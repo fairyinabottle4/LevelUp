@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation">
+
+    <fragment
+        android:id="@+id/nav_mktplace"
+        android:name="com.example.LevelUp.ui.mktplace.MktplaceFragment"
+        android:label="@string/title_mktplace"
+        tools:layout="@layout/fragment_mktplace" />
+
+    <fragment
+        android:id="@+id/nav_dashboard"
+        android:name="com.example.LevelUp.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/nav_jios"
+        android:name="com.example.LevelUp.ui.jios.JiosFragment"
+        android:label="@string/title_jios"
+        tools:layout="@layout/fragment_jios" />
+
+    <fragment
+        android:id="@+id/nav_events"
+        android:name="com.example.LevelUp.ui.events.EventsFragment"
+        android:label="@string/title_events"
+        tools:layout="@layout/fragment_events" />
+
+    <fragment
+        android:id="@+id/nav_mylist"
+        android:name="com.example.LevelUp.ui.mylist.MylistFragment"
+        android:label="@string/title_mylist"
+        tools:layout="@layout/fragment_mylist" />
+
+</navigation>

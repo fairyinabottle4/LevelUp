@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">LevelUp</string>
+    <string name="title_mktplace">Market Place</string>
+    <string name="title_jios">Jios</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_events">Events</string>
+    <string name="title_mylist">My List</string>
+    <string name="time_button">Select a time</string>
+    <string name="date_button">Select a date</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_filter">Filter</string>
+    <string name="menu_favourites">Favourites</string>
+    <string name="menu_history">History</string>
+    <string name="menu_myActivities">My Activities</string>
+</resources>

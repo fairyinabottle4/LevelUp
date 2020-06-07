@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "361887413011",
+    "firebase_url": "https://levelup-987c6.firebaseio.com",
+    "project_id": "levelup-987c6",
+    "storage_bucket": "levelup-987c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361887413011:android:79065cc2b7ace0fbe4a0e6",
+        "android_client_info": {
+          "package_name": "com.example.tryone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361887413011-6sc7r26oijsbmua0tdc444760j41h0qp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tryone",
+            "certificate_hash": "5b7716dc55afa4312bcb864e3aec86cd788e9e31"
+          }
+        },
+        {
+          "client_id": "361887413011-6bht0de25h8kohj3ihqfde3rn28n9a76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYtKRTKWNe-97UreOTA3YaEm_d8a3eMac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361887413011-6bht0de25h8kohj3ihqfde3rn28n9a76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
