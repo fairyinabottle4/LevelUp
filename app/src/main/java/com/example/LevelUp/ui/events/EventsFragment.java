@@ -12,7 +12,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +55,7 @@ public class EventsFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private EventsAdapter mAdapter;
     private View rootView;
+
     public FloatingActionButton floatingActionButton;
 
     @Nullable
@@ -72,6 +76,7 @@ public class EventsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         mValueEventListener = new ValueEventListener() {
 
             @Override
@@ -92,10 +97,13 @@ public class EventsFragment extends Fragment {
         };
         mDatabaseReference.addValueEventListener(mValueEventListener);
 
+        // setting up toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.events_toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
+        assert activity != null;
         activity.setSupportActionBar(toolbar);
+
         return rootView;
     }
 
@@ -122,14 +130,27 @@ public class EventsFragment extends Fragment {
         EventsItemList = new ArrayList<>();
     }
 
+
+
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new EventsAdapter(getActivity(), EventsItemList);
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mAdapter.setOnItemClickListener(new EventsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+            }
+        });
     }
+
+
 
     //eventually this getter will be used to combine this ArrayList with the Jios ArrayList. It will be
     //sorted by Unix time before being sent to the MyListFragment to be displayed.

@@ -9,6 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+
     }
 
 
@@ -51,8 +53,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView mTextView4;
         public TextView mTextView5;
 
+        public View itemView;
+
         public EventsViewHolder(Context context, View itemView, final EventsAdapter.OnItemClickListener listener) {
             super(itemView);
+            this.itemView = itemView;
             final Context context1 = context;
             mImageView = itemView.findViewById(R.id.imageView);
             mAddButton = itemView.findViewById(R.id.image_add);
@@ -61,6 +66,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mTextView3 = itemView.findViewById(R.id.date);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -72,11 +79,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     }
                 }
             });
-            mAddButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
+
         }
 
     }
@@ -107,6 +110,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         holder.mTextView3.setText(df.format(currentItem.getDateInfo()));
         holder.mTextView4.setText(currentItem.getLocationInfo());
         holder.mTextView5.setText(currentItem.getTimeInfo());
+
+        holder.mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "HEY", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
