@@ -130,8 +130,6 @@ public class EventsFragment extends Fragment {
         EventsItemList = new ArrayList<>();
     }
 
-
-
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -142,6 +140,7 @@ public class EventsFragment extends Fragment {
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        // dont know what this is for at the moment but it was already here -Yi En
         mAdapter.setOnItemClickListener(new EventsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {

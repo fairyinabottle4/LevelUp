@@ -31,18 +31,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private Context mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
+    // dont know what this is for at the moment but it was already here -Yi En
     public interface OnItemClickListener {
         void onItemClick(int position);
 
     }
 
-
-
     public void setOnItemClickListener(EventsAdapter.OnItemClickListener listener) {
         mListener = listener;
     }
 
-    //the ViewHolder holds the content of the card
+    // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView mImageView;
@@ -67,7 +66,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
 
-
+            // dont know what this is for at the moment but it was already here -Yi En
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -119,8 +118,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         });
     }
 
-
-
     @Override
     public int getItemCount() {
         return mEventsList.size();
@@ -154,6 +151,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             return results;
         }
 
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mEventsList.clear();
