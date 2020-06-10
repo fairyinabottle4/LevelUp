@@ -1,25 +1,23 @@
 package com.example.LevelUp.ui.mktplace;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
+import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
 import com.example.tryone.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -29,6 +27,7 @@ public class MktplaceFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private MktplaceAdapter mAdapter;
     private View rootView;
+    public FloatingActionButton floatingActionButton;
 
     @Nullable
     @Override
@@ -37,6 +36,16 @@ public class MktplaceFragment extends Fragment {
 
         createMktplaceList();
         buildRecyclerView();
+
+        floatingActionButton = rootView.findViewById(R.id.fab_mktplace);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MktplaceAdder.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
