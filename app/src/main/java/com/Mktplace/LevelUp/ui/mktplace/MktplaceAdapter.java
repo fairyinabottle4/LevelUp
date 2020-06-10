@@ -1,5 +1,6 @@
 package com.Mktplace.LevelUp.ui.mktplace;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.tryone.R;
 
 import java.util.ArrayList;
 
 public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.MktplaceViewHolder> {
     //ArrayList is passed in from MktplaceItem.java
+    private Context mContext;
     private ArrayList<MktplaceItem> mMktplaceList;
     private OnItemClickListener mListener;
 
@@ -29,14 +32,12 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     //the ViewHolder holds the content of the card
     public static class MktplaceViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
-        public TextView mTextView1;
-        public ImageView mImageView2;
-        public TextView mTextView2;
+        public TextView mTitle;
 
         public MktplaceViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
-            mTextView1 = itemView.findViewById(R.id.textView);
+            mTitle = itemView.findViewById(R.id.textView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -53,7 +54,8 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MktplaceAdapter(ArrayList<MktplaceItem> MktplaceList) {
+    public MktplaceAdapter(Context context, ArrayList<MktplaceItem> MktplaceList) {
+        this.mContext = context;
         mMktplaceList = MktplaceList;
     }
 
@@ -68,9 +70,11 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
     @Override
     public void onBindViewHolder(@NonNull MktplaceViewHolder holder, int position) {
-        MktplaceItem currentItem = mMktplaceList.get(position);
-        holder.mImageView.setImageResource(currentItem.getImageResource());
-        holder.mTextView1.setText(currentItem.getText1());
+        MktplaceItem uploadCurrent = mMktplaceList.get(position);
+        String url = uploadCurrent.getImageUrl();
+        holder.mTitle.setText(uploadCurrent.getName());
+        Glide.with(holder.mImageView.getContext()).load(url).into(holder.mImageView);
+
     }
 
 

@@ -1,17 +1,43 @@
 package com.Mktplace.LevelUp.ui.mktplace;
 
 public class MktplaceItem {
-    private int mImageResource;
-    private String mText1;
-    public MktplaceItem(int imageResource, String text1) {
-        mImageResource = imageResource;
-        mText1 = text1;
+    private String mImageUrl;
+    private String mName;
+    private String mLocation;
+    private String mDescription;
+
+    public MktplaceItem(String name, String imageUrl, String location, String description) {
+        if (name.trim().equals("")) {
+            name = "No Name";
+        }
+        this.mName = name;
+        this.mImageUrl = imageUrl;
+        this.mLocation = location;
+        this.mDescription = description;
     }
 
-    public int getImageResource() {
-        return mImageResource;
+    public MktplaceItem() {
+        //empty constructor needed
     }
-    public String getText1() {
-        return mText1;
+
+    public String getName() {
+        return mName;
+    }
+    public void setName(String name) {
+        mName = name;
+    }
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        mImageUrl = imageUrl;
+    }
+
+    public String getLocation() {
+        return this.mLocation;
+    }
+
+    public String getDescription() {
+        return this.mDescription;
     }
 }

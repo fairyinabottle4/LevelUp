@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,11 @@ import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -28,6 +34,8 @@ public class MktplaceFragment extends Fragment {
     private MktplaceAdapter mAdapter;
     private View rootView;
     public FloatingActionButton floatingActionButton;
+    private DatabaseReference mDatabaseRef;
+
 
     @Nullable
     @Override
@@ -36,7 +44,6 @@ public class MktplaceFragment extends Fragment {
 
         createMktplaceList();
         buildRecyclerView();
-
         floatingActionButton = rootView.findViewById(R.id.fab_mktplace);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +53,24 @@ public class MktplaceFragment extends Fragment {
             }
         });
 
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
+
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
+                    mktplaceItemList.add(upload);
+                }
+                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
         return rootView;
     }
 
@@ -69,26 +94,17 @@ public class MktplaceFragment extends Fragment {
 
     public void createMktplaceList() {
         mktplaceItemList = new ArrayList<>();
-        mktplaceItemList.add(new MktplaceItem(R.drawable.joy_con, "Nintendo Switch Joy Cons"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.mosquito_catcher, "Mosquito Catcher!! Deal with mozzies in your room!"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.iphone_ipad_charger, "iPhone/iPad charger"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.night_lamp, "USB Night Lamp"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.laptop_case, "Laptop Case 13 inch"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.table_fan, "USB table fan"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.ic_android_black_24dp, "Line 1"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.ic_launcher_foreground, "Line 3"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.ic_launcher_background, "Line 5"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.ic_android_black_24dp, "Line 1"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.ic_launcher_foreground, "Line 3"));
-        mktplaceItemList.add(new MktplaceItem(R.drawable.ic_launcher_background, "Line 5"));
     }
 
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new MktplaceAdapter(mktplaceItemList);
+        mAdapter = new MktplaceAdapter(getContext(), mktplaceItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
+
+
+
 }
