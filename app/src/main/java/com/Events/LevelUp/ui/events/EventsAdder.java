@@ -44,6 +44,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
     Uri currentUri;
     private int hourOfDay;
     private int minute;
+    boolean validDate;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,19 +83,36 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         mSaveJio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventsItem EventsItem = null;
+                EventsItem eventsItem = null;
                 try {
-                    EventsItem = new EventsItem(R.drawable.fui_ic_twitter_bird_white_24dp,
+                    eventsItem = new EventsItem(R.drawable.fui_ic_twitter_bird_white_24dp,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
                             mEventTitle.getText().toString(), mEventDescription.getText().toString());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDatabaseReference.push().setValue(EventsItem);
-                Toast.makeText(EventsAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(EventsAdder.this, MainActivity.class);
-                startActivity(intent);
+                boolean factors = !mEventDescription.getText().toString().equals("")
+                        && !mEventLocation.getText().toString().equals("")
+                        && !mEventTitle.getText().toString().equals("")
+                        && !mDateSelected.getText().toString().equals("")
+                        && !mTimeSelected.getText().toString().equals("");
+                try {
+                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
+                            .compareTo(df.parse(mDateSelected.getText().toString())) > 0;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (validDate) {
+                    Toast.makeText(EventsAdder.this, "Date selected cannot be before current date", Toast.LENGTH_LONG).show();
+                } else if (!factors) {
+                    Toast.makeText(EventsAdder.this, "Please check all fields and try again", Toast.LENGTH_LONG).show();
+                } else if (factors) {
+                    mDatabaseReference.push().setValue(eventsItem);
+                    Toast.makeText(EventsAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(EventsAdder.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

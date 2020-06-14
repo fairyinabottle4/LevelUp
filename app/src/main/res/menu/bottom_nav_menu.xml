@@ -3,26 +3,26 @@
 
     <item
         android:id="@+id/navigation_mktPlace"
-        android:icon="@drawable/ic_pages_black_24dp"
+        android:icon="@drawable/ic_marketplace"
         android:title="@string/title_mktplace" />
 
     <item
         android:id="@+id/navigation_jios"
-        android:icon="@drawable/ic_people_black_24dp"
+        android:icon="@drawable/ic_jios"
         android:title="@string/title_jios" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_dashboard"
         android:title="@string/title_dashboard" />
 
     <item
         android:id="@+id/navigation_events"
-        android:icon="@drawable/ic_event_black_24dp"
+        android:icon="@drawable/ic_event"
         android:title="@string/title_events" />
 
     <item
         android:id="@+id/navigation_myList"
-        android:icon="@drawable/ic_done_white_24dp"
+        android:icon="@drawable/ic_mylist"
         android:title="@string/title_mylist" />
 </menu>

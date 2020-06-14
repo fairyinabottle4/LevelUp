@@ -44,6 +44,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     Uri currentUri;
     private int hourOfDay;
     private int minute;
+    boolean validDate;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,10 +92,27 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDatabaseReference.push().setValue(jiosItem);
-                Toast.makeText(JiosAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(JiosAdder.this, MainActivity.class);
-                startActivity(intent);
+                boolean factors = !mEventDescription.getText().toString().equals("")
+                        && !mEventLocation.getText().toString().equals("")
+                        && !mEventTitle.getText().toString().equals("")
+                        && !mDateSelected.getText().toString().equals("")
+                        && !mTimeSelected.getText().toString().equals("");
+                try {
+                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
+                            .compareTo(df.parse(mDateSelected.getText().toString())) > 0;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (validDate) {
+                    Toast.makeText(JiosAdder.this, "Date selected cannot be before current date", Toast.LENGTH_LONG).show();
+                } else if (!factors) {
+                    Toast.makeText(JiosAdder.this, "Please check all fields and try again", Toast.LENGTH_LONG).show();
+                } else if (factors) {
+                    mDatabaseReference.push().setValue(jiosItem);
+                    Toast.makeText(JiosAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(JiosAdder.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
