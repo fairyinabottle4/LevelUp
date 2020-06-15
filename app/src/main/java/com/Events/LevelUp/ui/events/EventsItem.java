@@ -1,10 +1,14 @@
 package com.Events.LevelUp.ui.events;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.LevelUp.ui.Occasion;
 
+import java.text.DateFormat;
 import java.util.Date;
 
-public class EventsItem implements Occasion {
+public class EventsItem implements Occasion, Parcelable {
     private int profilePicture;
     private String timeInfo;
     private int hourOfDay;
@@ -29,6 +33,28 @@ public class EventsItem implements Occasion {
     public EventsItem() {
 
     }
+
+    public EventsItem(Parcel in) {
+        profilePicture = in.readInt();
+        timeInfo = in.readString();
+        hourOfDay = in.readInt();
+        minute = in.readInt();
+        locationInfo = in.readString();
+        title = in.readString();
+        description = in.readString();
+    }
+
+    public static final Creator<EventsItem> CREATOR = new Creator<EventsItem>() {
+        @Override
+        public EventsItem createFromParcel(Parcel in) {
+            return new EventsItem(in);
+        }
+
+        @Override
+        public EventsItem[] newArray(int size) {
+            return new EventsItem[size];
+        }
+    };
 
     public int getProfilePicture() {
         return profilePicture;
@@ -60,5 +86,22 @@ public class EventsItem implements Occasion {
 
     public int getMinute() {
         return minute;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(profilePicture);
+        dest.writeInt(hourOfDay);
+        dest.writeInt(minute);
+        dest.writeString(timeInfo);
+        dest.writeString(description);
+        dest.writeString(locationInfo);
+        dest.writeString(title);
+        dest.writeString(DateFormat.getInstance().format(dateInfo));
     }
 }

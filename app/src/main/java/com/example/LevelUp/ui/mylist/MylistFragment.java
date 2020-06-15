@@ -1,10 +1,13 @@
 package com.example.LevelUp.ui.mylist;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +24,10 @@ import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MylistFragment extends Fragment {
     ArrayList<Occasion> OccasionList;
@@ -29,11 +35,28 @@ public class MylistFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private MylistAdapter mAdapter;
     private View rootView;
+//    Intent intent = getActivity().getIntent();
+//    int profilePicture;
+//    int hourOfDay;
+//    int minute;
+//    String title;
+//    String description;
+//    Date date;
+//    String location;
+//    String time;
+    EventsItem event = new EventsItem(Parcel.obtain());
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            event = bundle.getParcelable("event");
+            Toast.makeText(getContext(), "there is something", Toast.LENGTH_SHORT).show();
+        }
+        String s = event.getDescription();
+        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
         createMylistList();
         buildRecyclerView();
         return rootView;
@@ -59,6 +82,9 @@ public class MylistFragment extends Fragment {
 
     public void createMylistList() {
         OccasionList = new ArrayList<>();
+        OccasionList.add(event);
+        Toast.makeText(getContext(), "event added", Toast.LENGTH_SHORT).show();
+//        OccasionList.add(new EventsItem(profilePicture, date, time, hourOfDay, minute, location, title, description));
     }
 
     public void buildRecyclerView() {

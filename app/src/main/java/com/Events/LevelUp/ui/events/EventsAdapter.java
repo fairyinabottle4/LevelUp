@@ -2,6 +2,7 @@ package com.Events.LevelUp.ui.events;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.MainActivity;
+import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 
 import java.lang.reflect.Array;
@@ -26,9 +30,9 @@ import java.util.Locale;
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> implements Filterable {
     //ArrayList is passed in from EventsItem.java
     private ArrayList<EventsItem> mEventsList;
-    private ArrayList<EventsItem> mEventsListFull;
-    private EventsAdapter.OnItemClickListener mListener;
-    private Context mContext;
+    private ArrayList<EventsItem> mEventsListFull;    private EventsAdapter.OnItemClickListener mListener;
+
+    private FragmentActivity mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
     // dont know what this is for at the moment but it was already here -Yi En
@@ -85,7 +89,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     //Constructor for EventsAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public EventsAdapter(Context context, ArrayList<EventsItem> EventsList) {
+    public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> EventsList) {
         mEventsList = EventsList;
         mContext = context;
         mEventsListFull = new ArrayList<>(EventsList); // copy of EventsList for SearchView
@@ -101,8 +105,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventsAdapter.EventsViewHolder holder, int position) {
-        EventsItem currentItem = mEventsList.get(position);
+    public void onBindViewHolder(@NonNull EventsAdapter.EventsViewHolder holder, final int position) {
+        final EventsItem currentItem = mEventsList.get(position);
         holder.mImageView.setImageResource(currentItem.getProfilePicture());
         holder.mTextView1.setText(currentItem.getTitle());
         holder.mTextView2.setText(currentItem.getDescription());
@@ -113,7 +117,24 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         holder.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "HEY", Toast.LENGTH_SHORT).show();
+                MylistFragment myListFragment = new MylistFragment();
+                EventsItem event = mEventsList.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", event); // this will work due to implementing parcelable
+                myListFragment.setArguments(bundle);
+
+                // use mContext since im assuming we areinside adapter
+                // if in an Activity, no need to use context to get the fragment manager
+                FragmentTransaction transaction = mContext.getSupportFragmentManager().beginTransaction();
+
+                // Replace the EventsFragment with the MyListFragment
+                // and add the transaction to the back stack so the user can navigate back
+                transaction.add(R.id.event_layout, myListFragment);
+                transaction.addToBackStack(null);
+
+                // Commit the transaction
+                transaction.commit();
+                Toast.makeText(mContext, "button is clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }
