@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Events.LevelUp.ui.events.EventsAdder;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
@@ -30,21 +31,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class MylistFragment extends Fragment {
-    ArrayList<Occasion> mOccasionListEventsInitial;
-    ArrayList<Occasion> mOccasionListJiosInitial;
-    ArrayList<Occasion> mOccasionListReal;
+    ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
+    ArrayList<Occasion> mOccasionListJiosInitial = new ArrayList<>();
+    // ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private MylistAdapter mAdapter;
     private View rootView;
-    private static Integer numberEvents;
-    private static Integer numberJios;
+    private static Integer numberEvents = -1;
+    private static Integer numberJios = -1;
     private FirebaseDatabase mDatabaseEvents;
     private DatabaseReference mDatabaseReferenceEvents;
     private FirebaseDatabase mDatabaseJios;
@@ -62,9 +64,10 @@ public class MylistFragment extends Fragment {
         mDatabaseJios = FirebaseDatabase.getInstance();
         mDatabaseReferenceJios = mDatabaseJios.getReference().child("Jios");
 
-        createMylistList();
-        buildRecyclerView();
+        // createMylistList();
 
+
+        // Events
         mValueEventListenerEvents = new ValueEventListener() {
 
             @Override
@@ -72,11 +75,25 @@ public class MylistFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     mOccasionListEventsInitial.add(snapshot.getValue(EventsItem.class));
                 }
-                mOccasionListReal.add(mOccasionListEventsInitial.get(numberEvents));
-                Toast.makeText(getContext(), numberEvents.toString(), Toast.LENGTH_SHORT).show();
-                MylistAdapter mylistAdapter = new MylistAdapter(mOccasionListReal);
-                mRecyclerView.setAdapter(mylistAdapter);
-                mAdapter = mylistAdapter; // YI EN ADDED THIS LINE
+                if (numberEvents != -1) {
+                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
+                    ArrayList<Integer> IDs = MainActivity.mEventsIDs;
+                    Occasion toAdd = mOccasionListEventsInitial.get(numberEvents);
+                    if (!IDs.contains(numberEvents)) {
+                        mOLR.add(toAdd);
+                        IDs.add(numberEvents);
+                        Toast.makeText(getContext(), numberEvents.toString(), Toast.LENGTH_SHORT).show();
+                        MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+                        mRecyclerView.setAdapter(myListAdapter);
+                        mAdapter = myListAdapter;
+                    } else {
+                        // This toast is temporary, it should change the + to a tick or smth
+                        Toast.makeText(getContext(), "Event already added to your list", Toast.LENGTH_SHORT).show();
+                        MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+                        mRecyclerView.setAdapter(myListAdapter);
+                        mAdapter = myListAdapter;
+                    }
+                }
             }
 
             @Override
@@ -86,6 +103,7 @@ public class MylistFragment extends Fragment {
         };
         mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
 
+        // Jios
         mValueEventListenerJios = new ValueEventListener() {
 
             @Override
@@ -93,11 +111,25 @@ public class MylistFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     mOccasionListJiosInitial.add(snapshot.getValue(JiosItem.class));
                 }
-                mOccasionListReal.add(mOccasionListJiosInitial.get(numberJios));
-                Toast.makeText(getContext(), numberJios.toString(), Toast.LENGTH_SHORT).show();
-                MylistAdapter myListAdapter = new MylistAdapter(mOccasionListReal);
-                mRecyclerView.setAdapter(myListAdapter);
-                mAdapter = myListAdapter; // YI EN ADDED THIS LINE
+                if (numberJios != -1) {
+                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
+                    ArrayList<Integer> IDs = MainActivity.mJiosIDs;
+                    Occasion toAdd = mOccasionListJiosInitial.get(numberJios);
+                    if (!IDs.contains(numberJios)) {
+                        mOLR.add(toAdd);
+                        IDs.add(numberJios);
+                        Toast.makeText(getContext(), numberJios.toString(), Toast.LENGTH_SHORT).show();
+                        MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+                        mRecyclerView.setAdapter(myListAdapter);
+                        mAdapter = myListAdapter;
+                    } else {
+                        // This toast is temporary, it should change the + to a tick or smth
+                        Toast.makeText(getContext(), "Jio already added to your list", Toast.LENGTH_SHORT).show();
+                        MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+                        mRecyclerView.setAdapter(myListAdapter);
+                        mAdapter = myListAdapter;
+                    }
+                }
             }
 
             @Override
@@ -106,7 +138,7 @@ public class MylistFragment extends Fragment {
             }
         };
         mDatabaseReferenceJios.addValueEventListener(mValueEventListenerJios);
-
+        buildRecyclerView();
         return rootView;
     }
 
@@ -127,17 +159,19 @@ public class MylistFragment extends Fragment {
     }
 
      */
-
+    /*
     public void createMylistList() {
         mOccasionListEventsInitial = new ArrayList<>();
         mOccasionListJiosInitial = new ArrayList<>();
-        mOccasionListReal = new ArrayList<>();
+        //mOccasionListReal = new ArrayList<>();
     }
+    */
+
 
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(mOccasionListReal);
+        // mAdapter = new MylistAdapter(mOccasionListReal);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

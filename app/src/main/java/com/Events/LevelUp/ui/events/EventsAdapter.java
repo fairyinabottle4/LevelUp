@@ -31,7 +31,9 @@ import java.util.Locale;
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> implements Filterable {
     //ArrayList is passed in from EventsItem.java
     private ArrayList<EventsItem> mEventsList;
-    private ArrayList<EventsItem> mEventsListFull;    private EventsAdapter.OnItemClickListener mListener;
+    private ArrayList<EventsItem> mEventsListFull;
+
+    private EventsAdapter.OnItemClickListener mListener;
 
     private FragmentActivity mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
@@ -121,7 +123,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 EventsItem ei = mEventsList.get(position);
                 int index = EventsFragment.getEventsItemList().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
-                Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

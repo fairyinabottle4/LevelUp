@@ -4,21 +4,28 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Events.LevelUp.ui.events.EventsItem;
 import com.bumptech.glide.Glide;
 import com.example.tryone.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.MktplaceViewHolder> {
+public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.MktplaceViewHolder> implements Filterable {
     //ArrayList is passed in from MktplaceItem.java
     private Context mContext;
+
     private ArrayList<MktplaceItem> mMktplaceList;
+    private ArrayList<MktplaceItem> mMktplaceListFull;
+
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -57,6 +64,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     public MktplaceAdapter(Context context, ArrayList<MktplaceItem> MktplaceList) {
         this.mContext = context;
         mMktplaceList = MktplaceList;
+        mMktplaceListFull = new ArrayList<>(MktplaceList);
     }
 
     //inflate the items in a MktplaceViewHolder
@@ -82,4 +90,42 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     public int getItemCount() {
         return mMktplaceList.size();
     }
+
+    @Override
+    public Filter getFilter() { // for the 'implements Filterable'
+        return mktplaceFilter;
+    }
+
+    private Filter mktplaceFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<MktplaceItem> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(mMktplaceListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (MktplaceItem item : mMktplaceListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getName().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mMktplaceList.clear();
+            mMktplaceList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+
+        }
+    };
 }

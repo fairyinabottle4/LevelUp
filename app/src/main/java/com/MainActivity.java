@@ -16,6 +16,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 
+import com.example.LevelUp.ui.Occasion;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
@@ -40,12 +41,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private static final String TAG = "MainActivity";
+
+    // THESE 3 LINES SHOULD BE MOVED TO A MYLIST ACTIVITY
+    public static ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
+    public static ArrayList<Integer> mJiosIDs = new ArrayList<>();
+    public static ArrayList<Integer> mEventsIDs = new ArrayList<>();
 
     private String mUsername;
     private FirebaseDatabase mFirebaseDatabase;
