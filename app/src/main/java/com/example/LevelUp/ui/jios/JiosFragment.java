@@ -39,6 +39,7 @@ import java.util.Date;
 
 public class JiosFragment extends Fragment {
     ArrayList<JiosItem> JiosItemList;
+    private static ArrayList<JiosItem> copy;
     FirebaseDatabase mDatabase;
     DatabaseReference mDatabaseReference;
     ValueEventListener mValueEventListener;
@@ -72,6 +73,7 @@ public class JiosFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItemList.add(snapshot.getValue(JiosItem.class));
                 }
+                copy = new ArrayList<>(JiosItemList);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
                 mRecyclerView.setAdapter(jiosAdapter);
                 mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
@@ -128,8 +130,8 @@ public class JiosFragment extends Fragment {
 
     //eventually this getter will be used to combine this ArrayList with the Jios ArrayList. It will be
     //sorted by Unix time before being sent to the MyListFragment to be displayed.
-    public ArrayList<JiosItem> getJiosItemList() {
-        return JiosItemList;
+    public static ArrayList<JiosItem> getJiosItemList() {
+        return copy;
     }
 
     @Override

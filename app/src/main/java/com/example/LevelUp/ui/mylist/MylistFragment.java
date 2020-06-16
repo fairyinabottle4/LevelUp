@@ -18,11 +18,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Events.LevelUp.ui.events.EventsAdder;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -30,35 +36,77 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MylistFragment extends Fragment {
-    ArrayList<Occasion> OccasionList;
+    ArrayList<Occasion> mOccasionListEventsInitial;
+    ArrayList<Occasion> mOccasionListJiosInitial;
+    ArrayList<Occasion> mOccasionListReal;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private MylistAdapter mAdapter;
     private View rootView;
-//    Intent intent = getActivity().getIntent();
-//    int profilePicture;
-//    int hourOfDay;
-//    int minute;
-//    String title;
-//    String description;
-//    Date date;
-//    String location;
-//    String time;
-    EventsItem event = new EventsItem(Parcel.obtain());
+    private static Integer numberEvents;
+    private static Integer numberJios;
+    private FirebaseDatabase mDatabaseEvents;
+    private DatabaseReference mDatabaseReferenceEvents;
+    private FirebaseDatabase mDatabaseJios;
+    private DatabaseReference mDatabaseReferenceJios;
+    ValueEventListener mValueEventListenerEvents;
+    ValueEventListener mValueEventListenerJios;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            event = bundle.getParcelable("event");
-            Toast.makeText(getContext(), "there is something", Toast.LENGTH_SHORT).show();
-        }
-        String s = event.getDescription();
-        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        mDatabaseEvents = FirebaseDatabase.getInstance();
+        mDatabaseReferenceEvents = mDatabaseEvents.getReference().child("Events");
+        
+        mDatabaseJios = FirebaseDatabase.getInstance();
+        mDatabaseReferenceJios = mDatabaseJios.getReference().child("Jios");
+
         createMylistList();
         buildRecyclerView();
+
+        mValueEventListenerEvents = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    mOccasionListEventsInitial.add(snapshot.getValue(EventsItem.class));
+                }
+                mOccasionListReal.add(mOccasionListEventsInitial.get(numberEvents));
+                Toast.makeText(getContext(), numberEvents.toString(), Toast.LENGTH_SHORT).show();
+                MylistAdapter mylistAdapter = new MylistAdapter(mOccasionListReal);
+                mRecyclerView.setAdapter(mylistAdapter);
+                mAdapter = mylistAdapter; // YI EN ADDED THIS LINE
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
+
+        mValueEventListenerJios = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    mOccasionListJiosInitial.add(snapshot.getValue(JiosItem.class));
+                }
+                mOccasionListReal.add(mOccasionListJiosInitial.get(numberJios));
+                Toast.makeText(getContext(), numberJios.toString(), Toast.LENGTH_SHORT).show();
+                MylistAdapter myListAdapter = new MylistAdapter(mOccasionListReal);
+                mRecyclerView.setAdapter(myListAdapter);
+                mAdapter = myListAdapter; // YI EN ADDED THIS LINE
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReferenceJios.addValueEventListener(mValueEventListenerJios);
+
         return rootView;
     }
 
@@ -81,18 +129,25 @@ public class MylistFragment extends Fragment {
      */
 
     public void createMylistList() {
-        OccasionList = new ArrayList<>();
-        OccasionList.add(event);
-        Toast.makeText(getContext(), "event added", Toast.LENGTH_SHORT).show();
-//        OccasionList.add(new EventsItem(profilePicture, date, time, hourOfDay, minute, location, title, description));
+        mOccasionListEventsInitial = new ArrayList<>();
+        mOccasionListJiosInitial = new ArrayList<>();
+        mOccasionListReal = new ArrayList<>();
     }
 
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(OccasionList);
+        mAdapter = new MylistAdapter(mOccasionListReal);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+    
+    public static void setNumberEvents(int i) {
+        numberEvents = i;
+    }
+
+    public static void setNumberJios(int i) {
+        numberJios = i;
     }
 }

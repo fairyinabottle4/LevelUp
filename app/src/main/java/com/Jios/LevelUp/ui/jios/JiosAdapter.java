@@ -9,11 +9,15 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventsItem;
+import com.example.LevelUp.ui.events.EventsFragment;
+import com.example.LevelUp.ui.jios.JiosFragment;
+import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 
 import java.text.DateFormat;
@@ -95,7 +99,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull JiosAdapter.JiosViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull JiosAdapter.JiosViewHolder holder, final int position) {
         JiosItem currentItem = mJiosList.get(position);
         holder.mImageView.setImageResource(currentItem.getProfilePicture());
         holder.mTextView1.setText(currentItem.getTitle());
@@ -103,6 +107,15 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         holder.mTextView3.setText(df.format(currentItem.getDateInfo()));
         holder.mTextView4.setText(currentItem.getLocationInfo());
         holder.mTextView5.setText(currentItem.getTimeInfo());
+        holder.mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JiosItem ji = mJiosList.get(position);
+                int index = JiosFragment.getJiosItemList().indexOf(ji);
+                MylistFragment.setNumberJios(index);
+                Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

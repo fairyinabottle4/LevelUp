@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.MainActivity;
+import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 
@@ -117,24 +118,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         holder.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MylistFragment myListFragment = new MylistFragment();
-                EventsItem event = mEventsList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("event", event); // this will work due to implementing parcelable
-                myListFragment.setArguments(bundle);
-
-                // use mContext since im assuming we areinside adapter
-                // if in an Activity, no need to use context to get the fragment manager
-                FragmentTransaction transaction = mContext.getSupportFragmentManager().beginTransaction();
-
-                // Replace the EventsFragment with the MyListFragment
-                // and add the transaction to the back stack so the user can navigate back
-                transaction.add(R.id.event_layout, myListFragment);
-                transaction.addToBackStack(null);
-
-                // Commit the transaction
-                transaction.commit();
-                Toast.makeText(mContext, "button is clicked", Toast.LENGTH_SHORT).show();
+                EventsItem ei = mEventsList.get(position);
+                int index = EventsFragment.getEventsItemList().indexOf(ei);
+                MylistFragment.setNumberEvents(index);
+                Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

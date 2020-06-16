@@ -48,6 +48,7 @@ import java.util.Comparator;
 
 public class EventsFragment extends Fragment {
     ArrayList<EventsItem> EventsItemList;
+    private static ArrayList<EventsItem> copy;
     FirebaseDatabase mDatabase;
     DatabaseReference mDatabaseReference;
     ValueEventListener mValueEventListener;
@@ -84,6 +85,7 @@ public class EventsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     EventsItemList.add(snapshot.getValue(EventsItem.class));
                 }
+                copy = new ArrayList<>(EventsItemList);
                 EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
                 mRecyclerView.setAdapter(eventsAdapter);
                 mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
@@ -137,24 +139,12 @@ public class EventsFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        // dont know what this is for at the moment but it was already here -Yi En
-        mAdapter.setOnItemClickListener(new EventsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-
-            }
-        });
     }
 
 
-
-    //eventually this getter will be used to combine this ArrayList with the Jios ArrayList. It will be
-    //sorted by Unix time before being sent to the MyListFragment to be displayed.
-    public ArrayList<EventsItem> getEventsItemList() {
-        return EventsItemList;
+    public static ArrayList<EventsItem> getEventsItemList() {
+        return copy;
     }
 
     @Override
