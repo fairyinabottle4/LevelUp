@@ -76,7 +76,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 @Override
                 public void onClick(View v) {
                      Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
-                     Intent intent = new Intent(context, JiosPage.class);
+                     Intent intent = new Intent(context, EventPage.class);
                      intent.putExtra("title", mTextView1.getText().toString());
                      intent.putExtra("description", mTextView2.getText().toString());
                      intent.putExtra("date", mTextView3.getText().toString());
