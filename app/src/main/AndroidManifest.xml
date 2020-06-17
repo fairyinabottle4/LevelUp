@@ -38,6 +38,12 @@
             >
         </activity>
 
+        <activity
+            android:name="com.Events.LevelUp.ui.events.EventPage"
+            android:label="Event Page"
+            >
+        </activity>
+
 
     </application>
 

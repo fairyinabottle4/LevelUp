@@ -61,10 +61,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         public View itemView;
 
-        public EventsViewHolder(Context context, View itemView, final EventsAdapter.OnItemClickListener listener) {
+        public EventsViewHolder(final Context context, View itemView, final EventsAdapter.OnItemClickListener listener) {
             super(itemView);
             this.itemView = itemView;
-            final Context context1 = context;
             mImageView = itemView.findViewById(R.id.imageView);
             mAddButton = itemView.findViewById(R.id.image_add);
             mTextView1 = itemView.findViewById(R.id.title);
@@ -72,17 +71,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mTextView3 = itemView.findViewById(R.id.date);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
-
-            // dont know what this is for at the moment but it was already here -Yi En
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
-                    }
+                     Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+                     Intent intent = new Intent(context, EventPage.class);
+                     intent.putExtra("title", mTextView1.getText().toString());
+                     intent.putExtra("description", mTextView2.getText().toString());
+                     intent.putExtra("date", mTextView3.getText().toString());
+                     intent.putExtra("location", mTextView4.getText().toString());
+                     intent.putExtra("time", mTextView5.getText().toString());
+                     context.startActivity(intent);
                 }
             });
 
