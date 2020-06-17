@@ -1,6 +1,7 @@
 package com;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 
+import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.example.LevelUp.ui.Occasion;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
@@ -35,6 +37,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.NonNull;
 
@@ -42,6 +46,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private static final String TAG = "MainActivity";
 
-    // THESE 3 LINES SHOULD BE MOVED TO A MYLIST ACTIVITY
+    // These 4 lines are for MyList Fragment
     public static ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
+    public static ArrayList<Occasion> mOccasionListRealFull = new ArrayList<>();
     public static ArrayList<Integer> mJiosIDs = new ArrayList<>();
     public static ArrayList<Integer> mEventsIDs = new ArrayList<>();
 
@@ -69,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // loadMyListData();
+
         //Initialize Firebase components
         mAuth = FirebaseAuth.getInstance();
 
@@ -79,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, new DashboardFragment()).commit();
         }
+
+
+
         /*
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -174,6 +185,38 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         mAuth.removeAuthStateListener(mAuthStateListener);
     }
+
+    /*
+    public void saveMyListData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json1 = gson.toJson(mJiosIDs);
+        String json2 = gson.toJson(mEventsIDs);
+        editor.putString("My List Jios", json1);
+        editor.putString("My List Events", json2);
+        editor.apply();
+    }
+
+    public void loadMyListData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String jsonJios = sharedPreferences.getString("My List Jios", null);
+        String jsonEvents = sharedPreferences.getString("My List Events", null);
+        Type type = new TypeToken<ArrayList<Integer>>() {}.getType();
+        mJiosIDs = gson.fromJson(jsonJios, type);
+        mEventsIDs = gson.fromJson(jsonEvents, type);
+
+        if (mJiosIDs == null) {
+            mJiosIDs = new ArrayList<>();
+        }
+        if (mEventsIDs == null) {
+            mEventsIDs = new ArrayList<>();
+        }
+    }
+
+     */
+
 
 
 }

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.example.LevelUp.ui.Occasion;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -104,4 +105,5 @@ public class EventsItem implements Occasion, Parcelable {
         dest.writeString(title);
         dest.writeString(DateFormat.getInstance().format(dateInfo));
     }
+
 }

@@ -62,7 +62,21 @@
                         android:textColor="@color/colorWhite"
                         android:layout_marginTop="82dp"
                         android:layout_marginStart="12dp" />
+
+                    <ImageButton
+                        android:id="@+id/edit_user_info_btn"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="190dp"
+                        android:layout_marginTop="167dp"
+                        android:src="@drawable/edit_user_btn"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:background="@null"/>
+
                 </RelativeLayout>
+
+
             </androidx.appcompat.widget.Toolbar>
 
 

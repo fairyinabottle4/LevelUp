@@ -2,6 +2,7 @@ package com.Jios.LevelUp.ui.jios;
 
 import com.example.LevelUp.ui.Occasion;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 public class JiosItem implements Occasion {
@@ -60,4 +61,5 @@ public class JiosItem implements Occasion {
     public String getTimeInfo() {
         return timeInfo;
     }
+
 }

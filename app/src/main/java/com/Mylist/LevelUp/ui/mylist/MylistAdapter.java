@@ -3,6 +3,8 @@ package com.Mylist.LevelUp.ui.mylist;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,14 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.Events.LevelUp.ui.events.EventsItem;
+import com.MainActivity;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistViewHolder> {
+public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistViewHolder> implements Filterable {
     //ArrayList is passed in from Occasion.java
     private ArrayList<Occasion> mMylistList;
     private MylistAdapter.OnItemClickListener mListener;
@@ -83,4 +88,42 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     public int getItemCount() {
         return mMylistList.size();
     }
+
+    @Override
+    public Filter getFilter() { // for the 'implements Filterable'
+        return myListFilter;
+    }
+
+    private Filter myListFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Occasion> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(MainActivity.mOccasionListRealFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (Occasion item : MainActivity.mOccasionListRealFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            MainActivity.mOccasionListReal.clear();
+            MainActivity.mOccasionListReal.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+
+        }
+    };
 }
