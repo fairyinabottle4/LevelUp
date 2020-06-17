@@ -13,12 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistViewHolder> {
     //ArrayList is passed in from Occasion.java
     private ArrayList<Occasion> mMylistList;
     private MylistAdapter.OnItemClickListener mListener;
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -35,6 +39,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public TextView mTextView2;
         public TextView mTextView3;
         public TextView mTextView4;
+        public TextView mTextView5;
 
         public MylistViewHolder(View itemView, final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -43,17 +48,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.time);
             mTextView4 = itemView.findViewById(R.id.location);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
-                    }
-                }
-            });
+            mTextView5 = itemView.findViewById(R.id.date);
         }
     }
 
@@ -78,8 +73,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         holder.mImageView.setImageResource(currentItem.getProfilePicture());
         holder.mTextView1.setText(currentItem.getTitle());
         holder.mTextView2.setText(currentItem.getDescription());
-//        holder.mTextView3.setText(currentItem.getDateInfo());
+        holder.mTextView3.setText(currentItem.getTimeInfo());
         holder.mTextView4.setText(currentItem.getLocationInfo());
+        holder.mTextView5.setText(df.format(currentItem.getDateInfo()));
     }
 
 
