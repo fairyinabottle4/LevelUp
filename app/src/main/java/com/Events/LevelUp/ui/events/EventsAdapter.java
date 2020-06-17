@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.MainActivity;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
@@ -75,7 +76,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 @Override
                 public void onClick(View v) {
                      Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
-                     Intent intent = new Intent(context, EventPage.class);
+                     Intent intent = new Intent(context, JiosPage.class);
                      intent.putExtra("title", mTextView1.getText().toString());
                      intent.putExtra("description", mTextView2.getText().toString());
                      intent.putExtra("date", mTextView3.getText().toString());

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Events.LevelUp.ui.events.EventPage;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
@@ -51,7 +52,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public TextView mTextView4;
         public TextView mTextView5;
 
-        public JiosViewHolder(Context context, View itemView, final OnItemClickListener listener) {
+        public JiosViewHolder(final Context context, View itemView, final OnItemClickListener listener) {
             super(itemView);
             final Context context1 = context;
             mImageView = itemView.findViewById(R.id.imageView);
@@ -64,18 +65,14 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
-                    }
-                }
-            });
-            mAddButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Add to MyList
+                    Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, EventPage.class);
+                    intent.putExtra("title", mTextView1.getText().toString());
+                    intent.putExtra("description", mTextView2.getText().toString());
+                    intent.putExtra("date", mTextView3.getText().toString());
+                    intent.putExtra("location", mTextView4.getText().toString());
+                    intent.putExtra("time", mTextView5.getText().toString());
+                    context.startActivity(intent);
                 }
             });
         }

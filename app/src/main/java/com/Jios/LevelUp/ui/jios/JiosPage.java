@@ -1,17 +1,16 @@
-package com.Events.LevelUp.ui.events;
+package com.Jios.LevelUp.ui.jios;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.tryone.R;
-
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class EventPage extends AppCompatActivity {
+import com.example.tryone.R;
+
+public class JiosPage extends AppCompatActivity {
 
     private ImageView mImageView;
     private TextView mTextView1;
