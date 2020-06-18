@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // loadMyListData();
+        loadMyListData();
 
         //Initialize Firebase components
         mAuth = FirebaseAuth.getInstance();
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         return eventsListMain;
     }
 
-    /*
+
     public void saveMyListData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         String json2 = gson.toJson(mEventsIDs);
         editor.putString("My List Jios", json1);
         editor.putString("My List Events", json2);
+        // editor.clear().apply();
         editor.apply();
     }
 
@@ -319,8 +320,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-     */
+    @Override
+    protected void onStop() {
+        saveMyListData();
+        super.onStop();
+    }
 
-
-
+    @Override
+    protected void onDestroy() {
+        saveMyListData();
+        super.onDestroy();
+    }
 }

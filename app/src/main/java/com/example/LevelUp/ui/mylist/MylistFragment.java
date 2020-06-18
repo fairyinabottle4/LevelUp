@@ -113,17 +113,17 @@ public class MylistFragment extends Fragment {
         };
         mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
 
-        /*
-        ArrayList<JiosItem> jiosItemArrayList = JiosFragment.getJiosItemList();
+
+        ArrayList<JiosItem> jiosItemArrayList = MainActivity.getJiosListReal();
 
         if (MainActivity.mJiosIDs.size() != 0 && jiosItemArrayList.size() != 0) {
+            ArrayList<Occasion> temp = new ArrayList<>();
             for (int id : MainActivity.mJiosIDs) {
-                Occasion toAdd = mOccasionListJiosInitial.get(id);
-                MainActivity.mOccasionListReal.add(toAdd);
+                Occasion toAdd = jiosItemArrayList.get(id);
+                temp.add(toAdd);
             }
+            MainActivity.mOccasionListReal = new ArrayList<>(temp);
         }
-         */
-
 
 
         // Jios
@@ -236,14 +236,15 @@ public class MylistFragment extends Fragment {
     public static void setNumberJios(int i) {
         numberJios.add(i);
     }
-    /*
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         MainActivity activity = (MainActivity) getActivity();
+        assert activity != null;
         activity.saveMyListData();
     }
-     */
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
