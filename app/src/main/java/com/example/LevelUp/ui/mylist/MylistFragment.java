@@ -102,7 +102,7 @@ public class MylistFragment extends Fragment {
                             mAdapter = myListAdapter;
                         }
                     }
-                    MainActivity.mOccasionListRealFull.addAll(mOLR);
+                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
                 }
             }
 
@@ -155,7 +155,7 @@ public class MylistFragment extends Fragment {
                             mAdapter = myListAdapter;
                         }
                     }
-                    MainActivity.mOccasionListRealFull.addAll(mOLR);
+                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
                 }
             }
 
