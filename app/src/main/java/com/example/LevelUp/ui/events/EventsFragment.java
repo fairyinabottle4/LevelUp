@@ -47,11 +47,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class EventsFragment extends Fragment {
-    ArrayList<EventsItem> EventsItemList;
-    private static ArrayList<EventsItem> copy;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
-    ValueEventListener mValueEventListener;
+    private static ArrayList<EventsItem> EventsItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private EventsAdapter mAdapter;
@@ -63,12 +59,7 @@ public class EventsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Events");
-
-        createEventsList();
         buildRecyclerView();
-
         floatingActionButton = rootView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,32 +69,10 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        mValueEventListener = new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventsItemList.add(snapshot.getValue(EventsItem.class));
-                }
-                copy = new ArrayList<>(EventsItemList);
-                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-                mRecyclerView.setAdapter(eventsAdapter);
-                mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
-                sort();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
-
         // setting up toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.events_toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        assert activity != null;
         activity.setSupportActionBar(toolbar);
 
         return rootView;
@@ -128,23 +97,14 @@ public class EventsFragment extends Fragment {
 
      */
 
-    public void createEventsList() {
-        EventsItemList = new ArrayList<>();
-    }
 
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new EventsAdapter(getActivity(), EventsItemList);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-
-    public static ArrayList<EventsItem> getEventsItemList() {
-        return copy;
     }
 
     @Override
@@ -193,27 +153,8 @@ public class EventsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void sort() {
-        Collections.sort(EventsItemList, new Comparator<EventsItem>() {
-            @Override
-            public int compare(EventsItem o1, EventsItem o2) {
-                int compareDate = 0;
-                compareDate = o1.getDateInfo().compareTo(o2.getDateInfo());
-                if (compareDate == 0) {
-                    int compareHour = 0;
-                    compareHour = o1.getHourOfDay() - o2.getHourOfDay();
-                    if (compareHour == 0) {
-                        int compareMinute = 0;
-                        compareMinute = o1.getMinute() - o2.getMinute();
-                        return compareMinute;
-                    } else {
-                        return compareHour;
-                    }
-                } else {
-                    return compareDate;
-                }
-            }
-        });
+    public static void setEventsItemList(ArrayList<EventsItem> eventsList) {
+        EventsItemList = eventsList;
     }
 
 }

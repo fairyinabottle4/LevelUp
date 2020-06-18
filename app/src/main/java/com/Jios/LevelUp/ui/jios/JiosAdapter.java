@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventPage;
 import com.Events.LevelUp.ui.events.EventsItem;
+import com.MainActivity;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
@@ -108,7 +109,9 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             @Override
             public void onClick(View v) {
                 JiosItem ji = mJiosList.get(position);
-                int index = JiosFragment.getJiosItemList().indexOf(ji);
+                //Now I am getting the unsorted copy from MainActivity instead of JiosFragment.
+                //This is because I need to have a sorted ArrayList in MainActivity to send to Mylist
+                int index = MainActivity.getJiosListCopy().indexOf(ji);
                 MylistFragment.setNumberJios(index);
                 Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
             }

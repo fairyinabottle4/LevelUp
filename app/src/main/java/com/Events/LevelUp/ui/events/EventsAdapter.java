@@ -121,7 +121,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             @Override
             public void onClick(View v) {
                 EventsItem ei = mEventsList.get(position);
-                int index = EventsFragment.getEventsItemList().indexOf(ei);
+                int index = MainActivity.getEventsListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
                 // Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
             }

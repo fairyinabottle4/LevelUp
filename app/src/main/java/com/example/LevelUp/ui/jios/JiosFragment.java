@@ -38,11 +38,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 public class JiosFragment extends Fragment {
-    ArrayList<JiosItem> JiosItemList;
-    private static ArrayList<JiosItem> copy;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
-    ValueEventListener mValueEventListener;
+    private static ArrayList<JiosItem> JiosItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private JiosAdapter mAdapter;
@@ -54,9 +50,6 @@ public class JiosFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_jios, container, false);
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Jios");
-        createJiosList();
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -66,26 +59,7 @@ public class JiosFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        mValueEventListener = new ValueEventListener() {
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    JiosItemList.add(snapshot.getValue(JiosItem.class));
-                }
-                copy = new ArrayList<>(JiosItemList);
-                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-                mRecyclerView.setAdapter(jiosAdapter);
-                mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
-                sort();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
 
         // setting up Toolbar
         setHasOptionsMenu(true);
@@ -114,9 +88,9 @@ public class JiosFragment extends Fragment {
 
      */
 
-    public void createJiosList() {
-        JiosItemList = new ArrayList<>();
-    }
+//    public void createJiosList() {
+//        JiosItemList = new ArrayList<>();
+//    }
 
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
@@ -125,13 +99,6 @@ public class JiosFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-    }
-
-    //eventually this getter will be used to combine this ArrayList with the Jios ArrayList. It will be
-    //sorted by Unix time before being sent to the MyListFragment to be displayed.
-    public static ArrayList<JiosItem> getJiosItemList() {
-        return copy;
     }
 
     @Override
@@ -180,26 +147,8 @@ public class JiosFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void sort() {
-        Collections.sort(JiosItemList, new Comparator<JiosItem>() {
-            @Override
-            public int compare(JiosItem o1, JiosItem o2) {
-                int compareDate = 0;
-                compareDate = o1.getDateInfo().compareTo(o2.getDateInfo());
-                if (compareDate == 0) {
-                    int compareHour = 0;
-                    compareHour = o1.getHourOfDay() - o2.getHourOfDay();
-                    if (compareHour == 0) {
-                        int compareMinute = 0;
-                        compareMinute = o1.getMinute() - o2.getMinute();
-                        return compareMinute;
-                    } else {
-                        return compareHour;
-                    }
-                } else {
-                    return compareDate;
-                }
-            }
-        });
+
+    public static void setJiosItemList(ArrayList<JiosItem> jioslist) {
+        JiosItemList = jioslist;
     }
 }
