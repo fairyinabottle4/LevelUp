@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loadMyListData();
+        // loadMyListData();
 
         //Initialize Firebase components
         mAuth = FirebaseAuth.getInstance();
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
         return eventsListMain;
     }
 
-
+    /*
     public void saveMyListData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -335,5 +335,7 @@ public class MainActivity extends AppCompatActivity {
         saveMyListData();
         super.onDestroy();
     }
+
+     */
 
 }

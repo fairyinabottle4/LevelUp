@@ -237,6 +237,7 @@ public class MylistFragment extends Fragment {
         numberJios.add(i);
     }
 
+    /*
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -244,6 +245,8 @@ public class MylistFragment extends Fragment {
         assert activity != null;
         activity.saveMyListData();
     }
+
+     */
 
 
     @Override
