@@ -113,7 +113,7 @@ public class MylistFragment extends Fragment {
         };
         mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
 
-
+        /*
         ArrayList<JiosItem> jiosItemArrayList = MainActivity.getJiosListReal();
 
         if (MainActivity.mJiosIDs.size() != 0 && jiosItemArrayList.size() != 0) {
@@ -124,6 +124,8 @@ public class MylistFragment extends Fragment {
             }
             MainActivity.mOccasionListReal = new ArrayList<>(temp);
         }
+
+         */
 
 
         // Jios
