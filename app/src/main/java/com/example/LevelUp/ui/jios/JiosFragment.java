@@ -52,6 +52,7 @@ public class JiosFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_jios, container, false);
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
+        floatingActionButton.setAlpha(0.50f); // setting transparency
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

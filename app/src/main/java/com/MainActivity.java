@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,6 +18,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 
+import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.example.LevelUp.ui.Occasion;
@@ -47,6 +49,7 @@ import com.google.gson.reflect.TypeToken;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import java.lang.reflect.Array;
@@ -184,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -331,4 +335,5 @@ public class MainActivity extends AppCompatActivity {
         saveMyListData();
         super.onDestroy();
     }
+
 }

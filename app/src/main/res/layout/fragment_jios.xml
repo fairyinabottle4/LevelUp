@@ -48,7 +48,7 @@
             android:layout_margin="28dp"
             android:elevation="6dp"
             android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="@color/colorAccent" />
+            app:backgroundTint="@color/colorPrimary" />
     </LinearLayout>
 
 </RelativeLayout>

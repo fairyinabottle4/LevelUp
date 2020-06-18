@@ -48,5 +48,7 @@ public class EventPage extends AppCompatActivity {
         mTextView3.setText(time);
         mTextView4.setText(location);
         mTextView5.setText(description);
+
+        // add plus then add to my list
     }
 }

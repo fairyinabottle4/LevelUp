@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -55,12 +56,14 @@ public class EventsFragment extends Fragment {
 
     public FloatingActionButton floatingActionButton;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
+        floatingActionButton.setAlpha(0.50f); // setting transparency
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +159,7 @@ public class EventsFragment extends Fragment {
     public static void setEventsItemList(ArrayList<EventsItem> eventsList) {
         EventsItemList = eventsList;
     }
+
 
 }
 

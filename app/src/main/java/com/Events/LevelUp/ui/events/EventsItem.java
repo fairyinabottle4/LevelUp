@@ -2,6 +2,7 @@ package com.Events.LevelUp.ui.events;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageButton;
 
 import com.example.LevelUp.ui.Occasion;
 
@@ -9,7 +10,7 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class EventsItem implements Occasion, Parcelable {
+public class EventsItem implements Occasion {
     private int profilePicture;
     private String timeInfo;
     private int hourOfDay;
@@ -18,6 +19,7 @@ public class EventsItem implements Occasion, Parcelable {
     private String locationInfo;
     private String title;
     private String description;
+
 
     public EventsItem(int profilePicture, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
         this.profilePicture = profilePicture;
@@ -35,6 +37,7 @@ public class EventsItem implements Occasion, Parcelable {
 
     }
 
+    /*
     public EventsItem(Parcel in) {
         profilePicture = in.readInt();
         timeInfo = in.readString();
@@ -44,6 +47,8 @@ public class EventsItem implements Occasion, Parcelable {
         title = in.readString();
         description = in.readString();
     }
+
+
 
     public static final Creator<EventsItem> CREATOR = new Creator<EventsItem>() {
         @Override
@@ -56,6 +61,10 @@ public class EventsItem implements Occasion, Parcelable {
             return new EventsItem[size];
         }
     };
+
+     */
+
+
 
     public int getProfilePicture() {
         return profilePicture;
@@ -88,11 +97,12 @@ public class EventsItem implements Occasion, Parcelable {
     public int getMinute() {
         return minute;
     }
-
+    /*
     @Override
     public int describeContents() {
         return 0;
     }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -105,5 +115,11 @@ public class EventsItem implements Occasion, Parcelable {
         dest.writeString(title);
         dest.writeString(DateFormat.getInstance().format(dateInfo));
     }
+
+     */
+
+
+
+
 
 }

@@ -28,7 +28,7 @@
         android:id="@+id/event_description"
         android:hint="Event Description"
         android:layout_width="match_parent"
-        android:layout_height="87dp"
+        android:layout_height="250dp"
         android:text="" />
 
     <LinearLayout
@@ -44,7 +44,9 @@
             android:id="@+id/date_selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date Selected"/>
+            android:text="No Date Selected"
+            android:layout_marginStart="4dp"
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
@@ -61,7 +63,9 @@
             android:id="@+id/time_selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time Selected"/>
+            android:text="No Time Selected"
+            android:layout_marginStart="4dp"
+            android:textSize="18sp"/>
 
     </LinearLayout>
 

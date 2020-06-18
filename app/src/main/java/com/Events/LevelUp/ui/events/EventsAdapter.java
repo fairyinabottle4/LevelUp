@@ -54,6 +54,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         public ImageView mImageView;
         public ImageView mAddButton;
+        public ImageView mLikeButton;
         public TextView mTextView1;
         public TextView mTextView2;
         public TextView mTextView3;
@@ -67,6 +68,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             this.itemView = itemView;
             mImageView = itemView.findViewById(R.id.imageView);
             mAddButton = itemView.findViewById(R.id.image_add);
+            mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.date);
@@ -113,9 +115,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         holder.mImageView.setImageResource(currentItem.getProfilePicture());
         holder.mTextView1.setText(currentItem.getTitle());
         holder.mTextView2.setText(currentItem.getDescription());
-        holder.mTextView3.setText(df.format(currentItem.getDateInfo()));
         holder.mTextView4.setText(currentItem.getLocationInfo());
-        holder.mTextView5.setText(currentItem.getTimeInfo());
+
+        String date = "Date: " + df.format(currentItem.getDateInfo());
+        holder.mTextView3.setText(date);
+
+        String time = "Time: " + currentItem.getTimeInfo();
+        holder.mTextView5.setText(time);
 
         holder.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +130,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 int index = MainActivity.getEventsListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
                 // Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView imageView = v.findViewById(R.id.image_like);
+                imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
+
             }
         });
     }
