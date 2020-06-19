@@ -34,20 +34,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private ArrayList<EventsItem> mEventsList;
     private ArrayList<EventsItem> mEventsListFull;
 
-    private EventsAdapter.OnItemClickListener mListener;
-
     private FragmentActivity mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
-    // dont know what this is for at the moment but it was already here -Yi En
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-
-    }
-
-    public void setOnItemClickListener(EventsAdapter.OnItemClickListener listener) {
-        mListener = listener;
-    }
 
     // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +52,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         public View itemView;
 
-        public EventsViewHolder(final Context context, View itemView, final EventsAdapter.OnItemClickListener listener) {
+        public EventsViewHolder(final Context context, View itemView) {
             super(itemView);
             this.itemView = itemView;
             mImageView = itemView.findViewById(R.id.imageView);
@@ -105,7 +94,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     @Override
     public EventsAdapter.EventsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
-        EventsAdapter.EventsViewHolder evh = new EventsAdapter.EventsViewHolder(mContext, v, mListener);
+        EventsAdapter.EventsViewHolder evh = new EventsAdapter.EventsViewHolder(mContext, v);
         return evh;
     }
 
@@ -129,7 +118,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 EventsItem ei = mEventsList.get(position);
                 int index = MainActivity.getEventsListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
-                // Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final int RC_SIGN_IN = 1;
-    private static final int RC_PHOTO_PICKER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

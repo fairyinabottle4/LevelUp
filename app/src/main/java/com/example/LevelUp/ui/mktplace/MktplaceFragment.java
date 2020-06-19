@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
+import com.Mktplace.LevelUp.ui.mktplace.MktplacePage;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -33,15 +34,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MktplaceFragment extends Fragment {
+public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItemClickListener {
     ArrayList<MktplaceItem> mktplaceItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private MktplaceAdapter mAdapter;
     private View rootView;
-    public FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButton;
     private DatabaseReference mDatabaseRef;
-
+    private MktplaceAdapter.OnItemClickListener mListener = this;
 
     @Nullable
     @Override
@@ -68,7 +69,7 @@ public class MktplaceFragment extends Fragment {
                     MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
                     mktplaceItemList.add(upload);
                 }
-                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
+                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList, mListener);
                 mRecyclerView.setAdapter(mAdapter);
             }
 
@@ -112,7 +113,7 @@ public class MktplaceFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new MktplaceAdapter(getContext(), mktplaceItemList);
+        mAdapter = new MktplaceAdapter(getContext(), mktplaceItemList, this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -165,6 +166,14 @@ public class MktplaceFragment extends Fragment {
     }
 
 
-
-
+    @Override
+    public void onItemClick(int position) {
+        MktplaceItem mItem = mktplaceItemList.get(position);
+        Intent intent = new Intent(getContext(), MktplacePage.class);
+        intent.putExtra("title", mItem.getName());
+        intent.putExtra("description", mItem.getDescription());
+        intent.putExtra("location", mItem.getLocation());
+        intent.putExtra("imageurl", mItem.getImageUrl());
+        startActivity(intent);
+    }
 }

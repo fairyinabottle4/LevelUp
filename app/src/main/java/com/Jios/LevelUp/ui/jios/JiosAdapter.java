@@ -31,17 +31,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     //ArrayList is passed in from JiosItem.java
     private ArrayList<JiosItem> mJiosList;
     private ArrayList<JiosItem> mJiosListFull;
-    private OnItemClickListener mListener;
     private Context mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
 
     //the ViewHolder holds the content of the card
     public static class JiosViewHolder extends RecyclerView.ViewHolder {
@@ -53,7 +44,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public TextView mTextView4;
         public TextView mTextView5;
 
-        public JiosViewHolder(final Context context, View itemView, final OnItemClickListener listener) {
+        public JiosViewHolder(final Context context, View itemView) {
             super(itemView);
             final Context context1 = context;
             mImageView = itemView.findViewById(R.id.imageView);
@@ -92,7 +83,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     @Override
     public JiosAdapter.JiosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
-        JiosAdapter.JiosViewHolder evh = new JiosAdapter.JiosViewHolder(mContext, v, mListener);
+        JiosAdapter.JiosViewHolder evh = new JiosAdapter.JiosViewHolder(mContext, v);
         return evh;
     }
 

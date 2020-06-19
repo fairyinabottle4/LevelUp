@@ -29,52 +29,39 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
     private ArrayList<MktplaceItem> mMktplaceList;
     private ArrayList<MktplaceItem> mMktplaceListFull;
-    private OnItemClickListener mListener;
-
-    private static String imageUrl;
-    private static String title;
-    private static String location;
-    private static String description;
+    private OnItemClickListener mAdapterListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
-
     //the ViewHolder holds the content of the card
-    public static class MktplaceViewHolder extends RecyclerView.ViewHolder {
+    public static class MktplaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView mImageView;
         public TextView mTitle;
+        private OnItemClickListener mListener;
 
         public MktplaceViewHolder(final Context context, View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTitle = itemView.findViewById(R.id.textView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, MktplaceAdapter.getTitle(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, MktplacePage.class);
-                    intent.putExtra("title", MktplaceAdapter.getTitle());
-                    intent.putExtra("description", MktplaceAdapter.getDescription());
-                    intent.putExtra("location", MktplaceAdapter.getLocation());
-                    intent.putExtra("imageurl", MktplaceAdapter.getImageUrl());
-                    context.startActivity(intent);
+            mListener = listener;
+            itemView.setOnClickListener(this);
+        }
 
-                }
-            });
+        @Override
+        public void onClick(View v) {
+            mListener.onItemClick(getAdapterPosition());
         }
     }
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MktplaceAdapter(Context context, ArrayList<MktplaceItem> MktplaceList) {
+    public MktplaceAdapter(Context context, ArrayList<MktplaceItem> MktplaceList, OnItemClickListener listener) {
         this.mContext = context;
         mMktplaceList = MktplaceList;
         mMktplaceListFull = new ArrayList<>(MktplaceList);
+        mAdapterListener = listener;
     }
 
     //inflate the items in a MktplaceViewHolder
@@ -82,17 +69,13 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     @Override
     public MktplaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.marketplace_item, parent, false);
-        MktplaceViewHolder evh = new MktplaceViewHolder(mContext,v, mListener);
+        MktplaceViewHolder evh = new MktplaceViewHolder(mContext,v, mAdapterListener);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull MktplaceViewHolder holder, int position) {
         MktplaceItem uploadCurrent = mMktplaceList.get(position);
-        imageUrl = uploadCurrent.getImageUrl();
-        title = uploadCurrent.getName();
-        description = uploadCurrent.getDescription();
-        location = uploadCurrent.getLocation();
         String url = uploadCurrent.getImageUrl();
         holder.mTitle.setText(uploadCurrent.getName());
         Glide.with(holder.mImageView.getContext()).load(url).into(holder.mImageView);
@@ -142,19 +125,4 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         }
     };
 
-    public static String getTitle() {
-        return title;
-    }
-
-    public static String getImageUrl() {
-        return imageUrl;
-    }
-
-    public static String getLocation() {
-        return location;
-    }
-
-    public static String getDescription() {
-        return description;
-    }
 }

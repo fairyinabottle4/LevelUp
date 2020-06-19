@@ -18,11 +18,6 @@ public class JiosPage extends AppCompatActivity {
     private TextView mTextView3;
     private TextView mTextView4;
     private TextView mTextView5;
-    private String title;
-    private String description;
-    private String date;
-    private String time;
-    private String location;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
