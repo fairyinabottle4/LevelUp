@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.MainActivity;
-import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.tryone.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,7 +49,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.occasion_adder);
+        setContentView(R.layout.jios_adder);
         currentUri = getIntent().getData();
 
         mEventTitle = findViewById(R.id.event_title);

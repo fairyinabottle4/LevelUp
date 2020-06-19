@@ -67,5 +67,7 @@ public class JiosPage extends AppCompatActivity {
                 Toast.makeText(mContext, "Button clicked", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 }

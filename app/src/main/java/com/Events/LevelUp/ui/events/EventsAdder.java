@@ -49,7 +49,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.occasion_adder);
+        setContentView(R.layout.events_adder);
         currentUri = getIntent().getData();
 
         mEventTitle = findViewById(R.id.event_title);

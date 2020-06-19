@@ -115,8 +115,8 @@ public class MylistFragment extends Fragment {
         mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
 
         /*
+        // adding saved jios
         ArrayList<JiosItem> jiosItemArrayList = MainActivity.getJiosListReal();
-
         if (MainActivity.mJiosIDs.size() != 0 && jiosItemArrayList.size() != 0) {
             ArrayList<Occasion> temp = new ArrayList<>();
             for (int id : MainActivity.mJiosIDs) {
@@ -233,7 +233,7 @@ public class MylistFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-    
+
     public static void setNumberEvents(int i) {
         numberEvents.add(i);
     }
@@ -242,7 +242,7 @@ public class MylistFragment extends Fragment {
         numberJios.add(i);
     }
 
-    /*
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -251,7 +251,7 @@ public class MylistFragment extends Fragment {
         activity.saveMyListData();
     }
 
-     */
+
 
 
     @Override

@@ -54,7 +54,7 @@
             <LinearLayout
                 android:id="@+id/upcoming_occasions"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="140dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:orientation="horizontal"
@@ -130,8 +130,6 @@
                 android:layout_height="340dp"
                 android:theme="@style/CalendarViewCustom"
                 app:layout_constraintTop_toBottomOf="@id/upcoming_occasions"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="60dp"
                 android:layout_marginBottom="56dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
