@@ -45,7 +45,6 @@ public class JiosFragment extends Fragment {
     private View rootView;
     public FloatingActionButton floatingActionButton;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -151,5 +150,9 @@ public class JiosFragment extends Fragment {
 
     public static void setJiosItemList(ArrayList<JiosItem> jioslist) {
         JiosItemList = jioslist;
+    }
+
+    public static ArrayList<JiosItem> getJiosItemList() {
+        return JiosItemList;
     }
 }

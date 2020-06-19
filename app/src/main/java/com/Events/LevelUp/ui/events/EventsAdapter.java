@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> implements Filterable {
-    //ArrayList is passed in from EventsItem.java
     private ArrayList<EventsItem> mEventsList;
     private ArrayList<EventsItem> mEventsListFull;
 
@@ -73,6 +72,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                      intent.putExtra("date", mTextView3.getText().toString());
                      intent.putExtra("location", mTextView4.getText().toString());
                      intent.putExtra("time", mTextView5.getText().toString());
+                     intent.putExtra("position", getAdapterPosition());
                      context.startActivity(intent);
                 }
             });
@@ -170,7 +170,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mEventsList.clear();
             mEventsList.addAll((List) results.values); // data list contains filtered items
             notifyDataSetChanged(); // tell adapter list has changed
-
         }
     };
+
 }

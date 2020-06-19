@@ -160,6 +160,9 @@ public class EventsFragment extends Fragment {
         EventsItemList = eventsList;
     }
 
+    public static ArrayList<EventsItem> getEventsItemList() {
+        return EventsItemList;
+    }
 
 }
 

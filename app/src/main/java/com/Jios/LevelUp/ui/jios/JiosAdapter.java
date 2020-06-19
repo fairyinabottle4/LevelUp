@@ -64,6 +64,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     intent.putExtra("date", mTextView3.getText().toString());
                     intent.putExtra("location", mTextView4.getText().toString());
                     intent.putExtra("time", mTextView5.getText().toString());
+                    intent.putExtra("position", getAdapterPosition());
                     context.startActivity(intent);
                 }
             });
