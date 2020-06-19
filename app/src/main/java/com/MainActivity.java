@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth.removeAuthStateListener(mAuthStateListener);
     }
 
-    public void sort(ArrayList<? extends Occasion> list) {
+    public static void sort(ArrayList<? extends Occasion> list) {
         Collections.sort(list, new Comparator<Occasion>() {
             @Override
             public int compare(Occasion o1, Occasion o2) {

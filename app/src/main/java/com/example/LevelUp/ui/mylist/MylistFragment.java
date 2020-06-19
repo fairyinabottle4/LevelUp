@@ -102,6 +102,7 @@ public class MylistFragment extends Fragment {
                             mAdapter = myListAdapter;
                         }
                     }
+                    MainActivity.sort(mOLR);
                     MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
                 }
             }
@@ -144,6 +145,7 @@ public class MylistFragment extends Fragment {
                         if (!IDs.contains(id)) {
                             Occasion toAdd = mOccasionListJiosInitial.get(id);
                             mOLR.add(toAdd);
+
                             IDs.add(id);
                             Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
                             MylistAdapter myListAdapter = new MylistAdapter(mOLR);
@@ -157,6 +159,7 @@ public class MylistFragment extends Fragment {
                             mAdapter = myListAdapter;
                         }
                     }
+                    MainActivity.sort(mOLR);
                     MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
                 }
             }
