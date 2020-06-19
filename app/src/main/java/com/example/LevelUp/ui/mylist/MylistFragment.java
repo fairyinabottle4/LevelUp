@@ -228,7 +228,7 @@ public class MylistFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(MainActivity.mOccasionListReal);
+        mAdapter = new MylistAdapter(MainActivity.mOccasionListRealFull);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
