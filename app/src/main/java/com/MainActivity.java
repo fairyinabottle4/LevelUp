@@ -92,14 +92,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Load saved My List
         // loadMyListData();
 
-        //Initialize Firebase components
+        // Initialize Firebase components
+        initializeFirebase();
+
+        // Add all items in Jios to jiosListMain
+        initializeJiosListMain();
+
+        // Sending jiosListMain to JiosFragment
+        JiosFragment.setJiosItemList(jiosListMain);
+
+        // Add all items in Events to eventsListMain
+        initializeEventsListMain();
+
+        // Sending eventsListMain to EventsFragment
+        EventsFragment.setEventsItemList(eventsListMain);
+
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        if (savedInstanceState == null) {
+            navView.setSelectedItemId(R.id.navigation_dashboard);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new DashboardFragment()).commit();
+        }
+
+        navView.setOnNavigationItemSelectedListener(navListener);
+
+        initializeLogin();
+
+    }
+
+    private void initializeFirebase() {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+    }
 
-        //this will add all items in Jios to jiosListMain
+    private void initializeJiosListMain() {
         mValueEventListenerJios = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -117,13 +149,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mReferenceJios.addValueEventListener(mValueEventListenerJios);
+    }
 
-        //Sending the JiosItemList to JiosFragment
-        JiosFragment.setJiosItemList(jiosListMain);
-
-
-        //doing the same for EventsFragment
-        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+    private void initializeEventsListMain(){
         mValueEventListenerEvents = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -141,31 +169,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mReferenceEvents.addValueEventListener(mValueEventListenerEvents);
-        EventsFragment.setEventsItemList(eventsListMain);
+    }
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-
-        if (savedInstanceState == null) {
-            navView.setSelectedItemId(R.id.navigation_dashboard);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment, new DashboardFragment()).commit();
-        }
-
-
-
-        /*
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_mktPlace, R.id.navigation_dashboard, R.id.navigation_jios)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
-         */
-
-        navView.setOnNavigationItemSelectedListener(navListener);
+    private void initializeLogin() {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -186,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -244,13 +249,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mAuth.removeAuthStateListener(mAuthStateListener);
-    }
-
-    public static void sort(ArrayList<? extends Occasion> list) {
+    public void sort(ArrayList<? extends Occasion> list) {
         Collections.sort(list, new Comparator<Occasion>() {
             @Override
             public int compare(Occasion o1, Occasion o2) {
@@ -293,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
         return eventsListMain;
     }
 
-    /*
     public void saveMyListData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -324,6 +322,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        saveMyListData();
+        mAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
     protected void onStop() {
         saveMyListData();
         super.onStop();
@@ -335,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-     */
+
+
 
 }
