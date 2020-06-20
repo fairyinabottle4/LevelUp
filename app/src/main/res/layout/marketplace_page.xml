@@ -11,31 +11,41 @@
     <ImageView
         android:id="@+id/listing_image_full"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
         app:srcCompat="@drawable/fake_user_dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/listing_title_full"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title"/>
+            android:text="title"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/like_button"
-            android:layout_width="23dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_action_like" />
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            app:srcCompat="@drawable/ic_favorite_black_24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"/>
 
         <ImageView
             android:id="@+id/chat_bubble"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_baseline_chat_bubble_24"/>
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            app:srcCompat="@drawable/ic_chat"/>
 
     </LinearLayout>
 
@@ -43,12 +53,16 @@
         android:id="@+id/meetup_location_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="meetup location"/>
+        android:text="meetup location"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="20dp"/>
 
     <TextView
         android:id="@+id/listing_description_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="description"/>
+        android:text="description"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="4dp"/>
 
 </LinearLayout>

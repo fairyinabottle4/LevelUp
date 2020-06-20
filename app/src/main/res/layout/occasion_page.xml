@@ -31,15 +31,16 @@
                 android:layout_marginStart="115dp"
                 android:layout_marginEnd="20dp"
                 android:text="Title"
+                android:ellipsize="end"
                 android:textSize="24sp"
-                android:maxLines="3"
+                android:maxLines="2"
                 android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="115dp"
-                android:layout_marginTop="55dp">
+                android:layout_below="@id/event_page_title">
                 <ImageView
                     android:id="@+id/imageView3"
                     android:layout_width="20dp"
@@ -53,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:layout_marginStart="1dp"
-                    android:text="Location"/>
+                    android:text="Location" />
             </LinearLayout>
         </RelativeLayout>
 

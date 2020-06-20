@@ -34,10 +34,10 @@ public class MktplaceItem {
     }
 
     public String getLocation() {
-        return this.mLocation;
+        return mLocation;
     }
 
     public String getDescription() {
-        return this.mDescription;
+        return mDescription;
     }
 }

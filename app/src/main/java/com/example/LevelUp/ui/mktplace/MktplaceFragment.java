@@ -169,9 +169,9 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     @Override
     public void onItemClick(int position) {
         MktplaceItem mItem = mktplaceItemList.get(position);
-        Intent intent = new Intent(getContext(), MktplacePage.class);
-        intent.putExtra("title", mItem.getName());
+        Intent intent = new Intent(getActivity(), MktplacePage.class);
         intent.putExtra("description", mItem.getDescription());
+        intent.putExtra("title", mItem.getName());
         intent.putExtra("location", mItem.getLocation());
         intent.putExtra("imageurl", mItem.getImageUrl());
         startActivity(intent);

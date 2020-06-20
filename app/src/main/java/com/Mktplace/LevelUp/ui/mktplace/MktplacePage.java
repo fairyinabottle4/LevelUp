@@ -34,10 +34,19 @@ public class MktplacePage extends AppCompatActivity {
         mTextView3 = findViewById(R.id.listing_description_full);
 
         Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        title = extras.getString("title");
+        location = extras.getString("location");
+        description = extras.getString("description");
+        url = extras.getString("imageurl");
+
+        /*
         url = intent.getStringExtra("imageurl");
         title = intent.getStringExtra("title");
         location = intent.getStringExtra("location");
         description = intent.getStringExtra("description");
+         */
+
         Glide.with(mImageView.getContext()).load(url).into(mImageView);
         mTextView1.setText(title);
         mTextView2.setText(location);
