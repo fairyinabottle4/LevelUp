@@ -52,6 +52,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         createMktplaceList();
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab_mktplace);
+        floatingActionButton.setAlpha(0.50f); // setting transparency
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

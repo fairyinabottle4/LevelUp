@@ -109,7 +109,7 @@ public class MktplaceAdder extends AppCompatActivity {
 
     private void uploadFile() {
         boolean factors = mImageUri != null && !meetupLocation.getText().toString().equals("")
-                && !listingTitle.getText().toString().equals("") && !listingDescription.getText().toString().equals("");
+                && !listingTitle.getText().toString().equals(""); // && !listingDescription.getText().toString().equals("");
         if (factors) {
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
