@@ -35,21 +35,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItemClickListener {
-    ArrayList<MktplaceItem> mktplaceItemList;
+    private static ArrayList<MktplaceItem> mktplaceItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private MktplaceAdapter mAdapter;
     private View rootView;
     private FloatingActionButton floatingActionButton;
-    private DatabaseReference mDatabaseRef;
     private MktplaceAdapter.OnItemClickListener mListener = this;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mktplace, container, false);
-
-        createMktplaceList();
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab_mktplace);
         floatingActionButton.setAlpha(0.50f); // setting transparency
@@ -58,25 +55,6 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MktplaceAdder.class);
                 startActivity(intent);
-            }
-        });
-
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
-
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-                    mktplaceItemList.add(upload);
-                }
-                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList, mListener);
-                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -106,10 +84,6 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     }
 
      */
-
-    public void createMktplaceList() {
-        mktplaceItemList = new ArrayList<>();
-    }
 
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
@@ -176,5 +150,9 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         intent.putExtra("location", mItem.getLocation());
         intent.putExtra("imageurl", mItem.getImageUrl());
         startActivity(intent);
+    }
+
+    public static void setMktplaceItemList(ArrayList<MktplaceItem> list) {
+        mktplaceItemList = list;
     }
 }

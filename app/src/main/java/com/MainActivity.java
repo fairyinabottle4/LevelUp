@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
+import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
 import com.example.LevelUp.ui.Occasion;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<EventsItem> eventsListMain = new ArrayList<>();
     private static ArrayList<EventsItem> eventsListMainCopy;
 
+    private static ArrayList<MktplaceItem> mktplaceItemList = new ArrayList<>();
+
     ValueEventListener mValueEventListenerEvents;
     ValueEventListener mValueEventListenerJios;
 
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mReferenceJios;
     private DatabaseReference mReferenceEvents;
-
+    private DatabaseReference mReferenceMktplace;
 
     private static final int RC_SIGN_IN = 1;
 
@@ -101,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
         // Add all items in Jios to jiosListMain
         initializeJiosListMain();
 
+        //Add all items in Mktplace to mktplaceItemList
+        initializeMktplace();
+
         // Sending jiosListMain to JiosFragment
         JiosFragment.setJiosItemList(jiosListMain);
 
@@ -109,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Sending eventsListMain to EventsFragment
         EventsFragment.setEventsItemList(eventsListMain);
+
+        //Sending mktplaceItemList to MktplaceFragment
+        MktplaceFragment.setMktplaceItemList(mktplaceItemList);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -129,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
         mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
     }
 
     private void initializeJiosListMain() {
@@ -169,6 +180,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mReferenceEvents.addValueEventListener(mValueEventListenerEvents);
+    }
+
+    private void initializeMktplace() {
+        mReferenceMktplace.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
+                    mktplaceItemList.add(upload);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     private void initializeLogin() {
