@@ -1,7 +1,6 @@
 package com.Mktplace.LevelUp.ui.mktplace;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +8,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.Events.LevelUp.ui.events.EventsItem;
-import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.bumptech.glide.Glide;
 import com.example.tryone.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,9 +68,9 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     @Override
     public void onBindViewHolder(@NonNull MktplaceViewHolder holder, int position) {
         MktplaceItem uploadCurrent = mMktplaceList.get(position);
-        String url = uploadCurrent.getImageUrl();
+        String imageUrl = uploadCurrent.getImageUrl();
         holder.mTitle.setText(uploadCurrent.getName());
-        Glide.with(holder.mImageView.getContext()).load(url).into(holder.mImageView);
+        Glide.with(holder.mImageView.getContext()).load(imageUrl).into(holder.mImageView);
     }
 
 
