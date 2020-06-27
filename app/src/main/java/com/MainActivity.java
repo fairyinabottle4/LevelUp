@@ -72,22 +72,22 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Integer> mJiosIDs = new ArrayList<>();
     public static ArrayList<Integer> mEventsIDs = new ArrayList<>();
 
-    private static ArrayList<JiosItem> jiosListMain = new ArrayList<>();
-    private static ArrayList<JiosItem> jiosListMainCopy;
-
-    private static ArrayList<EventsItem> eventsListMain = new ArrayList<>();
-    private static ArrayList<EventsItem> eventsListMainCopy;
-
-    private static ArrayList<MktplaceItem> mktplaceItemList = new ArrayList<>();
-
-    ValueEventListener mValueEventListenerEvents;
-    ValueEventListener mValueEventListenerJios;
+//    private static ArrayList<JiosItem> jiosListMain = new ArrayList<>();
+//    private static ArrayList<JiosItem> jiosListMainCopy;
+//
+//    private static ArrayList<EventsItem> eventsListMain = new ArrayList<>();
+//    private static ArrayList<EventsItem> eventsListMainCopy;
+//
+//    private static ArrayList<MktplaceItem> mktplaceItemList = new ArrayList<>();
+//
+//    ValueEventListener mValueEventListenerEvents;
+//    ValueEventListener mValueEventListenerJios;
 
     private String mUsername;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mReferenceJios;
-    private DatabaseReference mReferenceEvents;
-    private DatabaseReference mReferenceMktplace;
+//    private DatabaseReference mReferenceJios;
+//    private DatabaseReference mReferenceEvents;
+//    private DatabaseReference mReferenceMktplace;
 
     private static final int RC_SIGN_IN = 1;
 
@@ -102,23 +102,23 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase components
         initializeFirebase();
 
-        // Add all items in Jios to jiosListMain
-        initializeJiosListMain();
-
-        //Add all items in Mktplace to mktplaceItemList
-        initializeMktplace();
-
-        // Sending jiosListMain to JiosFragment
-        JiosFragment.setJiosItemList(jiosListMain);
-
-        // Add all items in Events to eventsListMain
-        initializeEventsListMain();
-
-        // Sending eventsListMain to EventsFragment
-        EventsFragment.setEventsItemList(eventsListMain);
-
-        //Sending mktplaceItemList to MktplaceFragment
-        MktplaceFragment.setMktplaceItemList(mktplaceItemList);
+//        // Add all items in Jios to jiosListMain
+//        initializeJiosListMain();
+//
+//        //Add all items in Mktplace to mktplaceItemList
+//        initializeMktplace();
+//
+//        // Sending jiosListMain to JiosFragment
+//        JiosFragment.setJiosItemList(jiosListMain);
+//
+//        // Add all items in Events to eventsListMain
+//        initializeEventsListMain();
+//
+//        // Sending eventsListMain to EventsFragment
+//        EventsFragment.setEventsItemList(eventsListMain);
+//
+//        //Sending mktplaceItemList to MktplaceFragment
+//        MktplaceFragment.setMktplaceItemList(mktplaceItemList);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -137,66 +137,66 @@ public class MainActivity extends AppCompatActivity {
     private void initializeFirebase() {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
+//        mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+//        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+//        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
     }
 
-    private void initializeJiosListMain() {
-        mValueEventListenerJios = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                jiosListMain.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    jiosListMain.add(snapshot.getValue(JiosItem.class));
-                }
-                jiosListMainCopy = new ArrayList<>(jiosListMain);
-                sort(jiosListMain);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mReferenceJios.addValueEventListener(mValueEventListenerJios);
-    }
-
-    private void initializeEventsListMain(){
-        mValueEventListenerEvents = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                eventsListMain.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    eventsListMain.add(snapshot.getValue(EventsItem.class));
-                }
-                eventsListMainCopy = new ArrayList<>(eventsListMain);
-                sort(eventsListMain);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mReferenceEvents.addValueEventListener(mValueEventListenerEvents);
-    }
-
-    private void initializeMktplace() {
-        mReferenceMktplace.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-                    mktplaceItemList.add(upload);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
+//    private void initializeJiosListMain() {
+//        mValueEventListenerJios = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                jiosListMain.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    jiosListMain.add(snapshot.getValue(JiosItem.class));
+//                }
+//                jiosListMainCopy = new ArrayList<>(jiosListMain);
+//                sort(jiosListMain);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//        mReferenceJios.addValueEventListener(mValueEventListenerJios);
+//    }
+//
+//    private void initializeEventsListMain(){
+//        mValueEventListenerEvents = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                eventsListMain.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    eventsListMain.add(snapshot.getValue(EventsItem.class));
+//                }
+//                eventsListMainCopy = new ArrayList<>(eventsListMain);
+//                sort(eventsListMain);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//        mReferenceEvents.addValueEventListener(mValueEventListenerEvents);
+//    }
+//
+//    private void initializeMktplace() {
+//        mReferenceMktplace.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+//                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
+//                    mktplaceItemList.add(upload);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
+//    }
 
     private void initializeLogin() {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -299,25 +299,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //This unsorted copy is sent to JiosAdapter
-    public static ArrayList<JiosItem> getJiosListCopy() {
-        return jiosListMainCopy;
-    }
-
-    //This is sorted and sent to MylistFragment
-    public static ArrayList<JiosItem> getJiosListReal() {
-        return jiosListMain;
-    }
-
-    //This unsorted copy is sent to EventsAdapter
-    public static ArrayList<EventsItem> getEventsListCopy() {
-        return eventsListMainCopy;
-    }
-
-    //This is sorted and sent to MylistFragment
-    public static ArrayList<EventsItem> getEventsListReal() {
-        return eventsListMain;
-    }
+//    //This unsorted copy is sent to JiosAdapter
+//    public static ArrayList<JiosItem> getJiosListCopy() {
+//        return jiosListMainCopy;
+//    }
+//
+//    //This is sorted and sent to MylistFragment
+//    public static ArrayList<JiosItem> getJiosListReal() {
+//        return jiosListMain;
+//    }
+//
+//    //This unsorted copy is sent to EventsAdapter
+//    public static ArrayList<EventsItem> getEventsListCopy() {
+//        return eventsListMainCopy;
+//    }
+//
+//    //This is sorted and sent to MylistFragment
+//    public static ArrayList<EventsItem> getEventsListReal() {
+//        return eventsListMain;
+//    }
 
     public void saveMyListData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
@@ -351,19 +351,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveMyListData();
+        // saveMyListData();
         mAuth.removeAuthStateListener(mAuthStateListener);
     }
 
     @Override
     protected void onStop() {
-        saveMyListData();
+        // saveMyListData();
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        saveMyListData();
+        // saveMyListData();
         super.onDestroy();
     }
 

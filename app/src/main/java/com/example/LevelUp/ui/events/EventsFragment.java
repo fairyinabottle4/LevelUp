@@ -49,6 +49,10 @@ import java.util.Comparator;
 
 public class EventsFragment extends Fragment {
     private static ArrayList<EventsItem> EventsItemList;
+    private static ArrayList<EventsItem> copy;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mDatabaseReference;
+    ValueEventListener mValueEventListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private EventsAdapter mAdapter;
@@ -61,6 +65,11 @@ public class EventsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
+
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mDatabase.getReference().child("Events");
+        createEventsList();
+
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
         floatingActionButton.setAlpha(0.50f); // setting transparency
@@ -72,6 +81,27 @@ public class EventsFragment extends Fragment {
             }
         });
 
+        mValueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    EventsItemList.add(snapshot.getValue(EventsItem.class));
+                }
+                copy = new ArrayList<>(EventsItemList);
+                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
+                mRecyclerView.setAdapter(eventsAdapter);
+                mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
+                MainActivity.sort(EventsItemList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReference.addValueEventListener(mValueEventListener);
+
         // setting up toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.events_toolbar);
@@ -79,6 +109,10 @@ public class EventsFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
 
         return rootView;
+    }
+
+    public void createEventsList() {
+        EventsItemList = new ArrayList<>();
     }
 
 
@@ -160,9 +194,11 @@ public class EventsFragment extends Fragment {
         EventsItemList = eventsList;
     }
 
-    public static ArrayList<EventsItem> getEventsItemList() {
-        return EventsItemList;
+    public static ArrayList<EventsItem> getEventsItemListCopy() {
+        return copy;
     }
+
+    public static ArrayList<EventsItem> getEventsItemList() { return EventsItemList; }
 
 }
 

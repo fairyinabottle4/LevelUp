@@ -26,22 +26,25 @@
         </activity>
         <activity
             android:name="com.Jios.LevelUp.ui.jios.JiosAdder"
-            android:label="Jio Adder"></activity>
+            android:label="Jio Adder" />
         <activity
             android:name="com.Events.LevelUp.ui.events.EventsAdder"
-            android:label="Event Adder"></activity>
+            android:label="Event Adder" />
         <activity
             android:name="com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder"
-            android:label="Event Adder"></activity>
+            android:label="Mktplace Adder" />
+        <activity
+            android:name="com.Jios.LevelUp.ui.jios.JiosPage"
+            android:label="Jios Page" />
         <activity
             android:name="com.Events.LevelUp.ui.events.EventPage"
-            android:label="Event Page"></activity>
+            android:label="Event Page" />
         <activity
             android:name="com.Mktplace.LevelUp.ui.mktplace.MktplacePage"
-            android:label="Event Page"></activity>
+            android:label="Mktplace Page" />
         <activity
             android:name="com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity"
-            android:label="Edit User Info"></activity>
+            android:label="Edit User Info" />
     </application>
 
 </manifest>

@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.MainActivity;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
@@ -65,7 +64,7 @@ public class EventPage extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(mContext, "Event added to your list.", Toast.LENGTH_SHORT).show();
                 EventsItem ei = eventsItemArrayList.get(position);
-                int index = MainActivity.getEventsListCopy().indexOf(ei);
+                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
             }
         });

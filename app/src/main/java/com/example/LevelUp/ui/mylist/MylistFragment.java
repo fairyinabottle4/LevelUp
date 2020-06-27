@@ -246,9 +246,9 @@ public class MylistFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainActivity activity = (MainActivity) getActivity();
-        assert activity != null;
-        activity.saveMyListData();
+        // MainActivity activity = (MainActivity) getActivity();
+        // assert activity != null;
+        // activity.saveMyListData();
     }
 
 

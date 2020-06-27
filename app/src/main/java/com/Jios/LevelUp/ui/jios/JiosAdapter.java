@@ -15,9 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventPage;
-import com.Events.LevelUp.ui.events.EventsItem;
-import com.MainActivity;
-import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
@@ -58,7 +55,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, EventPage.class);
+                    Intent intent = new Intent(context, JiosPage.class);
                     intent.putExtra("title", mTextView1.getText().toString());
                     intent.putExtra("description", mTextView2.getText().toString());
                     intent.putExtra("date", mTextView3.getText().toString());
@@ -103,7 +100,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 JiosItem ji = mJiosList.get(position);
                 //Now I am getting the unsorted copy from MainActivity instead of JiosFragment.
                 //This is because I need to have a sorted ArrayList in MainActivity to send to Mylist
-                int index = MainActivity.getJiosListCopy().indexOf(ji);
+                int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
                 MylistFragment.setNumberJios(index);
                 Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
             }

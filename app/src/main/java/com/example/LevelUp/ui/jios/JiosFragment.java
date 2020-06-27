@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.MainActivity;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ValueEventListener;
@@ -39,6 +40,10 @@ import java.util.Date;
 
 public class JiosFragment extends Fragment {
     private static ArrayList<JiosItem> JiosItemList;
+    private static ArrayList<JiosItem> copy;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mDatabaseReference;
+    ValueEventListener mValueEventListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private JiosAdapter mAdapter;
@@ -49,6 +54,11 @@ public class JiosFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_jios, container, false);
+
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mDatabase.getReference().child("Jios");
+        createJiosList();
+
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
         floatingActionButton.setAlpha(0.50f); // setting transparency
@@ -60,6 +70,27 @@ public class JiosFragment extends Fragment {
             }
         });
 
+        mValueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    JiosItemList.add(snapshot.getValue(JiosItem.class));
+                }
+                copy = new ArrayList<>(JiosItemList);
+                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
+                mRecyclerView.setAdapter(jiosAdapter);
+                mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
+                MainActivity.sort(JiosItemList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReference.addValueEventListener(mValueEventListener);
+
 
         // setting up Toolbar
         setHasOptionsMenu(true);
@@ -68,6 +99,10 @@ public class JiosFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
 
         return rootView;
+    }
+
+    public void createJiosList() {
+        JiosItemList = new ArrayList<>();
     }
 
     /*
@@ -150,6 +185,10 @@ public class JiosFragment extends Fragment {
 
     public static void setJiosItemList(ArrayList<JiosItem> jioslist) {
         JiosItemList = jioslist;
+    }
+
+    public static ArrayList<JiosItem> getJiosItemListCopy() {
+        return copy;
     }
 
     public static ArrayList<JiosItem> getJiosItemList() {

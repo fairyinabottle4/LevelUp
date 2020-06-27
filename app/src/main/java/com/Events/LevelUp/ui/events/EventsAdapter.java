@@ -2,7 +2,6 @@ package com.Events.LevelUp.ui.events;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Jios.LevelUp.ui.jios.JiosPage;
-import com.MainActivity;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +111,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             @Override
             public void onClick(View v) {
                 EventsItem ei = mEventsList.get(position);
-                int index = MainActivity.getEventsListCopy().indexOf(ei);
+                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
             }
         });

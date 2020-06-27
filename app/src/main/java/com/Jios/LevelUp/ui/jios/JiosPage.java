@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.MainActivity;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
@@ -62,7 +61,7 @@ public class JiosPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 JiosItem ji = jiosItemArrayList.get(position);
-                int index = MainActivity.getJiosListCopy().indexOf(ji);
+                int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
                 MylistFragment.setNumberJios(index);
                 Toast.makeText(mContext, "Button clicked", Toast.LENGTH_SHORT).show();
             }
