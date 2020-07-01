@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
@@ -41,7 +42,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     private MktplaceAdapter mAdapter;
     private View rootView;
     private FloatingActionButton floatingActionButton;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseReference mDatabaseRef;
     private MktplaceAdapter.OnItemClickListener mListener = this;
 
@@ -65,24 +66,8 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-                    mktplaceItemList.add(upload);
-                }
-
-                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList, mListener);
-                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        loadDataMktplace();
+        swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutmktplace);
 
         // setting up toolbar
         setHasOptionsMenu(true);
@@ -90,6 +75,16 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         assert activity != null;
         activity.setSupportActionBar(toolbar);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mktplaceItemList.clear();
+                loadDataMktplace();
+                mAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return rootView;
     }
 
@@ -184,5 +179,25 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
 
     public static void setMktplaceItemList(ArrayList<MktplaceItem> list) {
         mktplaceItemList = list;
+    }
+
+    public void loadDataMktplace() {
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
+                    mktplaceItemList.add(upload);
+                }
+
+                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList, mListener);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

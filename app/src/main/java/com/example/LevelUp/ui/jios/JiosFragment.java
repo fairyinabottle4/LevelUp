@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
@@ -49,6 +50,7 @@ public class JiosFragment extends Fragment {
     private JiosAdapter mAdapter;
     private View rootView;
     public FloatingActionButton floatingActionButton;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -70,26 +72,7 @@ public class JiosFragment extends Fragment {
             }
         });
 
-        mValueEventListener = new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    JiosItemList.add(snapshot.getValue(JiosItem.class));
-                }
-                copy = new ArrayList<>(JiosItemList);
-                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-                mRecyclerView.setAdapter(jiosAdapter);
-                mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
-                MainActivity.sort(JiosItemList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
+        loadDataJios();
 
 
         // setting up Toolbar
@@ -97,6 +80,17 @@ public class JiosFragment extends Fragment {
         Toolbar toolbar = rootView.findViewById(R.id.jios_toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutjios);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                JiosItemList.clear();
+                loadDataJios();
+                mAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return rootView;
     }
@@ -193,5 +187,28 @@ public class JiosFragment extends Fragment {
 
     public static ArrayList<JiosItem> getJiosItemList() {
         return JiosItemList;
+    }
+
+    public void loadDataJios() {
+        mValueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    JiosItemList.add(snapshot.getValue(JiosItem.class));
+                }
+                copy = new ArrayList<>(JiosItemList);
+                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
+                mRecyclerView.setAdapter(jiosAdapter);
+                mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
+                MainActivity.sort(JiosItemList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReference.addValueEventListener(mValueEventListener);
     }
 }

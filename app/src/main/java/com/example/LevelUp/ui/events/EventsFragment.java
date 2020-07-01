@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.Events.LevelUp.ui.events.EventsAdapter;
 import com.Events.LevelUp.ui.events.EventsAdder;
@@ -60,6 +61,8 @@ public class EventsFragment extends Fragment {
 
     public FloatingActionButton floatingActionButton;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Nullable
     @Override
@@ -81,32 +84,24 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        mValueEventListener = new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventsItemList.add(snapshot.getValue(EventsItem.class));
-                }
-                copy = new ArrayList<>(EventsItemList);
-                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-                mRecyclerView.setAdapter(eventsAdapter);
-                mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
-                MainActivity.sort(EventsItemList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
+        loadDataEvents();
 
         // setting up toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.events_toolbar);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+
+        swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutevents);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                EventsItemList.clear();
+                loadDataEvents();
+                mAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return rootView;
     }
@@ -199,6 +194,29 @@ public class EventsFragment extends Fragment {
     }
 
     public static ArrayList<EventsItem> getEventsItemList() { return EventsItemList; }
+
+    public void loadDataEvents() {
+        mValueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    EventsItemList.add(snapshot.getValue(EventsItem.class));
+                }
+                copy = new ArrayList<>(EventsItemList);
+                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
+                mRecyclerView.setAdapter(eventsAdapter);
+                mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
+                MainActivity.sort(EventsItemList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseReference.addValueEventListener(mValueEventListener);
+    }
 
 }
 
