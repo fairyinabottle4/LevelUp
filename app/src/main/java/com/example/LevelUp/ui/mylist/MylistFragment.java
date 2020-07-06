@@ -2,6 +2,7 @@ package com.example.LevelUp.ui.mylist;
 
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.renderscript.Sampler;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -72,6 +74,8 @@ public class MylistFragment extends Fragment {
     private ImageButton editUserInfoBtn;
 
     private UserItem user;
+    private Uri profilePicURI = EditUserInfoActivity.profileImageUri;
+    private String display_name;
     private String residence_name;
 
     @Nullable
@@ -80,6 +84,17 @@ public class MylistFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
         final TextView name = rootView.findViewById(R.id.user_display_name);
         final TextView resi = rootView.findViewById(R.id.user_display_resi);
+        final ImageView profilePic = rootView.findViewById(R.id.user_display_picture);
+
+        if (MainActivity.display_name != null) {
+            name.setText(MainActivity.display_name);
+        }
+        if (MainActivity.display_residential != null) {
+            resi.setText(MainActivity.display_residential);
+        }
+        if (profilePicURI != null) {
+            profilePic.setImageURI(profilePicURI);
+        }
 
         final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         // Toast.makeText(getActivity(), fbUID, Toast.LENGTH_LONG).show();
@@ -93,12 +108,13 @@ public class MylistFragment extends Fragment {
 
                     if (fbUID.equals(id)) {
                         user = selected;
-                        name.setText(user.getName());
-                        EditUserInfoActivity.name = user.getName();
+                        String disp_name = user.getName();
+                        MainActivity.display_name = disp_name;
+                        name.setText(disp_name);
 
                         intToRes(user.getResidential());
-                        EditUserInfoActivity.residence_name = residence_name;
                         resi.setText(residence_name);
+                        MainActivity.display_residential = residence_name;
                     }
                 }
             }

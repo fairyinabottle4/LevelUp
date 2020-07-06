@@ -133,7 +133,10 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         // new user(id, email, name) (eventually rc and profile pic)
         String userID = fbUser.getUid();
         String email = fbUser.getEmail();
-        UserItem userItem = new UserItem(userID, name, email, residence);
+
+        // must add the set dp
+        String fakeURI = "https://firebasestorage.googleapis.com/v0/b/levelup-987c6.appspot.com/o/mktplace%20uploads%2F1592656963953.jpg?alt=media&token=d2460a0f-dc71-444b-a0a3-9d2c5c5ce3fe";
+        UserItem userItem = new UserItem(userID, fakeURI, name, email, residence);
         mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);
     }

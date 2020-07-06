@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserItem {
     public String id;
-    // private int profilePicture;
+    public String profilePictureUri;
     public String name;
     public String email;
     public int residential;
@@ -13,8 +13,9 @@ public class UserItem {
     // halls ill do later
     // -1 for not specified
 
-    public UserItem(String id, String name, String email, int residential) {
+    public UserItem(String id, String profilePictureUri, String name, String email, int residential) {
         this.id = id;
+        this.profilePictureUri = profilePictureUri;
         this.name = name;
         this.email = email;
         this.residential = residential;
@@ -55,5 +56,13 @@ public class UserItem {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getProfilePictureUri() {
+        return profilePictureUri;
+    }
+
+    public void setProfilePictureUri(String profilePictureUri) {
+        this.profilePictureUri = profilePictureUri;
     }
 }

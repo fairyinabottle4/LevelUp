@@ -74,11 +74,18 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private static final String TAG = "MainActivity";
 
+    public static UserItem currUser;
+    private DatabaseReference mDatabaseReferenceUser;
+
     // These 4 lines are for MyList Fragment
     public static ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
     public static ArrayList<Occasion> mOccasionListRealFull = new ArrayList<>();
     public static ArrayList<Integer> mJiosIDs = new ArrayList<>();
     public static ArrayList<Integer> mEventsIDs = new ArrayList<>();
+
+    // For User Information on MyList Fragment
+    public static String display_name;
+    public static String display_residential;
 
 
 
@@ -144,6 +151,33 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLogin();
 
+
+        //initializeUser();
+
+    }
+
+    private void initializeUser() {
+        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // Toast.makeText(getActivity(), fbUID, Toast.LENGTH_LONG).show();
+        mDatabaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    UserItem selected = snapshot.getValue(UserItem.class);
+                    String id = selected.getId();
+
+                    if (fbUID.equals(id)) {
+                        currUser = selected;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initializeFirebase() {
@@ -239,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     //onSignedInInitialize(user.getDisplayName());
                     // mReferenceUsers.setValue(user);
+                    initializeUser();
                 } else { // first time sign in
                     //onSignedOutCleanup();
                     startActivityForResult(
@@ -270,28 +305,36 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selected = null;
+                    String fragTag = null;
 
                     switch (item.getItemId()) {
                         case R.id.navigation_mktPlace:
                             selected = new MktplaceFragment();
+                            fragTag = "MktplaceFragment";
                             break;
                         case R.id.navigation_jios:
                             selected = new JiosFragment();
+                            fragTag = "JiosFragment";
                             break;
                         case R.id.navigation_dashboard:
                             selected = new DashboardFragment();
+                            fragTag = "DashboardFragment";
                             break;
                         case R.id.navigation_events:
                             // Toolbar eventsToolbar = (Toolbar) findViewById(R.id.events_toolbar);
                             // setSupportActionBar(eventsToolbar);
                             selected = new EventsFragment();
+                            fragTag = "EventsFragment";
                             break;
                         case R.id.navigation_myList:
                             selected = new MylistFragment();
+                            fragTag = "MylistFragment";
                             break;
                     }
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.nav_host_fragment, selected).commit();
+                            .replace(R.id.nav_host_fragment, selected, fragTag)
+                            .addToBackStack(fragTag)
+                            .commit();
                     return true;
                 }
             };
