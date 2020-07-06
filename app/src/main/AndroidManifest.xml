@@ -11,9 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name="com.LoginActivity"></activity>
         <activity
             android:name="com.Dashboard.LevelUp.ui.dashboard.DashboardSettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity
             android:name="com.MainActivity"
             android:label="@string/app_name"

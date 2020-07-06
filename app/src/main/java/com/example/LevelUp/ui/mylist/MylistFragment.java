@@ -3,15 +3,18 @@ package com.example.LevelUp.ui.mylist;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,17 +31,23 @@ import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
+import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.tryone.R;
+import com.firebase.ui.auth.data.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MylistFragment extends Fragment {
     ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
@@ -55,15 +64,51 @@ public class MylistFragment extends Fragment {
     private DatabaseReference mDatabaseReferenceEvents;
     private FirebaseDatabase mDatabaseJios;
     private DatabaseReference mDatabaseReferenceJios;
+    private DatabaseReference mDatabaseReferenceUser;
+
     ValueEventListener mValueEventListenerEvents;
     ValueEventListener mValueEventListenerJios;
 
     private ImageButton editUserInfoBtn;
 
+    private UserItem user;
+    private String residence_name;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
+        final TextView name = rootView.findViewById(R.id.user_display_name);
+        final TextView resi = rootView.findViewById(R.id.user_display_resi);
+
+        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // Toast.makeText(getActivity(), fbUID, Toast.LENGTH_LONG).show();
+        mDatabaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    UserItem selected = snapshot.getValue(UserItem.class);
+                    String id = selected.getId();
+
+                    if (fbUID.equals(id)) {
+                        user = selected;
+                        name.setText(user.getName());
+                        EditUserInfoActivity.name = user.getName();
+
+                        intToRes(user.getResidential());
+                        EditUserInfoActivity.residence_name = residence_name;
+                        resi.setText(residence_name);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         mDatabaseEvents = FirebaseDatabase.getInstance();
         mDatabaseReferenceEvents = mDatabaseEvents.getReference().child("Events");
 
@@ -197,6 +242,21 @@ public class MylistFragment extends Fragment {
         });
 
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void intToRes(int x) {
+        if (x == 1) {
+            residence_name = "Cinammon";
+        }
+        if (x == 2) {
+            residence_name = "Tembusu";
+        }
+        if (x == 3) {
+            residence_name = "CAPT";
+        }
+        if (x == 4) {
+            residence_name = "RC4";
+        }
     }
 
     /*

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/editTextDisplayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Peter Tan"
@@ -19,7 +20,7 @@
             android:textSize="24sp"
             android:textStyle="bold"/>
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/editTextResidenceName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart ="90dp"

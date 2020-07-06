@@ -20,8 +20,24 @@ public class EventsItem implements Occasion {
     private String title;
     private String description;
 
+    private String ID;
+
 
     public EventsItem(int profilePicture, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+        this.profilePicture = profilePicture;
+        this.dateInfo = dateInfo;
+        this.timeInfo = timeInfo;
+        this.hourOfDay = hourOfDay;
+        this.minute = minute;
+        this.locationInfo = locationInfo;
+        this.title = title;
+        this.description = description;
+
+    }
+
+    // Overloaded Constructor to push ID to Firebase
+    public EventsItem(String ID, int profilePicture, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+        this.ID = ID;
         this.profilePicture = profilePicture;
         this.dateInfo = dateInfo;
         this.timeInfo = timeInfo;
@@ -97,6 +113,8 @@ public class EventsItem implements Occasion {
     public int getMinute() {
         return minute;
     }
+
+    public String getID() { return ID; }
     /*
     @Override
     public int describeContents() {

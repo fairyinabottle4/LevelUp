@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,9 +33,13 @@ import com.example.LevelUp.ui.dashboard.DashboardFragment;
 import com.example.LevelUp.ui.mktplace.MktplaceFragment;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.data.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -62,8 +67,11 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+    // For Login
+    private EditText editTextName, editTextEmail, editTextPassword;
+    public static FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseUser mUser;
     private static final String TAG = "MainActivity";
 
     // These 4 lines are for MyList Fragment
@@ -71,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Occasion> mOccasionListRealFull = new ArrayList<>();
     public static ArrayList<Integer> mJiosIDs = new ArrayList<>();
     public static ArrayList<Integer> mEventsIDs = new ArrayList<>();
+
+
 
 //    private static ArrayList<JiosItem> jiosListMain = new ArrayList<>();
 //    private static ArrayList<JiosItem> jiosListMainCopy;
@@ -85,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String mUsername;
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mReferenceUsers;
+
 //    private DatabaseReference mReferenceJios;
 //    private DatabaseReference mReferenceEvents;
 //    private DatabaseReference mReferenceMktplace;
@@ -135,8 +147,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeFirebase() {
-        mAuth = FirebaseAuth.getInstance();
+        if (mAuth == null) {
+            mAuth = FirebaseAuth.getInstance();
+        }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mReferenceUsers = mFirebaseDatabase.getReference("Users");
 //        mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
 //        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
 //        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
@@ -199,13 +214,32 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     private void initializeLogin() {
+//        editTextName = findViewById(R.id.editTextLoginName);
+//        editTextEmail = findViewById(R.id.editTextLoginEmail);
+//        editTextPassword = findViewById(R.id.editTextLoginPassword);
+//
+//        final String name = editTextName.getText().toString().trim();
+//        final String email = editTextEmail.getText().toString().trim();
+//        final String password = editTextPassword.getText().toString().trim();
+
+//        if (mAuth.getCurrentUser() != null) {
+//            // handle already login user
+//        } else {
+//            // start login activity
+//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            startActivity(intent);
+//            // registerUser();
+//        }
+
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                mUser = user;
                 if (user != null) {
                     //onSignedInInitialize(user.getDisplayName());
-                } else {
+                    // mReferenceUsers.setValue(user);
+                } else { // first time sign in
                     //onSignedOutCleanup();
                     startActivityForResult(
                             AuthUI.getInstance()
@@ -216,9 +250,19 @@ public class MainActivity extends AppCompatActivity {
                                             new AuthUI.IdpConfig.EmailBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
+//                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                        startActivity(intent);
+
                 }
             }
         };
+    }
+
+    @Override
+    protected void onStart() {
+//        Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
+//        initializeLogin();
+        super.onStart();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -257,6 +301,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             // Sign-in succeeded, set up the UI
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+
             Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_CANCELED) {
             // Sign in was canceled by the user, finish the activity
@@ -318,6 +365,9 @@ public class MainActivity extends AppCompatActivity {
 //    public static ArrayList<EventsItem> getEventsListReal() {
 //        return eventsListMain;
 //    }
+
+
+
 
     public void saveMyListData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);

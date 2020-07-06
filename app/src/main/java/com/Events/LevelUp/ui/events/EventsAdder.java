@@ -84,11 +84,13 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
             @Override
             public void onClick(View v) {
                 EventsItem eventsItem = null;
+                String key = mDatabaseReference.push().getKey();
                 try {
-                    eventsItem = new EventsItem(R.drawable.fui_ic_twitter_bird_white_24dp,
+                    eventsItem = new EventsItem(key, R.drawable.fui_ic_twitter_bird_white_24dp,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
                             mEventTitle.getText().toString(), mEventDescription.getText().toString());
+                    Toast.makeText(EventsAdder.this, key, Toast.LENGTH_SHORT).show();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
