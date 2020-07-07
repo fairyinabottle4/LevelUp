@@ -8,34 +8,58 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/editTextLoginName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Name"/>
+        <ImageButton
+            android:id="@+id/setProfilePictureLogin"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:src="@drawable/edit_dp_btn_loginpage"
+            app:layout_constraintBottom_toTopOf="@id/textSetProfilePicture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Spinner
-        android:id="@+id/residential_spinner"
-        app:layout_constraintTop_toBottomOf="@id/editTextLoginName"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_width="190dp"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/textSetProfilePicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="10dp"
+            android:text="Set a Profile Picture (Optional)"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@id/editTextLoginName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/Register_Btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/residential_spinner"
-        android:text="Register"/>
+        <EditText
+            android:id="@+id/editTextLoginName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Name"/>
+
+        <Spinner
+            android:id="@+id/residential_spinner"
+            app:layout_constraintTop_toBottomOf="@id/editTextLoginName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/Register_Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/residential_spinner"
+            android:text="Register"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

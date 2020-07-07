@@ -1,26 +1,35 @@
 package com;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
 import com.example.tryone.R;
-import com.firebase.ui.auth.data.model.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Objects;
 
@@ -36,6 +45,10 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mReferenceUsers;
 
+    private ImageButton setDP;
+    private Uri profileImageUri;
+    private boolean allowed;
+
     // eventually add halls
     private Spinner spinner;
     private static final String[] residentials = {"Cinnamon", "Tembusu", "CAPT", "RC4", "Select Residence"};
@@ -45,6 +58,17 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
+
+        setDP = findViewById(R.id.setProfilePictureLogin);
+        setDP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open Gallery
+                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent, 1000);
+
+            }
+        });
 
         initializeSpinner();
 
@@ -57,14 +81,67 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         findViewById(R.id.Register_Btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerUser();
+                if (residence < 1 || residence > 4) {
+                    allowed = false;
+                } else {
+                    allowed = true;
+                }
 
-                sendToDatabase();
+                registerName();
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                if (allowed) {
+                    sendToDatabase();
+                    Toast.makeText(LoginActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Please enter your details", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) { // means data is the image selected
+            if (resultCode == Activity.RESULT_OK) {
+                Uri imageUri = data.getData();
+                setDP.setImageURI(imageUri);
+                profileImageUri = imageUri;
+
+                uploadImageToFireBase();
+            }
+        }
+    }
+
+    private void uploadImageToFireBase() {
+        String currUserId = MainActivity.currUser.getId();
+        StorageReference fileReference = FirebaseStorage.getInstance().getReference("profile picture uploads").child(currUserId);
+        fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(LoginActivity.this, "Profile Picture Changed", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
+        // send update to database
+        String newUri = profileImageUri.toString();
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(MainActivity.currUser.getId())
+                .child("profilePictureUri")
+                .setValue(newUri);
+
+//        UserItem updatedUser = MainActivity.currUser;
+//        FirebaseDatabase.getInstance().getReference("Users")
+//                .child(MainActivity.currUser.getId())
+//                .setValue(updatedUser);
 
     }
 
@@ -120,12 +197,13 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
 //        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
     }
 
-    private void registerUser() {
+    private void registerName() {
          name = editTextName.getText().toString().trim();
 
         if (name.isEmpty()) {
             editTextName.setError("Please enter your name");
             editTextName.requestFocus();
+            allowed = false;
         }
     }
 
@@ -135,7 +213,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         String email = fbUser.getEmail();
 
         // must add the set dp
-        String fakeURI = "https://firebasestorage.googleapis.com/v0/b/levelup-987c6.appspot.com/o/mktplace%20uploads%2F1592656963953.jpg?alt=media&token=d2460a0f-dc71-444b-a0a3-9d2c5c5ce3fe";
+        String fakeURI = profileImageUri.toString();
         UserItem userItem = new UserItem(userID, fakeURI, name, email, residence);
         mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);

@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -248,8 +249,6 @@ public class MylistFragment extends Fragment {
         assert activity != null;
         activity.setSupportActionBar(toolbar);
 
-
-
         buildRecyclerView();
         return rootView;
     }
@@ -301,10 +300,17 @@ public class MylistFragment extends Fragment {
         numberJios.add(i);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onResume() {
+//        if (refresh) {
+//            refresh = false;
+//            getActivity().getSupportFragmentManager().beginTransaction()
+//                    .detach(MylistFragment.this)
+//                    .attach(MylistFragment.this)
+//                    .commit();
+//        }
+//        super.onResume();
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

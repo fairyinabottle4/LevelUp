@@ -9,7 +9,12 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.LoginActivity;
 import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.mylist.MylistFragment;
@@ -35,14 +41,25 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-public class EditUserInfoActivity extends AppCompatActivity {
+public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private FirebaseAuth firebaseAuth;
+
+    private String name;
+    private int residence;
+
+    private EditText editTextName;
+    private int finalResidence;
+    private Button saveButton;
 
     public static Uri profileImageUri;
     private ImageView editProfileImage;
 
     private StorageReference mStorageRef;
     // private DatabaseReference mDatabaseRef;
+
+    // eventually add halls
+    private Spinner spinner;
+    private static final String[] residentials = {"Cinnamon", "Tembusu", "CAPT", "RC4"};
 
 
     @Override
@@ -51,14 +68,30 @@ public class EditUserInfoActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        name = MainActivity.display_name;
+        residence = MainActivity.currUser.getResidential();
+
         mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
         // mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
         TextView display_name = findViewById(R.id.editTextDisplayName);
-        TextView residential_name = findViewById(R.id.editTextResidenceName);
-        display_name.setText(MainActivity.display_name);
-        residential_name.setText(MainActivity.display_residential);
+        display_name.setText(name);
+
+        initializeSpinner();
+
+        // For Setting Name and Residence
+        saveButton = findViewById(R.id.saveEditedDetailsBtn); // Button
+        editTextName = findViewById(R.id.editTextDisplayName); // Text View
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateName();
+                updateResidence();
+                finish();
+            }
+        });
+
 
         // For Setting Profile Picture
         final ImageView editProfileImage = findViewById(R.id.edit_profile_picture);
@@ -121,7 +154,7 @@ public class EditUserInfoActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFireBase() {
-        String profilePicNameInStorage = MainActivity.currUser.getId();
+        // String profilePicNameInStorage = MainActivity.currUser.getId();
         StorageReference fileReference = mStorageRef;
         fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -149,5 +182,94 @@ public class EditUserInfoActivity extends AppCompatActivity {
 //                .setValue(updatedUser);
 
     }
+
+    private void initializeSpinner() {
+        spinner = findViewById(R.id.editSpinnerResidenceName);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditUserInfoActivity.this,
+                android.R.layout.simple_spinner_item, residentials);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(residence - 1);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
+                finalResidence = 1;
+                break;
+            case 1:
+                // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
+                finalResidence = 2;
+                break;
+            case 2:
+                // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
+                finalResidence = 3;
+                break;
+            case 3:
+                // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
+                finalResidence = 4;
+                break;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private String finalName() {
+        String inputName = editTextName.getText().toString().trim();
+        if (name.isEmpty()) {
+            editTextName.setError("Please enter your name");
+            editTextName.requestFocus();
+        }
+        return inputName;
+    }
+
+    private void updateName() {
+        // if the name in the text view != name in main, update then send to DB
+        if (!finalName().equals(name)) {
+            // update the DB
+            String updatedName = finalName();
+            MainActivity.display_name = updatedName;
+            FirebaseDatabase.getInstance().getReference("Users")
+                    .child(MainActivity.currUser.getId())
+                    .child("name")
+                    .setValue(updatedName);
+        }
+    }
+
+    private void updateResidence() {
+        if (finalResidence != residence) { // these are ints
+            // update the DB
+            MainActivity.display_residential = intToRes(finalResidence);
+            FirebaseDatabase.getInstance().getReference("Users")
+                    .child(MainActivity.currUser.getId())
+                    .child("residential")
+                    .setValue(finalResidence);
+        }
+    }
+
+    public String intToRes(int x) {
+        String residence_name = "";
+        if (x == 1) {
+            residence_name = "Cinammon";
+        }
+        if (x == 2) {
+            residence_name = "Tembusu";
+        }
+        if (x == 3) {
+            residence_name = "CAPT";
+        }
+        if (x == 4) {
+            residence_name = "RC4";
+        }
+        return residence_name;
+    }
+
 
 }
