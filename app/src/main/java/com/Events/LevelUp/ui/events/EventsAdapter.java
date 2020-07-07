@@ -113,6 +113,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 EventsItem ei = mEventsList.get(position);
                 int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);
+                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
             }
         });
 

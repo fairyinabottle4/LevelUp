@@ -176,7 +176,7 @@ public class MylistFragment extends Fragment {
                             Occasion toAdd = mOccasionListEventsInitial.get(id);
                             mOLR.add(toAdd);
                             IDs.add(id);
-                            Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
                             MylistAdapter myListAdapter = new MylistAdapter(mOLR);
                             mRecyclerView.setAdapter(myListAdapter);
                             mAdapter = myListAdapter;
@@ -216,9 +216,8 @@ public class MylistFragment extends Fragment {
                         if (!IDs.contains(id)) {
                             Occasion toAdd = mOccasionListJiosInitial.get(id);
                             mOLR.add(toAdd);
-
                             IDs.add(id);
-                            Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
                             MylistAdapter myListAdapter = new MylistAdapter(mOLR);
                             mRecyclerView.setAdapter(myListAdapter);
                             mAdapter = myListAdapter;

@@ -102,7 +102,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 //This is because I need to have a sorted ArrayList in MainActivity to send to Mylist
                 int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
                 MylistFragment.setNumberJios(index);
-                Toast.makeText(mContext, "Button Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
             }
         });
     }

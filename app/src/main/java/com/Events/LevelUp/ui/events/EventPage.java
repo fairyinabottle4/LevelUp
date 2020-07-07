@@ -62,7 +62,7 @@ public class EventPage extends AppCompatActivity {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Event added to your list.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
                 EventsItem ei = eventsItemArrayList.get(position);
                 int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
                 MylistFragment.setNumberEvents(index);

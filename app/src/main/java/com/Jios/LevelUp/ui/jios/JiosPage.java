@@ -63,7 +63,7 @@ public class JiosPage extends AppCompatActivity {
                 JiosItem ji = jiosItemArrayList.get(position);
                 int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
                 MylistFragment.setNumberJios(index);
-                Toast.makeText(mContext, "Button clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
             }
         });
 
