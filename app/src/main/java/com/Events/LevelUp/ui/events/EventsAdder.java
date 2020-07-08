@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.MainActivity;
 import com.example.tryone.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -85,12 +86,13 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
             public void onClick(View v) {
                 EventsItem eventsItem = null;
                 String key = mDatabaseReference.push().getKey();
+                String eventCreatorUID = MainActivity.currUser.getId();
                 try {
-                    eventsItem = new EventsItem(key, R.drawable.fui_ic_twitter_bird_white_24dp,
+                    eventsItem = new EventsItem(key, eventCreatorUID, R.drawable.fui_ic_twitter_bird_white_24dp,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
                             mEventTitle.getText().toString(), mEventDescription.getText().toString());
-                    Toast.makeText(EventsAdder.this, key, Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(EventsAdder.this, key, Toast.LENGTH_SHORT).show();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

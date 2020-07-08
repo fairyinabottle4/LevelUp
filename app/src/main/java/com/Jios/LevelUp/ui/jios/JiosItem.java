@@ -15,7 +15,24 @@ public class JiosItem implements Occasion {
     private String title;
     private String description;
 
+    private String jioID;
+    private String creatorID;
+
     public JiosItem(int profilePicture, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+        this.hourOfDay = hourOfDay;
+        this.timeInfo = timeInfo;
+        this.minute = minute;
+        this.profilePicture = profilePicture;
+        this.dateInfo = dateInfo;
+        this.locationInfo = locationInfo;
+        this.title = title;
+        this.description = description;
+    }
+
+    // Overloaded Constructor to push Jio ID and Creator ID to Firebase
+    public JiosItem(String jioID, String creatorID, int profilePicture, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+        this.jioID = jioID;
+        this.creatorID = creatorID;
         this.hourOfDay = hourOfDay;
         this.timeInfo = timeInfo;
         this.minute = minute;
@@ -62,4 +79,11 @@ public class JiosItem implements Occasion {
         return timeInfo;
     }
 
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public String getJioID() {
+        return jioID;
+    }
 }

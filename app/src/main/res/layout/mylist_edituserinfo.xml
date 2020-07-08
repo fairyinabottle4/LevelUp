@@ -50,6 +50,17 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/editTextDisplayName" />
+
+            <TextView
+                android:id="@+id/deleteProfilePictureTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete profile picture"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editSpinnerResidenceName" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -59,6 +70,13 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:background="@color/fui_transparent"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="60dp"
+            android:src="@drawable/ic_baseline_edit_24"/>
     </RelativeLayout>
 
     <Button

@@ -91,8 +91,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
 
                 if (allowed) {
                     sendToDatabase();
-                    Toast.makeText(LoginActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
-
+                    // Toast.makeText(LoginActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();

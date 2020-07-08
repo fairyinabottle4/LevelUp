@@ -3,6 +3,7 @@ package com.Mylist.LevelUp.ui.mylist;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -55,11 +56,13 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private ImageView editProfileImage;
 
     private StorageReference mStorageRef;
-    // private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef;
 
     // eventually add halls
     private Spinner spinner;
     private static final String[] residentials = {"Cinnamon", "Tembusu", "CAPT", "RC4"};
+
+    private boolean deleteProfilePicture = false;
 
 
     @Override
@@ -71,14 +74,26 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         name = MainActivity.display_name;
         residence = MainActivity.currUser.getResidential();
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
-        // mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
+        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUID);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
         TextView display_name = findViewById(R.id.editTextDisplayName);
         display_name.setText(name);
 
         initializeSpinner();
+
+        // For Deleting Profile Picture
+        TextView deleteDP = findViewById(R.id.deleteProfilePictureTextView);
+        deleteDP.setPaintFlags(deleteDP.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        deleteDP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfileImage.setImageResource(R.drawable.fake_user_dp);
+                deleteProfilePicture = true;
+            }
+        });
 
         // For Setting Name and Residence
         saveButton = findViewById(R.id.saveEditedDetailsBtn); // Button
@@ -88,10 +103,13 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             public void onClick(View v) {
                 updateName();
                 updateResidence();
+                if (deleteProfilePicture) {
+                    deleteProfilePicture();
+                }
+
                 finish();
             }
         });
-
 
         // For Setting Profile Picture
         final ImageView editProfileImage = findViewById(R.id.edit_profile_picture);
@@ -108,10 +126,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             }
         });
 
-        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         // For displaying profile picture
-        mStorageRef = mStorageRef.child(fbUID);
+
         mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -131,6 +147,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
+                MainActivity.currUser = null;
                 Intent intent = new Intent(EditUserInfoActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -171,7 +188,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
         // send update to database
         String newUri = profileImageUri.toString();
-        FirebaseDatabase.getInstance().getReference("Users")
+        mDatabaseRef
             .child(MainActivity.currUser.getId())
             .child("profilePictureUri")
             .setValue(newUri);
@@ -236,7 +253,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             // update the DB
             String updatedName = finalName();
             MainActivity.display_name = updatedName;
-            FirebaseDatabase.getInstance().getReference("Users")
+            mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("name")
                     .setValue(updatedName);
@@ -247,7 +264,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         if (finalResidence != residence) { // these are ints
             // update the DB
             MainActivity.display_residential = intToRes(finalResidence);
-            FirebaseDatabase.getInstance().getReference("Users")
+            mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("residential")
                     .setValue(finalResidence);
@@ -269,6 +286,30 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             residence_name = "RC4";
         }
         return residence_name;
+    }
+
+    public void deleteProfilePicture() {
+        mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+        mDatabaseRef
+                .child(MainActivity.currUser.getId())
+                .child("profilePictureUri")
+                .setValue("");
+
+        // onClick
+        // editProfileImage.setImageResource(R.drawable.fake_user_dp);
+        // set Boolean True
+        // if True deleteProfilePic
     }
 
 

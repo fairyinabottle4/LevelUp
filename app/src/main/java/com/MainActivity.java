@@ -151,14 +151,10 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLogin();
 
-
-        //initializeUser();
-
     }
 
     private void initializeUser() {
         final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // Toast.makeText(getActivity(), fbUID, Toast.LENGTH_LONG).show();
         mDatabaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
         mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -166,10 +162,16 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
-
                     if (fbUID.equals(id)) {
                         currUser = selected;
                     }
+                }
+                if (!existInFirebase()){
+                    // start registration of details
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    // Toast.makeText(getApplicationContext(), "Welcome back!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -293,13 +295,6 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    @Override
-    protected void onStart() {
-//        Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
-//        initializeLogin();
-        super.onStart();
-    }
-
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -344,13 +339,16 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             // Sign-in succeeded, set up the Registration page
-            initializeUser();
-            if (!existInFirebase()){
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
-            }
+            initializeUser(); // if user is already in database, set currUser to the user
+            // must wait for data to return
+
+//            if (!existInFirebase()){
+//                // start registration of details
+//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                startActivity(intent);
+//            } else {
+//                Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
+//            }
 
             // Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_CANCELED) {
