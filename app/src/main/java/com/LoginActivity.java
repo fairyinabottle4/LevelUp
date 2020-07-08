@@ -95,6 +95,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
+                    Toast.makeText(LoginActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Please enter your details", Toast.LENGTH_SHORT).show();
                 }
@@ -211,10 +213,13 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         // new user(id, email, name) (eventually rc and profile pic)
         String userID = fbUser.getUid();
         String email = fbUser.getEmail();
+        String imageURI = "";
 
         // must add the set dp
-        String fakeURI = profileImageUri.toString();
-        UserItem userItem = new UserItem(userID, fakeURI, name, email, residence);
+        if (profileImageUri != null) {
+            imageURI = profileImageUri.toString();
+        }
+        UserItem userItem = new UserItem(userID, imageURI, name, email, residence);
         mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);
     }

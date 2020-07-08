@@ -343,16 +343,26 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
-            // Sign-in succeeded, set up the UI
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            // Sign-in succeeded, set up the Registration page
+            initializeUser();
+            if (!existInFirebase()){
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
+            }
 
-            Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_CANCELED) {
             // Sign in was canceled by the user, finish the activity
             Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    public boolean existInFirebase() {
+        // return true if user is already in Users table
+        return (currUser != null);
     }
 
     @Override
