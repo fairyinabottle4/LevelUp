@@ -1,17 +1,10 @@
 package com.Events.LevelUp.ui.events;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.widget.ImageButton;
-
 import com.example.LevelUp.ui.Occasion;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.util.Date;
 
 public class EventsItem implements Occasion {
-    private int profilePicture;
     private String timeInfo;
     private int hourOfDay;
     private int minute;
@@ -24,8 +17,7 @@ public class EventsItem implements Occasion {
     private String creatorID;
 
 
-    public EventsItem(int profilePicture, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
-        this.profilePicture = profilePicture;
+    public EventsItem(Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
         this.dateInfo = dateInfo;
         this.timeInfo = timeInfo;
         this.hourOfDay = hourOfDay;
@@ -37,10 +29,9 @@ public class EventsItem implements Occasion {
     }
 
     // Overloaded Constructor to push Event ID and Creator ID to Firebase
-    public EventsItem(String eventID, String creatorID, int profilePicture, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public EventsItem(String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
         this.eventID = eventID;
         this.creatorID = creatorID;
-        this.profilePicture = profilePicture;
         this.dateInfo = dateInfo;
         this.timeInfo = timeInfo;
         this.hourOfDay = hourOfDay;
@@ -80,10 +71,6 @@ public class EventsItem implements Occasion {
     };
 
      */
-
-    public int getProfilePicture() {
-        return profilePicture;
-    }
 
     public String getTitle() {
         return title;

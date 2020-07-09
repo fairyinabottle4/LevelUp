@@ -16,7 +16,7 @@
             android:id="@+id/imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="14dp"
             android:padding="2dp" />
 
         <TextView
@@ -67,15 +67,15 @@
             android:layout_marginEnd="14dp"
             android:layout_marginTop="50dp"
             android:src="@drawable/ic_favorite_black_24dp" />
-
+<!--
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="71dp"
             android:layout_marginStart="10dp"
             app:srcCompat="@drawable/ic_access_time_black_24dp" />
-
+-->
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="20dp"
@@ -84,22 +84,47 @@
             android:layout_marginTop="32dp"
             app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
+        <ImageView
+            android:id="@+id/imageView4Creator"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="57dp"
+            android:layout_marginTop="52dp"
+            app:srcCompat="@drawable/ic_round_person_24" />
+
+
+        <TextView
+            android:id="@+id/dateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="72dp"
+            android:textStyle="bold"
+            android:text="Date: " />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="69dp"
+            android:layout_marginStart="46dp"
+            android:layout_marginTop="72dp"
             android:text="Date" />
 
+        <TextView
+            android:id="@+id/timeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="92dp"
+            android:textStyle="bold"
+            android:text="Time: " />
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="89dp"
+            android:layout_marginStart="49dp"
+            android:layout_marginTop="92dp"
             android:text="Time" />
 
 
@@ -111,8 +136,19 @@
             android:layout_marginTop="32dp"
             android:paddingRight="20dp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:text="Location" />
+
+        <TextView
+            android:id="@+id/eventCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="78dp"
+            android:layout_marginTop="52dp"
+            android:paddingRight="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Creator Name" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

@@ -16,12 +16,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.MainActivity;
+import com.UserItem;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -35,6 +42,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private ArrayList<EventsItem> mEventsList;
     private ArrayList<EventsItem> mEventsListFull;
     private StorageReference mProfileStorageRef;
+    private DatabaseReference mUserRef;
 
     private FragmentActivity mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
@@ -43,6 +51,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
         public String uid;
+        public String creatorName;
 
         public ImageView mImageView;
         public ImageView mAddButton;
@@ -52,6 +61,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView mTextView3;
         public TextView mTextView4;
         public TextView mTextView5;
+        public TextView mTextView6;
 
         public View itemView;
 
@@ -66,12 +76,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mTextView3 = itemView.findViewById(R.id.date);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
+            mTextView6 = itemView.findViewById(R.id.eventCreator);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                      // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
                      Intent intent = new Intent(context, EventPage.class);
                      intent.putExtra("uid", uid);
+                     intent.putExtra("creatorName", creatorName);
                      intent.putExtra("title", mTextView1.getText().toString());
                      intent.putExtra("description", mTextView2.getText().toString());
                      intent.putExtra("date", mTextView3.getText().toString());
@@ -85,9 +97,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         }
 
         public void setUid(String newUID) {
-            uid = newUID;
+            this.uid = newUID;
         }
 
+        public void setCreatorName(String creatorName) {
+            this.creatorName = creatorName;
+        }
     } // static class EventsViewHolder ends here
 
     //Constructor for EventsAdapter class. This ArrayList contains the
@@ -98,6 +113,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         mEventsListFull = new ArrayList<>(EventsList);
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
+        mUserRef = FirebaseDatabase.getInstance().getReference("Users");
     }
 
     //inflate the items in a EventsViewHolder
@@ -114,8 +130,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         final EventsItem currentItem = mEventsList.get(position);
 //        holder.mImageView.setImageResource(currentItem.getProfilePicture());
         final EventsViewHolder holder1 = holder;
-        String creatorUID = currentItem.getCreatorID();
-        holder.setUid(creatorUID);
+        final String creatorUID = currentItem.getCreatorID();
+        holder1.setUid(creatorUID);
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -129,17 +145,40 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             }
         });
 
-        holder.mTextView1.setText(currentItem.getTitle());
-        holder.mTextView2.setText(currentItem.getDescription());
-        holder.mTextView4.setText(currentItem.getLocationInfo());
+        holder1.mTextView1.setText(currentItem.getTitle());
+        holder1.mTextView2.setText(currentItem.getDescription());
+        holder1.mTextView4.setText(currentItem.getLocationInfo());
 
-        String date = "Date: " + df.format(currentItem.getDateInfo());
-        holder.mTextView3.setText(date);
+        String date = df.format(currentItem.getDateInfo());
+        holder1.mTextView3.setText(date);
 
-        String time = "Time: " + currentItem.getTimeInfo();
-        holder.mTextView5.setText(time);
+        String time = currentItem.getTimeInfo();
+        holder1.mTextView5.setText(time);
 
-        holder.mAddButton.setOnClickListener(new View.OnClickListener() {
+        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    UserItem selected = snapshot.getValue(UserItem.class);
+                    String id = selected.getId();
+
+                    if (creatorUID.equals(id)) {
+                        String name = selected.getName();
+                        holder1.mTextView6.setText(name);
+                        holder1.setCreatorName(name);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        holder1.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventsItem ei = mEventsList.get(position);
@@ -149,7 +188,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             }
         });
 
-        holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+        holder1.mLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ImageView imageView = v.findViewById(R.id.image_like);
@@ -157,6 +196,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
             }
         });
+
     }
 
     @Override

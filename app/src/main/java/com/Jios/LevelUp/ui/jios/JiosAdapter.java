@@ -16,11 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventPage;
+import com.UserItem;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -35,6 +41,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     private ArrayList<JiosItem> mJiosList;
     private ArrayList<JiosItem> mJiosListFull;
     private StorageReference mProfileStorageRef;
+    private DatabaseReference mUserRef;
 
     private Context mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
@@ -42,6 +49,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     //the ViewHolder holds the content of the card
     public static class JiosViewHolder extends RecyclerView.ViewHolder {
         public String uid;
+        public String creatorName;
 
         public ImageView mAddButton;
         public ImageView mImageView;
@@ -50,6 +58,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public TextView mTextView3;
         public TextView mTextView4;
         public TextView mTextView5;
+        public TextView mTextView6;
 
         public JiosViewHolder(final Context context, View itemView) {
             super(itemView);
@@ -61,12 +70,14 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             mTextView3 = itemView.findViewById(R.id.date);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
+            mTextView6 = itemView.findViewById(R.id.eventCreator);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, JiosPage.class);
                     intent.putExtra("uid", uid);
+                    intent.putExtra("creatorName", creatorName);
                     intent.putExtra("title", mTextView1.getText().toString());
                     intent.putExtra("description", mTextView2.getText().toString());
                     intent.putExtra("date", mTextView3.getText().toString());
@@ -79,7 +90,11 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         }
 
         public void setUid(String newUID) {
-            uid = newUID;
+            this.uid = newUID;
+        }
+
+        public void setCreatorName(String creatorName) {
+            this.creatorName = creatorName;
         }
     }
 
@@ -91,6 +106,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         mJiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
+        mUserRef = FirebaseDatabase.getInstance().getReference("Users");
     }
 
     //inflate the items in a JiosViewHolder
@@ -107,8 +123,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         JiosItem currentItem = mJiosList.get(position);
 //        holder.mImageView.setImageResource(currentItem.getProfilePicture());
         final JiosViewHolder holder1 = holder;
-        String creatorUID = currentItem.getCreatorID();
-        holder.setUid(creatorUID);
+        final String creatorUID = currentItem.getCreatorID();
+        holder1.setUid(creatorUID);
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -122,12 +138,35 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             }
         });
 
-        holder.mTextView1.setText(currentItem.getTitle());
-        holder.mTextView2.setText(currentItem.getDescription());
-        holder.mTextView3.setText(df.format(currentItem.getDateInfo()));
-        holder.mTextView4.setText(currentItem.getLocationInfo());
-        holder.mTextView5.setText(currentItem.getTimeInfo());
-        holder.mAddButton.setOnClickListener(new View.OnClickListener() {
+        holder1.mTextView1.setText(currentItem.getTitle());
+        holder1.mTextView2.setText(currentItem.getDescription());
+        holder1.mTextView3.setText(df.format(currentItem.getDateInfo()));
+        holder1.mTextView4.setText(currentItem.getLocationInfo());
+        holder1.mTextView5.setText(currentItem.getTimeInfo());
+
+        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    UserItem selected = snapshot.getValue(UserItem.class);
+                    String id = selected.getId();
+
+                    if (creatorUID.equals(id)) {
+                        String name = selected.getName();
+                        holder1.mTextView6.setText(name);
+                        holder1.setCreatorName(name);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        holder1.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 JiosItem ji = mJiosList.get(position);

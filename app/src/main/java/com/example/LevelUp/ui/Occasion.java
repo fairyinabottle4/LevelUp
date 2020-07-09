@@ -8,7 +8,6 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 public interface Occasion {
-     int getProfilePicture();
      String getTitle();
      String getDescription();
      Date getDateInfo();

@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 public class JiosItem implements Occasion {
-    private int profilePicture;
     private String timeInfo;
     private int hourOfDay;
     private int minute;
@@ -18,11 +17,10 @@ public class JiosItem implements Occasion {
     private String jioID;
     private String creatorID;
 
-    public JiosItem(int profilePicture, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public JiosItem(Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
         this.hourOfDay = hourOfDay;
         this.timeInfo = timeInfo;
         this.minute = minute;
-        this.profilePicture = profilePicture;
         this.dateInfo = dateInfo;
         this.locationInfo = locationInfo;
         this.title = title;
@@ -30,13 +28,12 @@ public class JiosItem implements Occasion {
     }
 
     // Overloaded Constructor to push Jio ID and Creator ID to Firebase
-    public JiosItem(String jioID, String creatorID, int profilePicture, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public JiosItem(String jioID, String creatorID, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
         this.jioID = jioID;
         this.creatorID = creatorID;
         this.hourOfDay = hourOfDay;
         this.timeInfo = timeInfo;
         this.minute = minute;
-        this.profilePicture = profilePicture;
         this.dateInfo = dateInfo;
         this.locationInfo = locationInfo;
         this.title = title;
@@ -47,9 +44,6 @@ public class JiosItem implements Occasion {
 
     }
 
-    public int getProfilePicture() {
-        return profilePicture;
-    }
 
     public String getTitle() {
         return title;

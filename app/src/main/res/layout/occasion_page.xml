@@ -52,9 +52,11 @@
                     android:id="@+id/event_page_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
                     android:layout_marginStart="1dp"
-                    android:text="Location" />
+                    android:text="Location"
+                    android:maxLines="4"
+                    android:ellipsize="end"
+                    android:textSize="18sp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -65,21 +67,60 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp">
             <TextView
+                android:id="@+id/creatorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Creator: " />
+
+            <TextView
+                android:id="@+id/event_page_creator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="78dp"
+                android:textSize="18sp"
+                android:text="Creator" />
+
+            <TextView
+                android:id="@+id/dateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="24dp"
+                android:text="Date: " />
+
+            <TextView
                 android:id="@+id/event_page_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="46dp"
-                android:text="Date"
-                android:textSize="18sp"/>
+                android:layout_marginStart="56dp"
+                android:textSize="18sp"
+                android:layout_marginTop="24dp"
+                android:text="Date" />
+
+            <TextView
+                android:id="@+id/timeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="48dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Time: " />
 
             <TextView
                 android:id="@+id/event_page_time"
-                android:layout_marginTop="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="46dp"
-                android:text="Time"
-                android:textSize="18sp"/>
+                android:layout_marginStart="59dp"
+                android:layout_marginTop="48dp"
+                android:textSize="18sp"
+                android:text="Time" />
+            <!--
             <ImageView
                 android:id="@+id/events_page_clock_img"
                 android:layout_width="26dp"
@@ -87,11 +128,13 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="4dp"
                 app:srcCompat="@drawable/ic_access_time_black_24dp" />
+                -->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="300dp">
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="10dp">
 
                     <ImageView
                         android:id="@+id/events_page_image_add"

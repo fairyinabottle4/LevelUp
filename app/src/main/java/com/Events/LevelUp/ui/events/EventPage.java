@@ -34,6 +34,8 @@ public class EventPage extends AppCompatActivity {
     private TextView mTextView3;
     private TextView mTextView4;
     private TextView mTextView5;
+    private TextView mTextView6;
+
     private int position;
     private ArrayList<EventsItem> eventsItemArrayList = EventsFragment.getEventsItemList();
     private Context mContext = this;
@@ -53,9 +55,11 @@ public class EventPage extends AppCompatActivity {
         mTextView3 = findViewById(R.id.event_page_time);
         mTextView4 = findViewById(R.id.event_page_location);
         mTextView5 = findViewById(R.id.event_page_description);
+        mTextView6 = findViewById(R.id.event_page_creator);
 
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
+        String creatorName = intent.getStringExtra("creatorName");
         String title = intent.getStringExtra("title");
         String date = intent.getStringExtra("date");
         String time = intent.getStringExtra("time");
@@ -82,6 +86,7 @@ public class EventPage extends AppCompatActivity {
         mTextView3.setText(time);
         mTextView4.setText(location);
         mTextView5.setText(description);
+        mTextView6.setText(creatorName);
 
         // add plus then add to my list
         mAddButton.setOnClickListener(new View.OnClickListener() {

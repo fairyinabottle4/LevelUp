@@ -102,7 +102,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
-        holder.mImageView.setImageResource(currentItem.getProfilePicture());
         holder.mTextView1.setText(currentItem.getTitle());
         holder.mTextView2.setText(currentItem.getDescription());
         holder.mTextView3.setText(currentItem.getTimeInfo());
