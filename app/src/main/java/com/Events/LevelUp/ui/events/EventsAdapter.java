@@ -2,6 +2,7 @@ package com.Events.LevelUp.ui.events;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -27,6 +34,7 @@ import java.util.Locale;
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> implements Filterable {
     private ArrayList<EventsItem> mEventsList;
     private ArrayList<EventsItem> mEventsListFull;
+    private StorageReference mProfileStorageRef;
 
     private FragmentActivity mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
@@ -34,6 +42,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
+        public String uid;
 
         public ImageView mImageView;
         public ImageView mAddButton;
@@ -60,8 +69,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                     Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+                     // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
                      Intent intent = new Intent(context, EventPage.class);
+                     intent.putExtra("uid", uid);
                      intent.putExtra("title", mTextView1.getText().toString());
                      intent.putExtra("description", mTextView2.getText().toString());
                      intent.putExtra("date", mTextView3.getText().toString());
@@ -74,14 +84,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         }
 
-    }
+        public void setUid(String newUID) {
+            uid = newUID;
+        }
+
+    } // static class EventsViewHolder ends here
 
     //Constructor for EventsAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
     public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> EventsList) {
         mEventsList = EventsList;
         mContext = context;
-        mEventsListFull = new ArrayList<>(EventsList); // copy of EventsList for SearchView
+        mEventsListFull = new ArrayList<>(EventsList);
+        mProfileStorageRef = FirebaseStorage.getInstance()
+                .getReference("profile picture uploads");
     }
 
     //inflate the items in a EventsViewHolder
@@ -96,7 +112,23 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     @Override
     public void onBindViewHolder(@NonNull EventsAdapter.EventsViewHolder holder, final int position) {
         final EventsItem currentItem = mEventsList.get(position);
-        holder.mImageView.setImageResource(currentItem.getProfilePicture());
+//        holder.mImageView.setImageResource(currentItem.getProfilePicture());
+        final EventsViewHolder holder1 = holder;
+        String creatorUID = currentItem.getCreatorID();
+        holder.setUid(creatorUID);
+        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
+        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(holder1.mImageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
+            }
+        });
+
         holder.mTextView1.setText(currentItem.getTitle());
         holder.mTextView2.setText(currentItem.getDescription());
         holder.mTextView4.setText(currentItem.getLocationInfo());
@@ -168,5 +200,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             notifyDataSetChanged(); // tell adapter list has changed
         }
     };
+
 
 }

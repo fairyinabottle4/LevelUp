@@ -86,4 +86,8 @@ public class JiosItem implements Occasion {
     public String getJioID() {
         return jioID;
     }
+
+    public String getOccasionID() {
+        return jioID;
+    }
 }

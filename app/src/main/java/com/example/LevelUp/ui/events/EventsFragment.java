@@ -179,6 +179,21 @@ public class EventsFragment extends Fragment {
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("Search");
 
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                EventsItemList.clear();
+                loadDataEvents();
+                mAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         // ???
         // searchItem.setOnMenuItemClickListener()
 

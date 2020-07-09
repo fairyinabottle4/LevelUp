@@ -2,6 +2,7 @@ package com.Jios.LevelUp.ui.jios;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,11 @@ import com.Events.LevelUp.ui.events.EventPage;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -28,11 +34,15 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     //ArrayList is passed in from JiosItem.java
     private ArrayList<JiosItem> mJiosList;
     private ArrayList<JiosItem> mJiosListFull;
+    private StorageReference mProfileStorageRef;
+
     private Context mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
     //the ViewHolder holds the content of the card
     public static class JiosViewHolder extends RecyclerView.ViewHolder {
+        public String uid;
+
         public ImageView mAddButton;
         public ImageView mImageView;
         public TextView mTextView1;
@@ -54,8 +64,9 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, JiosPage.class);
+                    intent.putExtra("uid", uid);
                     intent.putExtra("title", mTextView1.getText().toString());
                     intent.putExtra("description", mTextView2.getText().toString());
                     intent.putExtra("date", mTextView3.getText().toString());
@@ -66,6 +77,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 }
             });
         }
+
+        public void setUid(String newUID) {
+            uid = newUID;
+        }
     }
 
     //Constructor for JiosAdapter class. This ArrayList contains the
@@ -74,6 +89,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         mContext = context;
         mJiosList = JiosList;
         mJiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
+        mProfileStorageRef = FirebaseStorage.getInstance()
+                .getReference("profile picture uploads");
     }
 
     //inflate the items in a JiosViewHolder
@@ -88,7 +105,23 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     @Override
     public void onBindViewHolder(@NonNull JiosAdapter.JiosViewHolder holder, final int position) {
         JiosItem currentItem = mJiosList.get(position);
-        holder.mImageView.setImageResource(currentItem.getProfilePicture());
+//        holder.mImageView.setImageResource(currentItem.getProfilePicture());
+        final JiosViewHolder holder1 = holder;
+        String creatorUID = currentItem.getCreatorID();
+        holder.setUid(creatorUID);
+        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
+        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(holder1.mImageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
+            }
+        });
+
         holder.mTextView1.setText(currentItem.getTitle());
         holder.mTextView2.setText(currentItem.getDescription());
         holder.mTextView3.setText(df.format(currentItem.getDateInfo()));

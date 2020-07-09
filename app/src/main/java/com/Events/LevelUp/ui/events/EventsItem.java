@@ -48,7 +48,6 @@ public class EventsItem implements Occasion {
         this.locationInfo = locationInfo;
         this.title = title;
         this.description = description;
-
     }
 
     public EventsItem() {
@@ -81,8 +80,6 @@ public class EventsItem implements Occasion {
     };
 
      */
-
-
 
     public int getProfilePicture() {
         return profilePicture;
@@ -117,6 +114,8 @@ public class EventsItem implements Occasion {
     }
 
     public String getEventID() { return eventID; }
+
+    public String getOccasionID() {return eventID; }
 
     public String getCreatorID() {
         return creatorID;

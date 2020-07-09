@@ -170,6 +170,21 @@ public class JiosFragment extends Fragment {
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("Search");
 
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                JiosItemList.clear();
+                loadDataJios();
+                mAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         // ???
         // searchItem.setOnMenuItemClickListener()
 

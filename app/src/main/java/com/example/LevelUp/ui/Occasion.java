@@ -16,5 +16,7 @@ public interface Occasion {
      int getHourOfDay();
      int getMinute();
      String getTimeInfo();
+     String getCreatorID();
+     String getOccasionID();
 
 }
