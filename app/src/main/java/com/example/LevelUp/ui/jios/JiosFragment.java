@@ -209,6 +209,7 @@ public class JiosFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                JiosItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItemList.add(snapshot.getValue(JiosItem.class));
                 }

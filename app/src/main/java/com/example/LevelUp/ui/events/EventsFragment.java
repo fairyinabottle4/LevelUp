@@ -215,6 +215,7 @@ public class EventsFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                EventsItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     EventsItemList.add(snapshot.getValue(EventsItem.class));
                 }
