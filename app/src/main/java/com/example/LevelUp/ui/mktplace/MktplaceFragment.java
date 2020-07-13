@@ -159,6 +159,21 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("Search");
 
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mktplaceItemList.clear();
+                loadDataMktplace();
+                mAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         // ???
         // searchItem.setOnMenuItemClickListener()
 
@@ -182,7 +197,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     }
 
     public void loadDataMktplace() {
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {

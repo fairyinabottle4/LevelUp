@@ -15,10 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Events.LevelUp.ui.events.EventPage;
+import com.ActivityOccasionItem;
+import com.MainActivity;
 import com.UserItem;
-import com.example.LevelUp.ui.jios.JiosFragment;
-import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +41,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     private ArrayList<JiosItem> mJiosListFull;
     private StorageReference mProfileStorageRef;
     private DatabaseReference mUserRef;
+    private FirebaseDatabase mFirebaseDatabase;
 
     private Context mContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
@@ -106,7 +106,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         mJiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
-        mUserRef = FirebaseDatabase.getInstance().getReference("Users");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserRef = mFirebaseDatabase.getReference("Users");
     }
 
     //inflate the items in a JiosViewHolder
@@ -170,10 +171,19 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             @Override
             public void onClick(View v) {
                 JiosItem ji = mJiosList.get(position);
-                //Now I am getting the unsorted copy from MainActivity instead of JiosFragment.
-                //This is because I need to have a sorted ArrayList in MainActivity to send to Mylist
-                int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
-                MylistFragment.setNumberJios(index);
+//                //Now I am getting the unsorted copy from MainActivity instead of JiosFragment.
+//                //This is because I need to have a sorted ArrayList in MainActivity to send to Mylist
+//                int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
+//                MylistFragment.setNumberJios(index);
+//                Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
+
+                // add to ActivityEvent firebase
+                UserItem user = MainActivity.currUser;
+                String jioID = ji.getJioID();
+                String userID = user.getId();
+                DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(jioID, userID);
+                mActivityJioRef.push().setValue(activityOccasionItem);
                 Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
             }
         });

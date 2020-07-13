@@ -112,7 +112,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                 } else if (!factors) {
                     Toast.makeText(EventsAdder.this, "Please check all fields and try again", Toast.LENGTH_LONG).show();
                 } else if (factors) {
-                    mDatabaseReference.push().setValue(eventsItem);
+                    mDatabaseReference.child(key).setValue(eventsItem);
                     Toast.makeText(EventsAdder.this, "Event saved successfully", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(EventsAdder.this, MainActivity.class);
                     startActivity(intent);

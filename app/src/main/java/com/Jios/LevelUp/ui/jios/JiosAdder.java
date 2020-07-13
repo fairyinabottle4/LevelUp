@@ -110,7 +110,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 } else if (!factors) {
                     Toast.makeText(JiosAdder.this, "Please check all fields and try again", Toast.LENGTH_LONG).show();
                 } else if (factors) {
-                    mDatabaseReference.push().setValue(jiosItem);
+                    mDatabaseReference.child(key).setValue(jiosItem);
                     Toast.makeText(JiosAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(JiosAdder.this, MainActivity.class);
                     startActivity(intent);

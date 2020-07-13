@@ -113,7 +113,6 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
             mMktplaceList.clear();
             mMktplaceList.addAll((List) results.values); // data list contains filtered items
             notifyDataSetChanged(); // tell adapter list has changed
-
         }
     };
 

@@ -16,14 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ActivityOccasionItem;
 import com.MainActivity;
 import com.UserItem;
-import com.example.LevelUp.ui.events.EventsFragment;
-import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +40,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private ArrayList<EventsItem> mEventsList;
     private ArrayList<EventsItem> mEventsListFull;
     private StorageReference mProfileStorageRef;
+    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserRef;
 
     private FragmentActivity mContext;
@@ -113,7 +112,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         mEventsListFull = new ArrayList<>(EventsList);
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
-        mUserRef = FirebaseDatabase.getInstance().getReference("Users");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserRef = mFirebaseDatabase.getReference("Users");
     }
 
     //inflate the items in a EventsViewHolder
@@ -182,8 +182,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             @Override
             public void onClick(View v) {
                 EventsItem ei = mEventsList.get(position);
-                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-                MylistFragment.setNumberEvents(index);
+
+//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+//                MylistFragment.setNumberEvents(index);
+
+                // add to ActivityEvent firebase
+                UserItem user = MainActivity.currUser;
+                String eventID = ei.getEventID();
+                String userID = user.getId();
+                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+                mActivityEventRef.push().setValue(activityOccasionItem);
+
+
                 Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
             }
         });

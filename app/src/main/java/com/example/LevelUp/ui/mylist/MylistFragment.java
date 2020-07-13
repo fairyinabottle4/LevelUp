@@ -1,17 +1,14 @@
 package com.example.LevelUp.ui.mylist;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -23,11 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
@@ -35,9 +32,7 @@ import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
-import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.tryone.R;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,17 +45,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MylistFragment extends Fragment {
-    ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
-    ArrayList<Occasion> mOccasionListJiosInitial = new ArrayList<>();
+//    ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
+//    ArrayList<Occasion> mOccasionListJiosInitial = new ArrayList<>();
     // ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
+
+    ArrayList<Occasion> mOccasionAll = new ArrayList<>();
+    ArrayList<String> mEventIDs = new ArrayList<>();
+    ArrayList<String> mJioIDs = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -68,10 +62,11 @@ public class MylistFragment extends Fragment {
     private View rootView;
     private static ArrayList<Integer> numberEvents = new ArrayList<>();
     private static ArrayList<Integer> numberJios = new ArrayList<>();
-    private FirebaseDatabase mDatabaseEvents;
+    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReferenceEvents;
-    private FirebaseDatabase mDatabaseJios;
     private DatabaseReference mDatabaseReferenceJios;
+    private DatabaseReference mDatabaseReferenceActivityEvent;
+    private DatabaseReference mDatabaseReferenceActivityJio;
     private DatabaseReference mDatabaseReferenceUser;
 
     ValueEventListener mValueEventListenerEvents;
@@ -80,8 +75,6 @@ public class MylistFragment extends Fragment {
     private ImageButton editUserInfoBtn;
 
     private StorageReference mProfileStorageRef;
-//    private DatabaseReference mUserDatabaseRef;
-//    private StorageReference mProfilePicRef;
 
     private UserItem user;
     private Uri profilePicURI = EditUserInfoActivity.profileImageUri;
@@ -108,8 +101,9 @@ public class MylistFragment extends Fragment {
 //            profilePic.setImageURI(profilePicURI);
 //        }
 
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+
         mProfileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
-        // mUserDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
         mProfileStorageRef = mProfileStorageRef.child(fbUID);
 
         mProfileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -153,43 +147,19 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseEvents = FirebaseDatabase.getInstance();
-        mDatabaseReferenceEvents = mDatabaseEvents.getReference().child("Events");
-
-        mDatabaseJios = FirebaseDatabase.getInstance();
-        mDatabaseReferenceJios = mDatabaseJios.getReference().child("Jios");
-
-        // Events
-        mValueEventListenerEvents = new ValueEventListener() {
-
+        // pulling activityevent with my userID
+        mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
+        mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mOccasionListEventsInitial.add(snapshot.getValue(EventsItem.class));
-                }
-                if (numberEvents.size() != 0) {
-                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
-                    ArrayList<Integer> IDs = MainActivity.mEventsIDs;
+                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                    String selectedUserID = selected.getUserID();
+                    if (selectedUserID.equals(fbUID)) {
+                        // it is my event so I add EventID into arraylist
+                        mEventIDs.add(selected.getOccasionID());
 
-                    for (int id : numberEvents){
-                        if (!IDs.contains(id)) {
-                            Occasion toAdd = mOccasionListEventsInitial.get(id);
-                            mOLR.add(toAdd);
-                            IDs.add(id);
-                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
-                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-                            mRecyclerView.setAdapter(myListAdapter);
-                            mAdapter = myListAdapter;
-                        } else {
-                            // This toast is temporary, it should change the + to a tick or smth
-                            Toast.makeText(getContext(), "Event already added to your list", Toast.LENGTH_SHORT).show();
-                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-                            mRecyclerView.setAdapter(myListAdapter);
-                            mAdapter = myListAdapter;
-                        }
                     }
-                    MainActivity.sort(mOLR);
-                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
                 }
             }
 
@@ -197,40 +167,18 @@ public class MylistFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        };
-        mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
+        });
 
-        // Jios
-        mValueEventListenerJios = new ValueEventListener() {
-
+        mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
+        mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mOccasionListJiosInitial.add(snapshot.getValue(JiosItem.class));
-                }
-
-                if (numberJios.size() != 0) {
-                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
-                    ArrayList<Integer> IDs = MainActivity.mJiosIDs;
-                    for (int id : numberJios) {
-                        if (!IDs.contains(id)) {
-                            Occasion toAdd = mOccasionListJiosInitial.get(id);
-                            mOLR.add(toAdd);
-                            IDs.add(id);
-                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
-                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-                            mRecyclerView.setAdapter(myListAdapter);
-                            mAdapter = myListAdapter;
-                        } else {
-                            // This toast is temporary, it should change the + to a tick or smth
-                            Toast.makeText(getContext(), "Jio already added to your list", Toast.LENGTH_SHORT).show();
-                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-                            mRecyclerView.setAdapter(myListAdapter);
-                            mAdapter = myListAdapter;
-                        }
+                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                    String selectedUserID = selected.getUserID();
+                    if (selectedUserID.equals(fbUID)) {
+                        mJioIDs.add(selected.getOccasionID());
                     }
-                    MainActivity.sort(mOLR);
-                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
                 }
             }
 
@@ -238,8 +186,136 @@ public class MylistFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        };
-        mDatabaseReferenceJios.addValueEventListener(mValueEventListenerJios);
+        });
+
+        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+
+        mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Occasion selected = snapshot.getValue(EventsItem.class);
+                    String eventID = selected.getOccasionID();
+                    if (mEventIDs.contains(eventID)) {
+                        mOccasionAll.add(selected);
+
+                    }
+                }
+                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
+                mRecyclerView.setAdapter(myListAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Occasion selected = snapshot.getValue(JiosItem.class);
+                    String jioID = selected.getOccasionID();
+                    if (mJioIDs.contains(jioID)) {
+                        mOccasionAll.add(selected);
+                    }
+                }
+                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
+                mRecyclerView.setAdapter(myListAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+//        // Events
+//        mValueEventListenerEvents = new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    mOccasionListEventsInitial.add(snapshot.getValue(EventsItem.class));
+//                }
+//                if (numberEvents.size() != 0) {
+//                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
+//                    ArrayList<Integer> IDs = MainActivity.mEventsIDs;
+//
+//                    for (int id : numberEvents){
+//                        if (!IDs.contains(id)) {
+//                            Occasion toAdd = mOccasionListEventsInitial.get(id);
+//                            mOLR.add(toAdd);
+//                            IDs.add(id);
+//                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
+//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+//                            mRecyclerView.setAdapter(myListAdapter);
+//                            mAdapter = myListAdapter;
+//                        } else {
+//                            // This toast is temporary, it should change the + to a tick or smth
+//                            Toast.makeText(getContext(), "Event already added to your list", Toast.LENGTH_SHORT).show();
+//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+//                            mRecyclerView.setAdapter(myListAdapter);
+//                            mAdapter = myListAdapter;
+//                        }
+//                    }
+//                    MainActivity.sort(mOLR);
+//                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//        mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
+//
+//        // Jios
+//        mValueEventListenerJios = new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    mOccasionListJiosInitial.add(snapshot.getValue(JiosItem.class));
+//                }
+//
+//                if (numberJios.size() != 0) {
+//                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
+//                    ArrayList<Integer> IDs = MainActivity.mJiosIDs;
+//                    for (int id : numberJios) {
+//                        if (!IDs.contains(id)) {
+//                            Occasion toAdd = mOccasionListJiosInitial.get(id);
+//                            mOLR.add(toAdd);
+//                            IDs.add(id);
+//                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
+//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+//                            mRecyclerView.setAdapter(myListAdapter);
+//                            mAdapter = myListAdapter;
+//                        } else {
+//                            // This toast is temporary, it should change the + to a tick or smth
+//                            Toast.makeText(getContext(), "Jio already added to your list", Toast.LENGTH_SHORT).show();
+//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
+//                            mRecyclerView.setAdapter(myListAdapter);
+//                            mAdapter = myListAdapter;
+//                        }
+//                    }
+//                    MainActivity.sort(mOLR);
+//                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//        mDatabaseReferenceJios.addValueEventListener(mValueEventListenerJios);
 
         // setting up toolbar
         setHasOptionsMenu(true);

@@ -9,11 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ActivityOccasionItem;
+import com.MainActivity;
+import com.UserItem;
 import com.example.LevelUp.ui.events.EventsFragment;
-import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -40,6 +44,7 @@ public class EventPage extends AppCompatActivity {
     private ArrayList<EventsItem> eventsItemArrayList = EventsFragment.getEventsItemList();
     private Context mContext = this;
     private StorageReference mProfileStorageRef;
+    private FirebaseDatabase mFirebaseDatabase;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class EventPage extends AppCompatActivity {
         setContentView(R.layout.occasion_page);
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
 
         mImageView = findViewById(R.id.event_page_image);
         mAddButton = findViewById(R.id.events_page_image_add);
@@ -92,10 +98,26 @@ public class EventPage extends AppCompatActivity {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+//                EventsItem ei = eventsItemArrayList.get(position);
+//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+//                MylistFragment.setNumberEvents(index);
+
                 EventsItem ei = eventsItemArrayList.get(position);
-                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-                MylistFragment.setNumberEvents(index);
+
+//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+//                MylistFragment.setNumberEvents(index);
+
+                // add to ActivityEvent firebase
+                UserItem user = MainActivity.currUser;
+                String eventID = ei.getEventID();
+                String userID = user.getId();
+                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+                mActivityEventRef.push().setValue(activityOccasionItem);
+
+
+                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
             }
         });
     }

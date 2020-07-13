@@ -231,7 +231,7 @@ public class EventsFragment extends Fragment {
 
             }
         };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
+        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
     }
 
 }

@@ -78,10 +78,13 @@
     </LinearLayout>
     -->
 
+    <include layout="@layout/activity_main"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshlayoutevents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
         android:layout_below="@+id/events_toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -89,10 +92,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/events_toolbar"
-            android:layout_alignBottom="@+id/nav_view"
+            android:layout_marginBottom="56dp"
             android:background="@android:color/darker_gray"
             android:padding="4dp"
-            android:layout_marginBottom="56dp"
             android:scrollbars="vertical" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

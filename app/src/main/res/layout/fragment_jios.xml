@@ -18,10 +18,13 @@
         android:background="@color/colorPrimary"
         app:menu="@menu/occasions_top_menu" />
 
+    <include layout="@layout/activity_main"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshlayoutjios"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_marginBottom="56dp"
         android:layout_below="@id/jios_toolbar">
 
         <androidx.recyclerview.widget.RecyclerView

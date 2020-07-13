@@ -16,21 +16,26 @@
         android:background="@color/colorPrimary"
         app:menu="@menu/mktplace_top_menu" />
 
+    <include layout="@layout/activity_main"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/swiperefreshlayoutmktplace"
-        android:layout_below="@id/mktplace_toolbar" >
+        android:layout_below="@id/mktplace_toolbar"
+        android:layout_marginBottom="56dp"
+        android:layout_above="@+id/nav_view">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/mktplace_toolbar"
-            android:background="@android:color/darker_gray"
-            android:layout_alignBottom="@+id/nav_view"
-            android:padding="4dp"
-            android:scrollbars="vertical" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/mktplace_toolbar"
+                android:layout_above="@+id/nav_view"
+                android:background="@android:color/darker_gray"
+                android:padding="4dp"
+                android:layout_marginBottom="56dp"
+                android:scrollbars="vertical" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
@@ -42,8 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="76dp"
         android:gravity="end"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/nav_view">
+        android:orientation="horizontal">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_mktplace"

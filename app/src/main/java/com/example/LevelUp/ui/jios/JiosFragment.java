@@ -225,6 +225,6 @@ public class JiosFragment extends Fragment {
 
             }
         };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
+        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
     }
 }
