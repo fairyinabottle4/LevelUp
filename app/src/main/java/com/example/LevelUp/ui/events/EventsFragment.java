@@ -187,9 +187,11 @@ public class EventsFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                EventsItemList.clear();
-                loadDataEvents();
-                mAdapter.notifyDataSetChanged();
+//                EventsItemList.clear();
+//                loadDataEvents();
+//                mAdapter.notifyDataSetChanged();
+                mAdapter.resetAdapter();
+                mRecyclerView.setAdapter(mAdapter);
                 return true;
             }
         });

@@ -8,6 +8,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +30,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistViewHolder> implements Filterable {
-    //ArrayList is passed in from Occasion.java
+    // ArrayList is passed in from Occasion.java
+    // ?? isnt it  passed in from MylistFragment -yien
     private ArrayList<Occasion> mMylistList;
+    private ArrayList<Occasion> mMylistListFull;
     private MylistAdapter.OnItemClickListener mListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
@@ -68,8 +71,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     //Constructor for MylistAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
     public MylistAdapter(ArrayList<Occasion> MylistList) {
-
         mMylistList = MylistList;
+        mMylistListFull = new ArrayList<>(MylistList);
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
     }
@@ -126,11 +129,11 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             List<Occasion> filteredList = new ArrayList<>(); // initially empty list
 
             if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(MainActivity.mOccasionListRealFull); // to show everything
+                filteredList.addAll(mMylistListFull); // to show everything
             } else {
                 String userSearchInput = constraint.toString().toLowerCase().trim();
 
-                for (Occasion item : MainActivity.mOccasionListRealFull) {
+                for (Occasion item : mMylistListFull) {
                     // contains can be changed to StartsWith
                     if (item.getTitle().toLowerCase().contains(userSearchInput)) {
                         filteredList.add(item);
@@ -146,10 +149,13 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            MainActivity.mOccasionListReal.clear();
-            MainActivity.mOccasionListReal.addAll((List) results.values); // data list contains filtered items
+            mMylistList.clear();
+            mMylistList.addAll((List) results.values); // data list contains filtered items
             notifyDataSetChanged(); // tell adapter list has changed
-
         }
     };
+
+    public MylistAdapter resetAdapter() {
+        return new MylistAdapter(mMylistListFull);
+    }
 }

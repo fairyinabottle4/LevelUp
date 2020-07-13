@@ -178,9 +178,11 @@ public class JiosFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                JiosItemList.clear();
-                loadDataJios();
-                mAdapter.notifyDataSetChanged();
+//                JiosItemList.clear();
+//                loadDataJios();
+//                mAdapter.notifyDataSetChanged();
+                mAdapter.resetAdapter();
+                mRecyclerView.setAdapter(mAdapter);
                 return true;
             }
         });

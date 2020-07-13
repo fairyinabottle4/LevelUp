@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
 import com.MainActivity;
+import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -251,6 +252,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             notifyDataSetChanged(); // tell adapter list has changed
         }
     };
+
+    public void resetAdapter() {
+        this.mEventsList = mEventsListFull;
+    }
 
 
 }

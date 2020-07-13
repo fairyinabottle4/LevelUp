@@ -203,7 +203,8 @@ public class MylistFragment extends Fragment {
                     }
                 }
                 MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
-                mRecyclerView.setAdapter(myListAdapter);
+                mAdapter = myListAdapter;
+                mRecyclerView.setAdapter(mAdapter);
             }
 
             @Override
@@ -223,7 +224,9 @@ public class MylistFragment extends Fragment {
                     }
                 }
                 MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
-                mRecyclerView.setAdapter(myListAdapter);
+                mAdapter = myListAdapter;
+                mRecyclerView.setAdapter(mAdapter);
+
             }
 
             @Override
@@ -361,7 +364,7 @@ public class MylistFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(MainActivity.mOccasionListRealFull);
+        mAdapter = new MylistAdapter(mOccasionAll);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -426,6 +429,21 @@ public class MylistFragment extends Fragment {
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("Search");
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // reset list
+                mAdapter = mAdapter.resetAdapter();
+                mRecyclerView.setAdapter(mAdapter);
+                return true;
+            }
+        });
 
         // ???
         // searchItem.setOnMenuItemClickListener()

@@ -231,4 +231,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
         }
     };
+
+    public void resetAdapter() {
+        this.mJiosList = mJiosListFull;
+    }
 }
