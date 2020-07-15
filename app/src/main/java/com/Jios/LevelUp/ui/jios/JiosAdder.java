@@ -1,5 +1,6 @@
 package com.Jios.LevelUp.ui.jios;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.MainActivity;
+import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.tryone.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -94,11 +96,12 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                boolean factors = !mEventDescription.getText().toString().equals("")
-                        && !mEventLocation.getText().toString().equals("")
+                boolean factors = !mEventLocation.getText().toString().equals("")
                         && !mEventTitle.getText().toString().equals("")
                         && !mDateSelected.getText().toString().equals("")
-                        && !mTimeSelected.getText().toString().equals("");
+                        && !mTimeSelected.getText().toString().equals("")
+                        && !mTimeSelected.getText().toString().equals("No Time Selected")
+                        && !mDateSelected.getText().toString().equals("No Date Selected");
                 try {
                     validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
                             .compareTo(df.parse(mDateSelected.getText().toString())) > 0;
@@ -112,8 +115,11 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 } else if (factors) {
                     mDatabaseReference.child(key).setValue(jiosItem);
                     Toast.makeText(JiosAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(JiosAdder.this, MainActivity.class);
-                    startActivity(intent);
+
+                    JiosFragment.setRefresh(true);
+                    onBackPressed();
+                    // Intent intent = new Intent(JiosAdder.this, MainActivity.class);
+                    // startActivity(intent);
                 }
             }
         });

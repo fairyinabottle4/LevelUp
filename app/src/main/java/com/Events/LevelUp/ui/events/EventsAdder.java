@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,8 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.MainActivity;
+import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -96,11 +99,12 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                boolean factors = !mEventDescription.getText().toString().equals("")
-                        && !mEventLocation.getText().toString().equals("")
+                boolean factors = !mEventLocation.getText().toString().equals("")
                         && !mEventTitle.getText().toString().equals("")
                         && !mDateSelected.getText().toString().equals("")
-                        && !mTimeSelected.getText().toString().equals("");
+                        && !mTimeSelected.getText().toString().equals("")
+                        && !mTimeSelected.getText().toString().equals("No Time Selected")
+                        && !mDateSelected.getText().toString().equals("No Date Selected");
                 try {
                     validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
                             .compareTo(df.parse(mDateSelected.getText().toString())) > 0;
@@ -114,8 +118,27 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                 } else if (factors) {
                     mDatabaseReference.child(key).setValue(eventsItem);
                     Toast.makeText(EventsAdder.this, "Event saved successfully", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(EventsAdder.this, MainActivity.class);
-                    startActivity(intent);
+
+//                    EventsFragment eF = (EventsFragment) getSupportFragmentManager().findFragmentByTag("EventsFragment");
+//
+//                    if (eF == null) {
+////                        Intent intent = new Intent(EventsAdder.this, MainActivity.class);
+////                        startActivity(intent);
+////                        eF = new EventsFragment();
+////                        getSupportFragmentManager().beginTransaction()
+////                                .replace(R.id.nav_host_fragment, eF, "EventsFragment")
+////                                .addToBackStack("EventsFragment")
+////                                .commit();
+//                        Toast.makeText(EventsAdder.this, "yes", Toast.LENGTH_SHORT).show();
+//                        onBackPressed();
+//                    } else {
+//                        eF.loadDataEvents();
+//                        onBackPressed();
+//                    }
+
+                    EventsFragment.setRefresh(true);
+                    onBackPressed();
+
                 }
             }
         });

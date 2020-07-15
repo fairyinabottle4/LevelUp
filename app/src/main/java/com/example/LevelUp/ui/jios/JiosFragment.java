@@ -35,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -51,6 +52,8 @@ public class JiosFragment extends Fragment {
     private View rootView;
     public FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    public static boolean refresh;
 
     @Nullable
     @Override
@@ -213,7 +216,30 @@ public class JiosFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 JiosItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    JiosItemList.add(snapshot.getValue(JiosItem.class));
+                    JiosItem selected = snapshot.getValue(JiosItem.class);
+                    // JiosItemList.add(selected);
+
+                    // To show ALL Jios created comment out lines 224 to 242 and uncomment out line 220
+
+                    if (selected.getTimeInfo().length() > 4) {
+                        continue;
+                    }
+
+                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                    Date eventDateZero = selected.getDateInfo();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDateZero);
+                    cal.set(Calendar.HOUR_OF_DAY, hour);
+                    cal.set(Calendar.MINUTE, min);
+                    Date eventDate = cal.getTime();
+
+                    Date currentDate = new Date();
+
+                    if (eventDate.compareTo(currentDate) >= 0) {
+                        JiosItemList.add(selected);
+                    }
                 }
                 copy = new ArrayList<>(JiosItemList);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
@@ -228,5 +254,18 @@ public class JiosFragment extends Fragment {
             }
         };
         mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
+    }
+
+    public static void setRefresh(boolean toSet) {
+        refresh = toSet;
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            loadDataJios();
+            refresh = false;
+        }
+        super.onResume();
     }
 }

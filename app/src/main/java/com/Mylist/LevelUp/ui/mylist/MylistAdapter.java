@@ -16,10 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.MainActivity;
+import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -38,6 +44,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
     private StorageReference mProfileStorageRef;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mUserRef;
 
 
     public interface OnItemClickListener {
@@ -50,12 +58,14 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
     //the ViewHolder holds the content of the card
     public static class MylistViewHolder extends RecyclerView.ViewHolder {
+        public String creatorName;
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
         public TextView mTextView3;
         public TextView mTextView4;
         public TextView mTextView5;
+        public TextView mTextView6;
 
         public MylistViewHolder(View itemView, final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -65,8 +75,13 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             mTextView3 = itemView.findViewById(R.id.time);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.date);
+            mTextView6 = itemView.findViewById(R.id.eventCreator);
         }
-    }
+
+        public void setCreatorName(String creatorName) {
+            this.creatorName = creatorName;
+        }
+    } // static class ends here
 
     //Constructor for MylistAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
@@ -75,6 +90,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         mMylistListFull = new ArrayList<>(MylistList);
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserRef = mFirebaseDatabase.getReference("Users");
     }
 
     //inflate the items in a MylistViewHolder
@@ -91,7 +108,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         Occasion currentItem = mMylistList.get(position);
 
         final MylistAdapter.MylistViewHolder holder1 = holder;
-        String creatorUID = currentItem.getCreatorID();
+        final String creatorUID = currentItem.getCreatorID();
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -105,11 +122,33 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
-        holder.mTextView1.setText(currentItem.getTitle());
-        holder.mTextView2.setText(currentItem.getDescription());
-        holder.mTextView3.setText(currentItem.getTimeInfo());
-        holder.mTextView4.setText(currentItem.getLocationInfo());
-        holder.mTextView5.setText(df.format(currentItem.getDateInfo()));
+        holder1.mTextView1.setText(currentItem.getTitle());
+        holder1.mTextView2.setText(currentItem.getDescription());
+        holder1.mTextView3.setText(currentItem.getTimeInfo());
+        holder1.mTextView4.setText(currentItem.getLocationInfo());
+        holder1.mTextView5.setText(df.format(currentItem.getDateInfo()));
+
+        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    UserItem selected = snapshot.getValue(UserItem.class);
+                    String id = selected.getId();
+
+                    if (creatorUID.equals(id)) {
+                        String name = selected.getName();
+                        holder1.mTextView6.setText(name);
+                        holder1.setCreatorName(name);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

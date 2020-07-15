@@ -45,8 +45,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 public class EventsFragment extends Fragment {
     private static ArrayList<EventsItem> EventsItemList;
@@ -62,6 +64,8 @@ public class EventsFragment extends Fragment {
     public FloatingActionButton floatingActionButton;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    public static boolean refresh;
 
 
     @Nullable
@@ -98,7 +102,7 @@ public class EventsFragment extends Fragment {
             public void onRefresh() {
                 EventsItemList.clear();
                 loadDataEvents();
-                mAdapter.notifyDataSetChanged();
+                // mAdapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -219,7 +223,33 @@ public class EventsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 EventsItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventsItemList.add(snapshot.getValue(EventsItem.class));
+                    EventsItem selected = snapshot.getValue(EventsItem.class);
+                    // EventsItemList.add(selected);
+
+                    // To show ALL Events created comment out lines 231 to 252 and uncomment out line 227
+
+                    if (selected.getTimeInfo().length() > 4) {
+                        continue;
+                    }
+
+                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                    Date eventDateZero = selected.getDateInfo();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDateZero);
+                    cal.set(Calendar.HOUR_OF_DAY, hour);
+                    cal.set(Calendar.MINUTE, min);
+                    Date eventDate = cal.getTime();
+
+                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
+
+                    Date currentDate = new Date();
+                    // eventDate.compareTo(currentDate) >= 0
+                    //eventDate.after(currentDate)
+                    if (eventDate.compareTo(currentDate) >= 0) {
+                        EventsItemList.add(selected);
+                    }
                 }
                 copy = new ArrayList<>(EventsItemList);
                 EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
@@ -234,7 +264,20 @@ public class EventsFragment extends Fragment {
             }
         };
         mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
+        mAdapter.notifyDataSetChanged();
     }
 
+    public static void setRefresh(boolean toSet) {
+        refresh = toSet;
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            loadDataEvents();
+            refresh = false;
+        }
+        super.onResume();
+    }
 }
 

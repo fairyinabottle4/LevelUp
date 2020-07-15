@@ -1,15 +1,12 @@
 package com.Mylist.LevelUp.ui.mylist;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,12 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.LoginActivity;
 import com.MainActivity;
-import com.UserItem;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,8 +32,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-
-import java.util.Objects;
 
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private FirebaseAuth firebaseAuth;
@@ -63,6 +54,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private static final String[] residentials = {"Cinnamon", "Tembusu", "CAPT", "RC4"};
 
     private boolean deleteProfilePicture = false;
+    private boolean changes = false;
 
 
     @Override
@@ -103,11 +95,21 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             public void onClick(View v) {
                 updateName();
                 updateResidence();
+                boolean pass = true;
                 if (deleteProfilePicture) {
                     deleteProfilePicture();
                 }
-
-                finish();
+                if (name.isEmpty()) {
+                    editTextName.setError("Please enter your name");
+                    editTextName.requestFocus();
+                    pass = false;
+                }
+                if (changes) {
+                    MylistFragment.setRefreshUserDetails(true);
+                }
+                if (pass) {
+                    finish();
+                }
             }
         });
 
@@ -238,25 +240,19 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     }
 
-    private String finalName() {
-        String inputName = editTextName.getText().toString().trim();
-        if (name.isEmpty()) {
-            editTextName.setError("Please enter your name");
-            editTextName.requestFocus();
-        }
-        return inputName;
-    }
-
     private void updateName() {
+        String inputName = editTextName.getText().toString().trim();
         // if the name in the text view != name in main, update then send to DB
-        if (!finalName().equals(name)) {
+        if (!inputName.equals(name)) {
             // update the DB
-            String updatedName = finalName();
+            String updatedName = inputName;
+            name = inputName;
             MainActivity.display_name = updatedName;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("name")
                     .setValue(updatedName);
+            changes = true;
         }
     }
 
@@ -268,6 +264,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                     .child(MainActivity.currUser.getId())
                     .child("residential")
                     .setValue(finalResidence);
+            changes = true;
         }
     }
 

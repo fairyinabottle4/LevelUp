@@ -46,6 +46,8 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     private DatabaseReference mDatabaseRef;
     private MktplaceAdapter.OnItemClickListener mListener = this;
 
+    public static boolean refresh;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,7 +83,6 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
             public void onRefresh() {
                 mktplaceItemList.clear();
                 loadDataMktplace();
-                mAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -167,9 +168,8 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mktplaceItemList.clear();
-                loadDataMktplace();
-                mAdapter.notifyDataSetChanged();
+                mAdapter.resetAdapter();
+                mRecyclerView.setAdapter(mAdapter);
                 return true;
             }
         });
@@ -200,6 +200,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mktplaceItemList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
                     mktplaceItemList.add(upload);
@@ -214,5 +215,19 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public static void setRefresh(boolean toSet) {
+        refresh = toSet;
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            loadDataMktplace();
+            refresh = false;
+        }
+        super.onResume();
     }
 }

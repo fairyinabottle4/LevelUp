@@ -116,4 +116,8 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         }
     };
 
+    public void resetAdapter() {
+        this.mMktplaceList = mMktplaceListFull;
+    }
+
 }

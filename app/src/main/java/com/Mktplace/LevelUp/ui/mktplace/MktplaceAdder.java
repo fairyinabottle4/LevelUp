@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.MainActivity;
 import com.bumptech.glide.Glide;
+import com.example.LevelUp.ui.mktplace.MktplaceFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -134,8 +135,11 @@ public class MktplaceAdder extends AppCompatActivity {
                                     listingDescription.getText().toString().trim());
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(title);
-                            Intent intent = new Intent(MktplaceAdder.this, MainActivity.class);
-                            startActivity(intent);
+//                            Intent intent = new Intent(MktplaceAdder.this, MainActivity.class);
+//                            startActivity(intent);
+
+                            MktplaceFragment.setRefresh(true);
+                            onBackPressed();
 
                         }
                     })

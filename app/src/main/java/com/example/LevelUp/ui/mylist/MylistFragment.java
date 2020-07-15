@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,19 +76,25 @@ public class MylistFragment extends Fragment {
     private StorageReference mProfileStorageRef;
 
     private UserItem user;
-    private Uri profilePicURI = EditUserInfoActivity.profileImageUri;
-    private String display_name;
     private String residence_name;
+
+    private TextView name;
+    private TextView resi;
+    private ImageView profilePic;
+    private String fbUID;
+
+    private static boolean refreshUserDetails;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
-        final TextView name = rootView.findViewById(R.id.user_display_name);
-        final TextView resi = rootView.findViewById(R.id.user_display_resi);
-        final ImageView profilePic = rootView.findViewById(R.id.user_display_picture);
+        name = rootView.findViewById(R.id.user_display_name);
+        resi = rootView.findViewById(R.id.user_display_resi);
+        profilePic = rootView.findViewById(R.id.user_display_picture);
 
-        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        fbUID = fbUIDFinal;
 
         if (MainActivity.display_name != null) {
             name.setText(MainActivity.display_name);
@@ -97,55 +102,10 @@ public class MylistFragment extends Fragment {
         if (MainActivity.display_residential != null) {
             resi.setText(MainActivity.display_residential);
         }
-//        if (profilePicURI != null) {
-//            profilePic.setImageURI(profilePicURI);
-//        }
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
-        mProfileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
-        mProfileStorageRef = mProfileStorageRef.child(fbUID);
-
-        mProfileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profilePic);
-                profilePicURI = uri;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                profilePic.setImageResource(R.drawable.fake_user_dp);
-            }
-        });
-
-        // Pulling user from Firebase
-        mDatabaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
-        mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserItem selected = snapshot.getValue(UserItem.class);
-                    String id = selected.getId();
-
-                    if (fbUID.equals(id)) {
-                        user = selected;
-                        String disp_name = user.getName();
-                        MainActivity.display_name = disp_name;
-                        name.setText(disp_name);
-
-                        intToRes(user.getResidential());
-                        resi.setText(residence_name);
-                        MainActivity.display_residential = residence_name;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        initializeUserDetails();
 
         // pulling activityevent with my userID
         mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
@@ -155,7 +115,7 @@ public class MylistFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUID)) {
+                    if (selectedUserID.equals(fbUIDFinal)) {
                         // it is my event so I add EventID into arraylist
                         mEventIDs.add(selected.getOccasionID());
 
@@ -176,7 +136,7 @@ public class MylistFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUID)) {
+                    if (selectedUserID.equals(fbUIDFinal)) {
                         mJioIDs.add(selected.getOccasionID());
                     }
                 }
@@ -235,91 +195,6 @@ public class MylistFragment extends Fragment {
             }
         });
 
-
-
-
-//        // Events
-//        mValueEventListenerEvents = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    mOccasionListEventsInitial.add(snapshot.getValue(EventsItem.class));
-//                }
-//                if (numberEvents.size() != 0) {
-//                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
-//                    ArrayList<Integer> IDs = MainActivity.mEventsIDs;
-//
-//                    for (int id : numberEvents){
-//                        if (!IDs.contains(id)) {
-//                            Occasion toAdd = mOccasionListEventsInitial.get(id);
-//                            mOLR.add(toAdd);
-//                            IDs.add(id);
-//                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
-//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-//                            mRecyclerView.setAdapter(myListAdapter);
-//                            mAdapter = myListAdapter;
-//                        } else {
-//                            // This toast is temporary, it should change the + to a tick or smth
-//                            Toast.makeText(getContext(), "Event already added to your list", Toast.LENGTH_SHORT).show();
-//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-//                            mRecyclerView.setAdapter(myListAdapter);
-//                            mAdapter = myListAdapter;
-//                        }
-//                    }
-//                    MainActivity.sort(mOLR);
-//                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        mDatabaseReferenceEvents.addValueEventListener(mValueEventListenerEvents);
-//
-//        // Jios
-//        mValueEventListenerJios = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    mOccasionListJiosInitial.add(snapshot.getValue(JiosItem.class));
-//                }
-//
-//                if (numberJios.size() != 0) {
-//                    ArrayList<Occasion> mOLR = MainActivity.mOccasionListReal;
-//                    ArrayList<Integer> IDs = MainActivity.mJiosIDs;
-//                    for (int id : numberJios) {
-//                        if (!IDs.contains(id)) {
-//                            Occasion toAdd = mOccasionListJiosInitial.get(id);
-//                            mOLR.add(toAdd);
-//                            IDs.add(id);
-//                            // Toast.makeText(getContext(), Integer.toString(id), Toast.LENGTH_SHORT).show();
-//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-//                            mRecyclerView.setAdapter(myListAdapter);
-//                            mAdapter = myListAdapter;
-//                        } else {
-//                            // This toast is temporary, it should change the + to a tick or smth
-//                            Toast.makeText(getContext(), "Jio already added to your list", Toast.LENGTH_SHORT).show();
-//                            MylistAdapter myListAdapter = new MylistAdapter(mOLR);
-//                            mRecyclerView.setAdapter(myListAdapter);
-//                            mAdapter = myListAdapter;
-//                        }
-//                    }
-//                    MainActivity.sort(mOLR);
-//                    MainActivity.mOccasionListRealFull = new ArrayList<>(mOLR);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        mDatabaseReferenceJios.addValueEventListener(mValueEventListenerJios);
-
         // setting up toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.mylist_toolbar);
@@ -329,6 +204,56 @@ public class MylistFragment extends Fragment {
 
         buildRecyclerView();
         return rootView;
+    }
+
+    public void initializeUserDetails() {
+        final String fbUIDFinal = fbUID;
+        final TextView nameFinal = name;
+        final TextView resiFinal = resi;
+
+        mProfileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
+        mProfileStorageRef = mProfileStorageRef.child(fbUID);
+
+        mProfileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profilePic);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                profilePic.setImageResource(R.drawable.fake_user_dp);
+            }
+        });
+
+        // Pulling user from Firebase
+        mDatabaseReferenceUser = mFirebaseDatabase.getReference().child("Users");
+        mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    UserItem selected = snapshot.getValue(UserItem.class);
+                    String id = selected.getId();
+
+                    if (fbUIDFinal.equals(id)) {
+                        user = selected;
+                        String disp_name = user.getName();
+                        MainActivity.display_name = disp_name;
+                        nameFinal.setText(disp_name);
+
+                        intToRes(user.getResidential());
+                        resiFinal.setText(residence_name);
+                        MainActivity.display_residential = residence_name;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -449,5 +374,17 @@ public class MylistFragment extends Fragment {
         // searchItem.setOnMenuItemClickListener()
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    public static void setRefreshUserDetails(boolean toSet) {
+        refreshUserDetails = toSet;
+    }
+
+    @Override
+    public void onResume() {
+        if (refreshUserDetails) {
+            initializeUserDetails();
+        }
+        super.onResume();
     }
 }
