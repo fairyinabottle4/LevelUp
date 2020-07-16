@@ -6,16 +6,19 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.Events.LevelUp.ui.events.EventsItem;
 import com.MainActivity;
 import com.UserItem;
 import com.example.tryone.R;
@@ -51,7 +54,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public String uid;
         public String creatorName;
 
-        public ImageView mAddButton;
+        public ToggleButton mAddButton;
+        public ToggleButton mLikeButton;
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
@@ -65,6 +69,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             final Context context1 = context;
             mImageView = itemView.findViewById(R.id.imageView);
             mAddButton = itemView.findViewById(R.id.image_add);
+            mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.date);
@@ -114,7 +119,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     @NonNull
     @Override
     public JiosAdapter.JiosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
         JiosAdapter.JiosViewHolder evh = new JiosAdapter.JiosViewHolder(mContext, v);
         return evh;
     }
@@ -167,25 +172,77 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             }
         });
 
-        holder1.mAddButton.setOnClickListener(new View.OnClickListener() {
+        String jioID = currentItem.getJioID();
+        if (MainActivity.mJioIDs.contains(jioID)) {
+            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            holder1.mAddButton.setChecked(true);
+        }
+
+        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                JiosItem ji = mJiosList.get(position);
-//                //Now I am getting the unsorted copy from MainActivity instead of JiosFragment.
-//                //This is because I need to have a sorted ArrayList in MainActivity to send to Mylist
-//                int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
-//                MylistFragment.setNumberJios(index);
-//                Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // change to tick
+                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
 
-                // add to ActivityEvent firebase
-                UserItem user = MainActivity.currUser;
-                String jioID = ji.getJioID();
-                String userID = user.getId();
-                DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
-                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(jioID, userID);
-                mActivityJioRef.push().setValue(activityOccasionItem);
+                    JiosItem ji = mJiosList.get(position);
 
-                Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
+//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+//                MylistFragment.setNumberEvents(index);
+
+                    // add to ActivityEvent firebase
+                    UserItem user = MainActivity.currUser;
+                    String eventID = ji.getJioID();
+                    String userID = user.getId();
+                    DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                    ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+                    mActivityJioRef.push().setValue(activityOccasionItem);
+
+                    Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // change back to plus
+                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+
+                    // delete the entry from activity DB
+                    JiosItem ji = mJiosList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String jioID = ji.getJioID();
+                    final String userID = user.getId();
+                    final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                    mActivityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                                if (jioID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mActivityJioRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Jio removed from your list", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    MainActivity.mJioIDs.remove(jioID);
+                }
+            }
+        });
+
+        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    // do wtv u need to when user clicks liked button
+                } else {
+                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    // do wtv u need to when user unlikes an event
+                }
             }
         });
     }

@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -18,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
 import com.MainActivity;
-import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,8 +55,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public String creatorName;
 
         public ImageView mImageView;
-        public ImageView mAddButton;
-        public ImageView mLikeButton;
+        public ToggleButton mAddButton;
+        public ToggleButton mLikeButton;
         public TextView mTextView1;
         public TextView mTextView2;
         public TextView mTextView3;
@@ -121,7 +122,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     @NonNull
     @Override
     public EventsAdapter.EventsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
         EventsAdapter.EventsViewHolder evh = new EventsAdapter.EventsViewHolder(mContext, v);
         return evh;
     }
@@ -179,38 +180,106 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         });
 
 
-        holder1.mAddButton.setOnClickListener(new View.OnClickListener() {
+//        holder1.mAddButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                EventsItem ei = mEventsList.get(position);
+//
+////                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+////                MylistFragment.setNumberEvents(index);
+//
+//                // add to ActivityEvent firebase
+//                UserItem user = MainActivity.currUser;
+//                String eventID = ei.getEventID();
+//                String userID = user.getId();
+//                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+//                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+//                mActivityEventRef.push().setValue(activityOccasionItem);
+//
+//
+//                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        // if currentItem is contained in Main's Event List, then mAddButton set state
+        String eventID = currentItem.getEventID();
+        if (MainActivity.mEventIDs.contains(eventID)) {
+            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            holder1.mAddButton.setChecked(true);
+        }
+
+        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                EventsItem ei = mEventsList.get(position);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // change to tick
+                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+
+                    EventsItem ei = mEventsList.get(position);
 
 //                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
 //                MylistFragment.setNumberEvents(index);
 
-                // add to ActivityEvent firebase
-                UserItem user = MainActivity.currUser;
-                String eventID = ei.getEventID();
-                String userID = user.getId();
-                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
-                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
-                mActivityEventRef.push().setValue(activityOccasionItem);
+                    // add to ActivityEvent firebase
+                    UserItem user = MainActivity.currUser;
+                    String eventID = ei.getEventID();
+                    String userID = user.getId();
+                    DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                    ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+                    mActivityEventRef.push().setValue(activityOccasionItem);
 
 
-                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // change back to plus
+                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+
+                    // delete the entry from activity DB
+                    EventsItem ei = mEventsList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String eventID = ei.getEventID();
+                    final String userID = user.getId();
+                    final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                    mActivityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mActivityEventRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Event removed from your list", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    MainActivity.mEventIDs.remove(eventID);
+                }
             }
         });
 
-        holder1.mLikeButton.setOnClickListener(new View.OnClickListener() {
+        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                ImageView imageView = v.findViewById(R.id.image_like);
-                imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    // do wtv u need to when user clicks liked button
+                } else {
+                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    // do wtv u need to when user unlikes an event
+                }
             }
         });
 
     }
 
+    //imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
     @Override
     public int getItemCount() {
         return mEventsList.size();

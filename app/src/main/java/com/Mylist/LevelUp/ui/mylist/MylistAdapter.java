@@ -8,14 +8,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.Events.LevelUp.ui.events.EventsItem;
-import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
@@ -98,7 +95,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     @NonNull
     @Override
     public MylistAdapter.MylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
         MylistAdapter.MylistViewHolder evh = new MylistAdapter.MylistViewHolder(v, mListener);
         return evh;
     }

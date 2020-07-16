@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,7 +71,7 @@ public class JiosMyListFragment extends Fragment {
             }
         });
         DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionJios.clear();
@@ -97,17 +98,14 @@ public class JiosMyListFragment extends Fragment {
 
                         Date currentDate = new Date();
                         // eventDate.compareTo(currentDate) >= 0
-                        //eventDate.after(currentDate)
                         if (eventDate.compareTo(currentDate) >= 0) {
                             mOccasionJios.add(selected);
                         }
                     }
                 }
-
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), mOccasionJios);
                 mAdapter = jiosAdapter;
                 mRecyclerView.setAdapter(mAdapter);
-
             }
 
             @Override

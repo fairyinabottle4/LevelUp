@@ -86,10 +86,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReferenceActivityEvent;
     private DatabaseReference mDatabaseReferenceActivityJio;
 
-    public static ArrayList<EventsItem> mOccasionEvents = new ArrayList<>();
-    public static ArrayList<JiosItem> mOccasionJios = new ArrayList<>();
-    public static ArrayList<String> mEventIDs = new ArrayList<>();
-    public static ArrayList<String> mJioIDs = new ArrayList<>();
+    public static final ArrayList<String> mEventIDs = new ArrayList<>();
+    public static final ArrayList<String> mJioIDs = new ArrayList<>();
 
     private static final int RC_SIGN_IN = 1;
 
@@ -113,7 +111,9 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLogin();
 
-        // initializeMyList();
+        initializeMyList();
+
+        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUIDFinal)) {
                         mJioIDs.add(selected.getOccasionID());
-                        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -159,61 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        DatabaseReference mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-
-        mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventsItem selected = snapshot.getValue(EventsItem.class);
-                    String eventID = selected.getOccasionID();
-                    if (mEventIDs.contains(eventID)) {
-                        mOccasionEvents.add(selected);
-                    }
-                }
-//                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
-//                mAdapter = myListAdapter;
-//                mRecyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    JiosItem selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
-
-                    if (mJioIDs.contains(jioID)) {
-                        mOccasionJios.add(selected);
-                    }
-                }
-//                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
-//                mAdapter = myListAdapter;
-//                mRecyclerView.setAdapter(mAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public static ArrayList<EventsItem> getmOccasionEvents() {
-        return mOccasionEvents;
-    }
-
-    public static ArrayList<JiosItem> getmOccasionJios() {
-        return mOccasionJios;
     }
 
     private void initializeUser() {

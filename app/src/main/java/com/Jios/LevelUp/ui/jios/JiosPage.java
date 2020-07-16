@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +35,7 @@ public class JiosPage extends AppCompatActivity {
 
     private ImageView mImageView;
     private ImageView mAddButton;
+    private ToggleButton mLikeButton;
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
@@ -54,6 +57,7 @@ public class JiosPage extends AppCompatActivity {
                 .getReference("profile picture uploads");
         mImageView = findViewById(R.id.event_page_image);
         mAddButton = findViewById(R.id.events_page_image_add);
+        mLikeButton = findViewById(R.id.events_page_image_like);
         mTextView1 = findViewById(R.id.event_page_title);
         mTextView2 = findViewById(R.id.event_page_date);
         mTextView3 = findViewById(R.id.event_page_time);
@@ -107,6 +111,19 @@ public class JiosPage extends AppCompatActivity {
                 mActivityJioRef.push().setValue(activityOccasionItem);
 
                 Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    // do wtv u need to when user clicks liked button
+                } else {
+                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    // do wtv u need to when user unlikes an event
+                }
             }
         });
 
