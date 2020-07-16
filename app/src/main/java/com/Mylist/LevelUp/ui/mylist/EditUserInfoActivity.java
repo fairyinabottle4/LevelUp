@@ -51,7 +51,11 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     // eventually add halls
     private Spinner spinner;
-    private static final String[] residentials = {"Cinnamon", "Tembusu", "CAPT", "RC4"};
+    private static final String[] residentials = {"I don't stay on campus",
+            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+            "Select Residence"};
 
     private boolean deleteProfilePicture = false;
     private boolean changes = false;
@@ -208,7 +212,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                 android.R.layout.simple_spinner_item, residentials);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setSelection(residence - 1);
+        spinner.setSelection(residence);
         spinner.setOnItemSelectedListener(this);
     }
 
@@ -216,20 +220,53 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
+                finalResidence = 0;
+                break;
+            case 1:
                 // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
                 finalResidence = 1;
                 break;
-            case 1:
+            case 2:
                 // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
                 finalResidence = 2;
                 break;
-            case 2:
+            case 3:
                 // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
                 finalResidence = 3;
                 break;
-            case 3:
+            case 4:
                 // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
                 finalResidence = 4;
+                break;
+            case 5:
+                finalResidence = 5;
+                break;
+            case 6:
+                finalResidence = 6;
+                break;
+            case 7:
+                finalResidence = 7;
+                break;
+            case 8:
+                finalResidence = 8;
+                break;
+            case 9:
+                finalResidence = 9;
+                break;
+            case 10:
+                finalResidence = 10;
+                break;
+            case 11:
+                finalResidence = 11;
+                break;
+            case 12:
+                finalResidence = 12;
+                break;
+            case 13:
+                finalResidence = 13;
+                break;
+            case 14:
+                finalResidence = 14;
                 break;
         }
 
@@ -270,8 +307,11 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     public String intToRes(int x) {
         String residence_name = "";
+        if (x == 0) {
+            residence_name = "Off Campus";
+        }
         if (x == 1) {
-            residence_name = "Cinammon";
+            residence_name = "Cinnamon";
         }
         if (x == 2) {
             residence_name = "Tembusu";
@@ -282,6 +322,37 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         if (x == 4) {
             residence_name = "RC4";
         }
+        if (x == 5) {
+            residence_name = "RVRC";
+        }
+        if (x == 6) {
+            residence_name = "Eusoff";
+        }
+        if (x == 7) {
+            residence_name = "Kent Ridge";
+        }
+        if (x == 8) {
+            residence_name = "King Edward VII";
+        }
+        if (x == 9) {
+            residence_name = "Raffles";
+        }
+        if (x == 10) {
+            residence_name = "Sheares";
+        }
+        if (x == 11) {
+            residence_name = "Temasek";
+        }
+        if (x == 12) {
+            residence_name = "PGP House";
+        }
+        if (x == 13) {
+            residence_name = "PGP Residences";
+        }
+        if (x == 14) {
+            residence_name = "UTown Residence";
+        }
+
         return residence_name;
     }
 

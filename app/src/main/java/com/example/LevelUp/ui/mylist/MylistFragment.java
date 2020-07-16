@@ -272,8 +272,11 @@ public class MylistFragment extends Fragment {
     }
 
     public void intToRes(int x) {
+        if (x == 0) {
+            residence_name = "Off Campus";
+        }
         if (x == 1) {
-            residence_name = "Cinammon";
+            residence_name = "Cinnamon";
         }
         if (x == 2) {
             residence_name = "Tembusu";
@@ -284,6 +287,37 @@ public class MylistFragment extends Fragment {
         if (x == 4) {
             residence_name = "RC4";
         }
+        if (x == 5) {
+            residence_name = "RVRC";
+        }
+        if (x == 6) {
+            residence_name = "Eusoff";
+        }
+        if (x == 7) {
+            residence_name = "Kent Ridge";
+        }
+        if (x == 8) {
+            residence_name = "King Edward VII";
+        }
+        if (x == 9) {
+            residence_name = "Raffles";
+        }
+        if (x == 10) {
+            residence_name = "Sheares";
+        }
+        if (x == 11) {
+            residence_name = "Temasek";
+        }
+        if (x == 12) {
+            residence_name = "PGP House";
+        }
+        if (x == 13) {
+            residence_name = "PGP Residences";
+        }
+        if (x == 14) {
+            residence_name = "UTown Residence";
+        }
+
     }
 
     public void buildRecyclerView() {

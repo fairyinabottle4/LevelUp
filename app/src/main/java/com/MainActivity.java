@@ -24,6 +24,7 @@ import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
+import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.example.LevelUp.ui.Occasion;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
@@ -77,36 +78,20 @@ public class MainActivity extends AppCompatActivity {
     public static UserItem currUser;
     private DatabaseReference mDatabaseReferenceUser;
 
-    // These 4 lines are for MyList Fragment
-    public static ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
-    public static ArrayList<Occasion> mOccasionListRealFull = new ArrayList<>();
-    public static ArrayList<Integer> mJiosIDs = new ArrayList<>();
-    public static ArrayList<Integer> mEventsIDs = new ArrayList<>();
-
     // For User Information on MyList Fragment
     public static String display_name;
     public static String display_residential;
+    private String fbUID;
 
-
-
-//    private static ArrayList<JiosItem> jiosListMain = new ArrayList<>();
-//    private static ArrayList<JiosItem> jiosListMainCopy;
-//
-//    private static ArrayList<EventsItem> eventsListMain = new ArrayList<>();
-//    private static ArrayList<EventsItem> eventsListMainCopy;
-//
-//    private static ArrayList<MktplaceItem> mktplaceItemList = new ArrayList<>();
-//
-//    ValueEventListener mValueEventListenerEvents;
-//    ValueEventListener mValueEventListenerJios;
-
-    private String mUsername;
+    // For things in MyList
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mReferenceUsers;
+    private DatabaseReference mDatabaseReferenceActivityEvent;
+    private DatabaseReference mDatabaseReferenceActivityJio;
 
-//    private DatabaseReference mReferenceJios;
-//    private DatabaseReference mReferenceEvents;
-//    private DatabaseReference mReferenceMktplace;
+    public static ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
+    public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
+    public static ArrayList<String> mEventIDs = new ArrayList<>();
+    public static ArrayList<String> mJioIDs = new ArrayList<>();
 
     private static final int RC_SIGN_IN = 1;
 
@@ -115,29 +100,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Load saved My List
-        // loadMyListData();
-
         // Initialize Firebase components
         initializeFirebase();
-
-//        // Add all items in Jios to jiosListMain
-//        initializeJiosListMain();
-//
-//        //Add all items in Mktplace to mktplaceItemList
-//        initializeMktplace();
-//
-//        // Sending jiosListMain to JiosFragment
-//        JiosFragment.setJiosItemList(jiosListMain);
-//
-//        // Add all items in Events to eventsListMain
-//        initializeEventsListMain();
-//
-//        // Sending eventsListMain to EventsFragment
-//        EventsFragment.setEventsItemList(eventsListMain);
-//
-//        //Sending mktplaceItemList to MktplaceFragment
-//        MktplaceFragment.setMktplaceItemList(mktplaceItemList);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -151,18 +115,118 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLogin();
 
+        initializeMyList();
+
+    }
+
+    private void initializeMyList() {
+        final String fbUIDFinal = fbUID;
+        // pulling activityevent with my userID
+        mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
+        mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                    String selectedUserID = selected.getUserID();
+                    if (selectedUserID.equals(fbUIDFinal)) {
+                        // it is my event so I add EventID into arraylist
+                        mEventIDs.add(selected.getOccasionID());
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
+        mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                    String selectedUserID = selected.getUserID();
+                    if (selectedUserID.equals(fbUIDFinal)) {
+                        mJioIDs.add(selected.getOccasionID());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+        DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+
+        mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Occasion selected = snapshot.getValue(EventsItem.class);
+                    String eventID = selected.getOccasionID();
+                    if (mEventIDs.contains(eventID)) {
+                        mOccasionEvents.add(selected);
+
+                    }
+                }
+//                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
+//                mAdapter = myListAdapter;
+//                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Occasion selected = snapshot.getValue(JiosItem.class);
+                    String jioID = selected.getOccasionID();
+                    if (mJioIDs.contains(jioID)) {
+                        mOccasionJios.add(selected);
+                    }
+                }
+//                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
+//                mAdapter = myListAdapter;
+//                mRecyclerView.setAdapter(mAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static ArrayList<Occasion> getmOccasionEvents() {
+        return mOccasionEvents;
+    }
+
+    public static ArrayList<Occasion> getmOccasionJios() {
+        return mOccasionJios;
     }
 
     private void initializeUser() {
-        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabaseReferenceUser = FirebaseDatabase.getInstance().getReference().child("Users");
+        final String fbUIDfinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        fbUID = fbUIDfinal;
+        mDatabaseReferenceUser = mFirebaseDatabase.getReference().child("Users");
         mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
-                    if (fbUID.equals(id)) {
+                    if (fbUIDfinal.equals(id)) {
                         currUser = selected;
                     }
                 }
@@ -170,8 +234,6 @@ public class MainActivity extends AppCompatActivity {
                     // start registration of details
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
-                } else {
-                    // Toast.makeText(getApplicationContext(), "Welcome back!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -187,85 +249,9 @@ public class MainActivity extends AppCompatActivity {
             mAuth = FirebaseAuth.getInstance();
         }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mReferenceUsers = mFirebaseDatabase.getReference("Users");
-//        mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-//        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-//        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
     }
 
-//    private void initializeJiosListMain() {
-//        mValueEventListenerJios = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                jiosListMain.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    jiosListMain.add(snapshot.getValue(JiosItem.class));
-//                }
-//                jiosListMainCopy = new ArrayList<>(jiosListMain);
-//                sort(jiosListMain);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        mReferenceJios.addValueEventListener(mValueEventListenerJios);
-//    }
-//
-//    private void initializeEventsListMain(){
-//        mValueEventListenerEvents = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                eventsListMain.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    eventsListMain.add(snapshot.getValue(EventsItem.class));
-//                }
-//                eventsListMainCopy = new ArrayList<>(eventsListMain);
-//                sort(eventsListMain);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        mReferenceEvents.addValueEventListener(mValueEventListenerEvents);
-//    }
-//
-//    private void initializeMktplace() {
-//        mReferenceMktplace.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-//                    MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-//                    mktplaceItemList.add(upload);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
-//    }
-
     private void initializeLogin() {
-//        editTextName = findViewById(R.id.editTextLoginName);
-//        editTextEmail = findViewById(R.id.editTextLoginEmail);
-//        editTextPassword = findViewById(R.id.editTextLoginPassword);
-//
-//        final String name = editTextName.getText().toString().trim();
-//        final String email = editTextEmail.getText().toString().trim();
-//        final String password = editTextPassword.getText().toString().trim();
-
-//        if (mAuth.getCurrentUser() != null) {
-//            // handle already login user
-//        } else {
-//            // start login activity
-//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//            startActivity(intent);
-//            // registerUser();
-//        }
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -340,17 +326,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             // Sign-in succeeded, set up the Registration page
             initializeUser(); // if user is already in database, set currUser to the user
-            // must wait for data to return
-
-//            if (!existInFirebase()){
-//                // start registration of details
-//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                startActivity(intent);
-//            } else {
-//                Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
-//            }
-
-            // Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
         } else if (resultCode == RESULT_CANCELED) {
             // Sign in was canceled by the user, finish the activity
             Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
@@ -358,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean existInFirebase() {
+    private boolean existInFirebase() {
         // return true if user is already in Users table
         return (currUser != null);
     }
@@ -396,79 +371,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-//    //This unsorted copy is sent to JiosAdapter
-//    public static ArrayList<JiosItem> getJiosListCopy() {
-//        return jiosListMainCopy;
-//    }
-//
-//    //This is sorted and sent to MylistFragment
-//    public static ArrayList<JiosItem> getJiosListReal() {
-//        return jiosListMain;
-//    }
-//
-//    //This unsorted copy is sent to EventsAdapter
-//    public static ArrayList<EventsItem> getEventsListCopy() {
-//        return eventsListMainCopy;
-//    }
-//
-//    //This is sorted and sent to MylistFragment
-//    public static ArrayList<EventsItem> getEventsListReal() {
-//        return eventsListMain;
-//    }
-
-
-
-
-    public void saveMyListData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json1 = gson.toJson(mJiosIDs);
-        String json2 = gson.toJson(mEventsIDs);
-        editor.putString("My List Jios", json1);
-        editor.putString("My List Events", json2);
-        // editor.clear().apply();
-        editor.apply();
-    }
-
-    public void loadMyListData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String jsonJios = sharedPreferences.getString("My List Jios", null);
-        String jsonEvents = sharedPreferences.getString("My List Events", null);
-        Type type = new TypeToken<ArrayList<Integer>>() {}.getType();
-        mJiosIDs = gson.fromJson(jsonJios, type);
-        mEventsIDs = gson.fromJson(jsonEvents, type);
-
-        if (mJiosIDs == null) {
-            mJiosIDs = new ArrayList<>();
-        }
-        if (mEventsIDs == null) {
-            mEventsIDs = new ArrayList<>();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // saveMyListData();
-        mAuth.removeAuthStateListener(mAuthStateListener);
-    }
-
-    @Override
-    protected void onStop() {
-        // saveMyListData();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        // saveMyListData();
-        super.onDestroy();
-    }
-
-
-
 
 }
