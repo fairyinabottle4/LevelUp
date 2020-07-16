@@ -13,11 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ActivityOccasionItem;
+import com.MainActivity;
+import com.UserItem;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -38,11 +43,13 @@ public class JiosPage extends AppCompatActivity {
     private ArrayList<JiosItem> jiosItemArrayList = JiosFragment.getJiosItemList();
     private Context mContext = this;
     private StorageReference mProfileStorageRef;
+    private FirebaseDatabase mFirebaseDatabase;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.occasion_page);
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
         mImageView = findViewById(R.id.event_page_image);
@@ -90,7 +97,15 @@ public class JiosPage extends AppCompatActivity {
             public void onClick(View v) {
                 JiosItem ji = jiosItemArrayList.get(position);
                 int index = JiosFragment.getJiosItemListCopy().indexOf(ji);
-                MylistFragment.setNumberJios(index);
+
+                // add to ActivityJio firebase
+                UserItem user = MainActivity.currUser;
+                String jioID = ji.getJioID();
+                String userID = user.getId();
+                DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(jioID, userID);
+                mActivityJioRef.push().setValue(activityOccasionItem);
+
                 Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
             }
         });

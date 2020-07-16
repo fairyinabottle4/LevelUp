@@ -20,9 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.Jios.LevelUp.ui.jios.JiosMyListFragment;
 import com.MainActivity;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -102,28 +104,6 @@ public class JiosFragment extends Fragment {
         JiosItemList = new ArrayList<>();
     }
 
-    /*
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        JiosViewModel =
-                ViewModelProviders.of(this).get(JiosViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_Jios, container, false);
-        final TextView textView = root.findViewById(R.id.text_Jios);
-        JiosViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
-    }
-
-     */
-
-//    public void createJiosList() {
-//        JiosItemList = new ArrayList<>();
-//    }
-
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -158,6 +138,13 @@ public class JiosFragment extends Fragment {
                     }
                 });
 
+                break;
+            case R.id.action_cfmed_events: // the tick
+                JiosMyListFragment nextFrag= new JiosMyListFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, nextFrag)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
         return super.onOptionsItemSelected(item);

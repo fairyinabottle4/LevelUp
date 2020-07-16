@@ -31,9 +31,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.Events.LevelUp.ui.events.EventsAdapter;
 import com.Events.LevelUp.ui.events.EventsAdder;
 import com.Events.LevelUp.ui.events.EventsItem;
+import com.Events.LevelUp.ui.events.EventsMyListFragment;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.Jios.LevelUp.ui.jios.JiosMyListFragment;
 import com.MainActivity;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
@@ -169,6 +171,13 @@ public class EventsFragment extends Fragment {
                 });
 
                 break;
+            case R.id.action_cfmed_events: // the tick
+                EventsMyListFragment nextFrag= new EventsMyListFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, nextFrag)
+                        .addToBackStack(null)
+                        .commit();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -226,7 +235,7 @@ public class EventsFragment extends Fragment {
                     EventsItem selected = snapshot.getValue(EventsItem.class);
                     // EventsItemList.add(selected);
 
-                    // To show ALL Events created comment out lines 231 to 252 and uncomment out line 227
+                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
 
                     if (selected.getTimeInfo().length() > 4) {
                         continue;

@@ -45,6 +45,8 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MylistFragment extends Fragment {
 //    ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
@@ -59,8 +61,7 @@ public class MylistFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private MylistAdapter mAdapter;
     private View rootView;
-    private static ArrayList<Integer> numberEvents = new ArrayList<>();
-    private static ArrayList<Integer> numberJios = new ArrayList<>();
+
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReferenceEvents;
     private DatabaseReference mDatabaseReferenceJios;
@@ -158,10 +159,28 @@ public class MylistFragment extends Fragment {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     String eventID = selected.getOccasionID();
                     if (mEventIDs.contains(eventID)) {
-                        mOccasionAll.add(selected);
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
+
+
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            mOccasionAll.add(selected);
+                        }
                     }
                 }
+                MainActivity.sort(mOccasionAll);
                 MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
@@ -180,9 +199,28 @@ public class MylistFragment extends Fragment {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
                     if (mJioIDs.contains(jioID)) {
-                        mOccasionAll.add(selected);
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
+
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
+
+
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            mOccasionAll.add(selected);
+                        }
                     }
                 }
+                MainActivity.sort(mOccasionAll);
                 MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
@@ -327,14 +365,6 @@ public class MylistFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-    public static void setNumberEvents(int i) {
-        numberEvents.add(i);
-    }
-
-    public static void setNumberJios(int i) {
-        numberJios.add(i);
     }
 
 //    @Override

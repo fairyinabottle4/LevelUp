@@ -184,6 +184,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
                 ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(jioID, userID);
                 mActivityJioRef.push().setValue(activityOccasionItem);
+
                 Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
             }
         });

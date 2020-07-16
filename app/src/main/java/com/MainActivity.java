@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.Jios.LevelUp.ui.jios.JiosMyListFragment;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
@@ -69,10 +70,8 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     // For Login
-    private EditText editTextName, editTextEmail, editTextPassword;
     public static FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseUser mUser;
     private static final String TAG = "MainActivity";
 
     public static UserItem currUser;
@@ -81,15 +80,14 @@ public class MainActivity extends AppCompatActivity {
     // For User Information on MyList Fragment
     public static String display_name;
     public static String display_residential;
-    private String fbUID;
 
     // For things in MyList
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReferenceActivityEvent;
     private DatabaseReference mDatabaseReferenceActivityJio;
 
-    public static ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
-    public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
+    public static ArrayList<EventsItem> mOccasionEvents = new ArrayList<>();
+    public static ArrayList<JiosItem> mOccasionJios = new ArrayList<>();
     public static ArrayList<String> mEventIDs = new ArrayList<>();
     public static ArrayList<String> mJioIDs = new ArrayList<>();
 
@@ -115,13 +113,14 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLogin();
 
-        initializeMyList();
+        // initializeMyList();
 
     }
 
     private void initializeMyList() {
-        final String fbUIDFinal = fbUID;
+        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         // pulling activityevent with my userID
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
         mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     if (selectedUserID.equals(fbUIDFinal)) {
                         // it is my event so I add EventID into arraylist
                         mEventIDs.add(selected.getOccasionID());
-
                     }
                 }
             }
@@ -151,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUIDFinal)) {
                         mJioIDs.add(selected.getOccasionID());
+                        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -160,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         DatabaseReference mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
 
@@ -167,11 +167,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(EventsItem.class);
+                    EventsItem selected = snapshot.getValue(EventsItem.class);
                     String eventID = selected.getOccasionID();
                     if (mEventIDs.contains(eventID)) {
                         mOccasionEvents.add(selected);
-
                     }
                 }
 //                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
@@ -189,8 +188,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(JiosItem.class);
+                    JiosItem selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
+
                     if (mJioIDs.contains(jioID)) {
                         mOccasionJios.add(selected);
                     }
@@ -208,17 +208,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static ArrayList<Occasion> getmOccasionEvents() {
+    public static ArrayList<EventsItem> getmOccasionEvents() {
         return mOccasionEvents;
     }
 
-    public static ArrayList<Occasion> getmOccasionJios() {
+    public static ArrayList<JiosItem> getmOccasionJios() {
         return mOccasionJios;
     }
 
     private void initializeUser() {
         final String fbUIDfinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        fbUID = fbUIDfinal;
         mDatabaseReferenceUser = mFirebaseDatabase.getReference().child("Users");
         mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -228,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     String id = selected.getId();
                     if (fbUIDfinal.equals(id)) {
                         currUser = selected;
+                        break;
                     }
                 }
                 if (!existInFirebase()){
@@ -257,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                mUser = user;
                 if (user != null) {
                     //onSignedInInitialize(user.getDisplayName());
                     // mReferenceUsers.setValue(user);
@@ -372,4 +371,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAuth.removeAuthStateListener(mAuthStateListener);
+    }
 }
