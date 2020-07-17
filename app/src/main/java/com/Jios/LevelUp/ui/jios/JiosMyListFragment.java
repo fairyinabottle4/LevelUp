@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.MainActivity;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +36,6 @@ public class JiosMyListFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private JiosAdapter mAdapter;
     private View rootView;
-    public static ArrayList<JiosItem> JiosItemList = new ArrayList<>();
     public static ArrayList<String> mJioIDs = new ArrayList<>();
     public static ArrayList<JiosItem> mOccasionJios = new ArrayList<>();
 
@@ -55,6 +55,7 @@ public class JiosMyListFragment extends Fragment {
         mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mJioIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
@@ -94,15 +95,14 @@ public class JiosMyListFragment extends Fragment {
                         cal.set(Calendar.MINUTE, min);
                         Date eventDate = cal.getTime();
 
-                        // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
-
                         Date currentDate = new Date();
-                        // eventDate.compareTo(currentDate) >= 0
+
                         if (eventDate.compareTo(currentDate) >= 0) {
                             mOccasionJios.add(selected);
                         }
                     }
                 }
+                MainActivity.sort(mOccasionJios);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), mOccasionJios);
                 mAdapter = jiosAdapter;
                 mRecyclerView.setAdapter(mAdapter);
@@ -123,7 +123,7 @@ public class JiosMyListFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new JiosAdapter(getActivity(), JiosItemList);
+        mAdapter = new JiosAdapter(getActivity(), mOccasionJios);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

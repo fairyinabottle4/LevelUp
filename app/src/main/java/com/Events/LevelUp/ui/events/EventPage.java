@@ -18,8 +18,11 @@ import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 public class EventPage extends AppCompatActivity {
 
     private ImageView mImageView;
-    private ImageView mAddButton;
+    private ToggleButton mAddButton;
     private ToggleButton mLikeButton;
     private TextView mTextView1;
     private TextView mTextView2;
@@ -48,6 +51,8 @@ public class EventPage extends AppCompatActivity {
     private Context mContext = this;
     private StorageReference mProfileStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
+
+    private boolean changes = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +80,10 @@ public class EventPage extends AppCompatActivity {
         String time = intent.getStringExtra("time");
         String location = intent.getStringExtra("location");
         String description = intent.getStringExtra("description");
+        boolean isChecked = intent.getBooleanExtra("stateChecked", true);
+        final String eventID = intent.getStringExtra("eventID");
         position = intent.getIntExtra("position", 0);
+        final String userID = MainActivity.currUser.getId();
 
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(uid);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -90,7 +98,7 @@ public class EventPage extends AppCompatActivity {
             }
         });
         // mImageView.setImageResource(R.mipmap.ic_launcher_round);
-        mAddButton.setImageResource(R.drawable.ic_add_black_24dp);
+        // mAddButton.setImageResource(R.drawable.ic_add_black_24dp);
         mTextView1.setText(title);
         mTextView2.setText(date);
         mTextView3.setText(time);
@@ -98,30 +106,81 @@ public class EventPage extends AppCompatActivity {
         mTextView5.setText(description);
         mTextView6.setText(creatorName);
 
-        // add plus then add to my list
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+//        // add plus then add to my list
+//        mAddButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+////                EventsItem ei = eventsItemArrayList.get(position);
+////                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+////                MylistFragment.setNumberEvents(index);
+//
 //                EventsItem ei = eventsItemArrayList.get(position);
-//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-//                MylistFragment.setNumberEvents(index);
+//
+////                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+////                MylistFragment.setNumberEvents(index);
+//
+//                // add to ActivityEvent firebase
+//                UserItem user = MainActivity.currUser;
+//                String eventID = ei.getEventID();
+//                String userID = user.getId();
+//                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+//                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+//                mActivityEventRef.push().setValue(activityOccasionItem);
+//
+//
+//                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
-                EventsItem ei = eventsItemArrayList.get(position);
+        if (isChecked) {
+            mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+        } else {
+            mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+        }
 
-//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-//                MylistFragment.setNumberEvents(index);
+        mAddButton.setChecked(isChecked);
 
-                // add to ActivityEvent firebase
-                UserItem user = MainActivity.currUser;
-                String eventID = ei.getEventID();
-                String userID = user.getId();
-                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
-                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
-                mActivityEventRef.push().setValue(activityOccasionItem);
+        mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                changes = true;
+                if (isChecked) {
+                    // change to tick
+                    mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
 
+                    DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                    ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+                    mActivityEventRef.push().setValue(activityOccasionItem);
 
-                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // change back to plus
+                    mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+
+                    // delete the entry from activity DB
+                    final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                    mActivityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mActivityEventRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Event removed from your list", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    MainActivity.mEventIDs.remove(eventID);
+                }
             }
         });
 
@@ -137,5 +196,13 @@ public class EventPage extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (changes) {
+            EventsFragment.setRefresh(true);
+        }
+        super.onBackPressed();
     }
 }

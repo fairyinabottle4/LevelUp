@@ -51,8 +51,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
-        public String uid;
+        public String creatorUid;
         public String creatorName;
+        public String eventID;
+        public boolean isChecked;
 
         public ImageView mImageView;
         public ToggleButton mAddButton;
@@ -83,7 +85,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 public void onClick(View v) {
                      // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
                      Intent intent = new Intent(context, EventPage.class);
-                     intent.putExtra("uid", uid);
+                     intent.putExtra("uid", creatorUid);
                      intent.putExtra("creatorName", creatorName);
                      intent.putExtra("title", mTextView1.getText().toString());
                      intent.putExtra("description", mTextView2.getText().toString());
@@ -91,18 +93,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                      intent.putExtra("location", mTextView4.getText().toString());
                      intent.putExtra("time", mTextView5.getText().toString());
                      intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("stateChecked", isChecked);
+                    intent.putExtra("eventID", eventID);
                      context.startActivity(intent);
                 }
             });
 
         }
 
-        public void setUid(String newUID) {
-            this.uid = newUID;
+        public void setCreatorUid(String newUID) {
+            this.creatorUid = newUID;
         }
 
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
+        }
+
+        public void setChecked(boolean toSet) {this.isChecked = toSet; }
+
+        public void setEventID(String eventID) {
+            this.eventID = eventID;
         }
     } // static class EventsViewHolder ends here
 
@@ -133,7 +143,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 //        holder.mImageView.setImageResource(currentItem.getProfilePicture());
         final EventsViewHolder holder1 = holder;
         final String creatorUID = currentItem.getCreatorID();
-        holder1.setUid(creatorUID);
+        holder1.setCreatorUid(creatorUID);
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -203,9 +213,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         // if currentItem is contained in Main's Event List, then mAddButton set state
         String eventID = currentItem.getEventID();
+        holder1.setEventID(eventID);
         if (MainActivity.mEventIDs.contains(eventID)) {
             holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            holder1.setChecked(true);
             holder1.mAddButton.setChecked(true);
+        } else {
+            holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+            holder1.setChecked(false);
+            holder1.mAddButton.setChecked(false);
         }
 
         holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
