@@ -1,5 +1,6 @@
 package com.example.LevelUp.ui.jios;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -173,6 +175,7 @@ public class JiosFragment extends Fragment {
 //                mAdapter.notifyDataSetChanged();
                 mAdapter.resetAdapter();
                 mRecyclerView.setAdapter(mAdapter);
+                closeKeyboard();
                 return true;
             }
         });
@@ -181,6 +184,15 @@ public class JiosFragment extends Fragment {
         // searchItem.setOnMenuItemClickListener()
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void closeKeyboard() {
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        }
     }
 
 

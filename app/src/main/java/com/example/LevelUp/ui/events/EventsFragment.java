@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -205,6 +206,7 @@ public class EventsFragment extends Fragment {
 //                mAdapter.notifyDataSetChanged();
                 mAdapter.resetAdapter();
                 mRecyclerView.setAdapter(mAdapter);
+                closeKeyboard();
                 return true;
             }
         });
@@ -213,6 +215,15 @@ public class EventsFragment extends Fragment {
         // searchItem.setOnMenuItemClickListener()
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void closeKeyboard() {
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        }
     }
 
     public static void setEventsItemList(ArrayList<EventsItem> eventsList) {
