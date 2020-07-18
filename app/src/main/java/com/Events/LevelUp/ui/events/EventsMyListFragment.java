@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
+import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,11 +33,11 @@ import java.util.Date;
 public class EventsMyListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private EventsAdapter mAdapter;
+    private MylistAdapter mAdapter;
     private View rootView;
-    public static ArrayList<EventsItem> EventsItemList = new ArrayList<>();
+
     public static ArrayList<String> mEventIDs = new ArrayList<>();
-    public static ArrayList<EventsItem> mOccasionEvents = new ArrayList<>();
+    public static ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
 
     @Nullable
     @Override
@@ -102,8 +104,8 @@ public class EventsMyListFragment extends Fragment {
                     }
                 }
 
-                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), mOccasionEvents);
-                mAdapter = eventsAdapter;
+                MylistAdapter mylistAdapter = new MylistAdapter(mOccasionEvents);
+                mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
             }
@@ -123,7 +125,7 @@ public class EventsMyListFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new EventsAdapter(getActivity(), EventsItemList);
+        mAdapter = new MylistAdapter(mOccasionEvents);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

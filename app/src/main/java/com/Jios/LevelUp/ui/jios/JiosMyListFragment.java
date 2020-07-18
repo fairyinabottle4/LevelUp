@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
 import com.MainActivity;
+import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
+import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,10 +36,10 @@ import java.util.Date;
 public class JiosMyListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private JiosAdapter mAdapter;
+    private MylistAdapter mAdapter;
     private View rootView;
     public static ArrayList<String> mJioIDs = new ArrayList<>();
-    public static ArrayList<JiosItem> mOccasionJios = new ArrayList<>();
+    public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
 
     @Nullable
     @Override
@@ -103,8 +105,8 @@ public class JiosMyListFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mOccasionJios);
-                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), mOccasionJios);
-                mAdapter = jiosAdapter;
+                MylistAdapter mylistAdapter = new MylistAdapter(mOccasionJios);
+                mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }
 
@@ -123,7 +125,7 @@ public class JiosMyListFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new JiosAdapter(getActivity(), mOccasionJios);
+        mAdapter = new MylistAdapter(mOccasionJios);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

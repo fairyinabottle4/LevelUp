@@ -1,21 +1,29 @@
 package com.Mylist.LevelUp.ui.mylist;
 
 import android.net.Uri;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.ActivityOccasionItem;
+import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +64,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     //the ViewHolder holds the content of the card
     public static class MylistViewHolder extends RecyclerView.ViewHolder {
         public String creatorName;
+
+        public ToggleButton mAddButton;
+        public ToggleButton mLikeButton;
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
@@ -67,6 +78,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public MylistViewHolder(View itemView, final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
+            mAddButton = itemView.findViewById(R.id.image_add);
+            mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.time);
@@ -101,8 +114,13 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MylistAdapter.MylistViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MylistAdapter.MylistViewHolder holder, final int position) {
         Occasion currentItem = mMylistList.get(position);
+        UserItem user = MainActivity.currUser;
+        final String userID = user.getId();
+        final String occID = currentItem.getOccasionID();
+        final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+        final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
 
         final MylistAdapter.MylistViewHolder holder1 = holder;
         final String creatorUID = currentItem.getCreatorID();
@@ -144,6 +162,99 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+        holder1.mAddButton.setChecked(true);
+        final Handler handler = new Handler();
+        final Runnable myRun = new Runnable() {
+            @Override
+            public void run() {
+                // delete from Database
+                // Jio
+                mActivityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                            if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                String key = snapshot.getKey();
+                                mActivityJioRef.child(key).removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //Events
+                mActivityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                            if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                String key = snapshot.getKey();
+                                mActivityEventRef.child(key).removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                if (MainActivity.mJioIDs.contains(occID)) {
+                    MainActivity.mJioIDs.remove(occID);
+                }
+
+                if(MainActivity.mEventIDs.contains(occID)) {
+                    MainActivity.mEventIDs.remove(occID);
+                }
+
+
+                mMylistList.remove(position);
+                notifyItemRemoved(position);
+            }
+        };
+
+        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    handler.removeCallbacks(myRun);
+                    Toast.makeText(buttonView.getContext(), "Item added back to your list.", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    handler.postDelayed(myRun, 5000);
+                    String msg = "Item will be removed in 5s." + "\n" + "Press the + to add it back to your list.";
+                    Toast toast = Toast.makeText(buttonView.getContext(), msg, Toast.LENGTH_SHORT);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    v.setGravity(Gravity.CENTER);
+                    toast.show();
+
+
+                }
+            }
+        });
+
+        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    // do wtv u need to when user clicks liked button
+                } else {
+                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    // do wtv u need to when user unlikes an event
+                }
             }
         });
     }
