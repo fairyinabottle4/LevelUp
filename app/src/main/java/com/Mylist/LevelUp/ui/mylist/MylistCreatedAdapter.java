@@ -1,6 +1,7 @@
 package com.Mylist.LevelUp.ui.mylist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,8 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     private StorageReference mProfileStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserRef;
+
+    private Occasion item;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -100,6 +103,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     @Override
     public void onBindViewHolder(@NonNull MylistCreatedAdapter.MylistCreatedViewHolder holder, final int position) {
         Occasion currentItem = mMylistList.get(position);
+        item = currentItem;
         UserItem user = MainActivity.currUser;
         final String userID = user.getId();
         final String occID = currentItem.getOccasionID();
@@ -154,8 +158,28 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             public void onClick(View v) {
                 // open Activity to Edit Info
                 // pass title location description date time
+                // pass item ID as well
                 // reuse the create events page
-                // Intent intent = new Intent(MylistCreatedAdapter.this, EditOccasionInfoActivity.class);
+
+                // how pass date and time ???
+
+                Intent intent = new Intent(mContext, EditOccasionInfoActivity.class);
+                String title = item.getTitle();
+                String location = item.getLocationInfo();
+                String description = item.getDescription();
+                String date = df.format(item.getDateInfo());
+                String time = item.getTimeInfo();
+                String occID = item.getOccasionID();
+
+                intent.putExtra("title", title);
+                intent.putExtra("location", location);
+                intent.putExtra("description", description);
+                intent.putExtra("date", date);
+                intent.putExtra("time", time);
+                intent.putExtra("occID", occID);
+
+                mContext.startActivity(intent);
+
             }
         });
     }

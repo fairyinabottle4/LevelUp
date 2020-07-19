@@ -59,6 +59,9 @@
         <activity
             android:name="com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity"
             android:label="Edit User Info" />
+        <activity
+            android:name="com.Mylist.LevelUp.ui.mylist.EditOccasionInfoActivity"
+            android:label="Edit Occasion Info" />
     </application>
 
 </manifest>
