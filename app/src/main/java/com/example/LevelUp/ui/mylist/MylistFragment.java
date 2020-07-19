@@ -27,6 +27,7 @@ import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
+import com.Mylist.LevelUp.ui.mylist.CreatedFragment;
 import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
@@ -404,6 +405,13 @@ public class MylistFragment extends Fragment {
                     }
                 });
 
+                break;
+            case R.id.action_favourites:
+                CreatedFragment nextFrag= new CreatedFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, nextFrag)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -117,26 +117,6 @@ public class EventsFragment extends Fragment {
         EventsItemList = new ArrayList<>();
     }
 
-
-    /*
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        EventsViewModel =
-                ViewModelProviders.of(this).get(EventsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_Events, container, false);
-        final TextView textView = root.findViewById(R.id.text_Events);
-        EventsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
-    }
-
-     */
-
-
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
