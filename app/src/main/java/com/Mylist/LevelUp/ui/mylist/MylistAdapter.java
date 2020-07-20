@@ -231,7 +231,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-                    handler.removeCallbacks(myRun);
+                    // handler.removeCallbacks(myRun);
                     Toast.makeText(buttonView.getContext(), "Item added back to your list.", Toast.LENGTH_SHORT).show();
 
                 } else {
