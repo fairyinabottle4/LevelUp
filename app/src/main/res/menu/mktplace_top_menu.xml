@@ -7,7 +7,7 @@
         android:title="@string/menu_history"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/action_favourites"
+    <item android:id="@+id/action_createdoccasions"
         android:icon="@drawable/ic_favorite_white_24dp"
         android:title="@string/menu_favourites"
         app:showAsAction="always"/>

@@ -29,6 +29,8 @@ import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.CreatedFragment;
 import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
+import com.Mylist.LevelUp.ui.mylist.HistoryEventsFragment;
+import com.Mylist.LevelUp.ui.mylist.HistoryFragment;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
@@ -55,6 +57,8 @@ public class MylistFragment extends Fragment {
     // ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
 
     ArrayList<Occasion> mOccasionAll = new ArrayList<>();
+    ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
+    ArrayList<Occasion> mOccasionJios = new ArrayList<>();
     ArrayList<String> mEventIDs = new ArrayList<>();
     ArrayList<String> mJioIDs = new ArrayList<>();
 
@@ -153,9 +157,12 @@ public class MylistFragment extends Fragment {
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
 
+        mOccasionAll.clear();
+
         mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOccasionEvents.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     String eventID = selected.getOccasionID();
@@ -177,10 +184,12 @@ public class MylistFragment extends Fragment {
 
                         Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionAll.add(selected);
+                            mOccasionEvents.add(selected);
                         }
                     }
                 }
+                mOccasionEvents.addAll(mOccasionJios);
+                mOccasionAll = mOccasionEvents;
                 MainActivity.sort(mOccasionAll);
                 MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
                 mAdapter = myListAdapter;
@@ -196,6 +205,7 @@ public class MylistFragment extends Fragment {
         mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOccasionJios.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
@@ -217,11 +227,15 @@ public class MylistFragment extends Fragment {
 
                         Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionAll.add(selected);
+                            mOccasionJios.add(selected);
                         }
                     }
                 }
+                mOccasionJios.addAll(mOccasionEvents);
+                mOccasionAll = mOccasionJios;
+
                 MainActivity.sort(mOccasionAll);
+
                 MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
@@ -406,15 +420,25 @@ public class MylistFragment extends Fragment {
                 });
 
                 break;
-            case R.id.action_favourites:
+            case R.id.action_createdoccasions:
                 CreatedFragment nextFrag= new CreatedFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, nextFrag)
                         .addToBackStack(null)
                         .commit();
                 break;
+
+            case R.id.action_history:
+                HistoryFragment nextFrag2= new HistoryFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, nextFrag2)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
+
     }
 
     @Override
