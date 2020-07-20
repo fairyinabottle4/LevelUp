@@ -119,23 +119,6 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                     mDatabaseReference.child(key).setValue(eventsItem);
                     Toast.makeText(EventsAdder.this, "Event saved successfully", Toast.LENGTH_LONG).show();
 
-//                    EventsFragment eF = (EventsFragment) getSupportFragmentManager().findFragmentByTag("EventsFragment");
-//
-//                    if (eF == null) {
-////                        Intent intent = new Intent(EventsAdder.this, MainActivity.class);
-////                        startActivity(intent);
-////                        eF = new EventsFragment();
-////                        getSupportFragmentManager().beginTransaction()
-////                                .replace(R.id.nav_host_fragment, eF, "EventsFragment")
-////                                .addToBackStack("EventsFragment")
-////                                .commit();
-//                        Toast.makeText(EventsAdder.this, "yes", Toast.LENGTH_SHORT).show();
-//                        onBackPressed();
-//                    } else {
-//                        eF.loadDataEvents();
-//                        onBackPressed();
-//                    }
-
                     EventsFragment.setRefresh(true);
                     onBackPressed();
 
@@ -151,6 +134,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
+        // Toast.makeText(this, currentDateString, Toast.LENGTH_SHORT).show();
         mDateSelected.setText(currentDateString);
     }
 

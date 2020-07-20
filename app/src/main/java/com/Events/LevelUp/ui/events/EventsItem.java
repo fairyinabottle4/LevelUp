@@ -104,9 +104,13 @@ public class EventsItem implements Occasion {
 
     public String getOccasionID() {return eventID; }
 
+    public void setOccasionID(String newID) { this.eventID = newID; }
+
     public String getCreatorID() {
         return creatorID;
     }
+
+
 
     /*
     @Override

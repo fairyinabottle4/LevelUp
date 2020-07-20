@@ -36,6 +36,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     private ArrayList<Occasion> mMylistList;
     private MylistCreatedAdapter.OnItemClickListener mListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+    private DateFormat df2 = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
     private Context mContext;
 
@@ -102,8 +103,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
     @Override
     public void onBindViewHolder(@NonNull MylistCreatedAdapter.MylistCreatedViewHolder holder, final int position) {
-        Occasion currentItem = mMylistList.get(position);
-        item = currentItem;
+        final Occasion currentItem = mMylistList.get(position);
         UserItem user = MainActivity.currUser;
         final String userID = user.getId();
         final String occID = currentItem.getOccasionID();
@@ -164,12 +164,13 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 // how pass date and time ???
 
                 Intent intent = new Intent(mContext, EditOccasionInfoActivity.class);
-                String title = item.getTitle();
-                String location = item.getLocationInfo();
-                String description = item.getDescription();
-                String date = df.format(item.getDateInfo());
-                String time = item.getTimeInfo();
-                String occID = item.getOccasionID();
+                String title = currentItem.getTitle();
+                String location = currentItem.getLocationInfo();
+                String description = currentItem.getDescription();
+                String date = df2.format(currentItem.getDateInfo());
+                String time = currentItem.getTimeInfo();
+                String occID = currentItem.getOccasionID();
+                String creatorID = currentItem.getCreatorID();
 
                 intent.putExtra("title", title);
                 intent.putExtra("location", location);
@@ -177,6 +178,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 intent.putExtra("date", date);
                 intent.putExtra("time", time);
                 intent.putExtra("occID", occID);
+                intent.putExtra("creatorID", creatorID);
 
                 mContext.startActivity(intent);
 

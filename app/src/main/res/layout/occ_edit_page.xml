@@ -136,13 +136,16 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center">
-        <Button
+        <ToggleButton
+            android:id="@+id/delete_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@null"
-            android:text="Delete"
+            android:textOff="Delete"
+            android:textOn="Undo Delete"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="54dp"
             android:drawableEnd="@drawable/ic_round_delete_24"/>
     </RelativeLayout>
 

@@ -80,14 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
         initializeLogin();
 
-        initializeMyList();
+        // initializeMyList();
 
         // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
 
     }
 
     private void initializeMyList() {
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUIDFinal = currUser.getId();
         // pulling activityevent with my userID
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     String id = selected.getId();
                     if (fbUIDfinal.equals(id)) {
                         currUser = selected;
+                        initializeMyList();
                         break;
                     }
                 }
