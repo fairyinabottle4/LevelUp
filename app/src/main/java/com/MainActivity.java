@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     public static UserItem currUser;
+    private static String currUserProfilePicture;
     private DatabaseReference mDatabaseReferenceUser;
 
     // For User Information on MyList Fragment
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     String id = selected.getId();
                     if (fbUIDfinal.equals(id)) {
                         currUser = selected;
+                        currUser.setProfilePictureUri(currUserProfilePicture);
                         initializeMyList();
                         break;
                     }
@@ -292,5 +295,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    public static void setCurrUserProfilePicture(String currUserProfilePicture) {
+        MainActivity.currUserProfilePicture = currUserProfilePicture;
     }
 }

@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void uploadImageToFireBase() {
-        String currUserId = MainActivity.currUser.getId();
+        String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference fileReference = FirebaseStorage.getInstance().getReference("profile picture uploads").child(currUserId);
         fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -135,11 +135,12 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
+        // MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
+        MainActivity.setCurrUserProfilePicture(profileImageUri.toString());
         // send update to database
         String newUri = profileImageUri.toString();
         FirebaseDatabase.getInstance().getReference("Users")
-                .child(MainActivity.currUser.getId())
+                .child(currUserId)
                 .child("profilePictureUri")
                 .setValue(newUri);
 
