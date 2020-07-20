@@ -161,8 +161,6 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 // pass item ID as well
                 // reuse the create events page
 
-                // how pass date and time ???
-
                 Intent intent = new Intent(mContext, EditOccasionInfoActivity.class);
                 String title = currentItem.getTitle();
                 String location = currentItem.getLocationInfo();
