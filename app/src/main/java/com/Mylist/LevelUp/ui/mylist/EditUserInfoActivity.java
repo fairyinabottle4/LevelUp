@@ -108,10 +108,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                     editTextName.requestFocus();
                     pass = false;
                 }
-                if (changes) {
-                    MylistFragment.setRefreshUserDetails(true);
-                }
+
                 if (pass) {
+                    MylistFragment.setRefreshUserDetails(true);
                     finish();
                 }
             }
@@ -119,11 +118,21 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         // For Setting Profile Picture
         final ImageView editProfileImage = findViewById(R.id.edit_profile_picture);
+        final ImageView editProfileImagePencil = findViewById(R.id.edit_profile_picture_pencil);
         this.editProfileImage = editProfileImage;
         if (profileImageUri != null) {
             editProfileImage.setImageURI(profileImageUri);
         }
         editProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open Gallery
+                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent, 1000);
+            }
+        });
+
+        editProfileImagePencil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open Gallery

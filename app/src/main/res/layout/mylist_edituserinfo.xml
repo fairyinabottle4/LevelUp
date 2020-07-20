@@ -63,20 +63,24 @@
                 app:layout_constraintTop_toBottomOf="@id/editSpinnerResidenceName" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:id="@+id/edit_profile_picture_pencil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginStart="60dp"
+            android:src="@drawable/ic_baseline_edit_24"/>
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/edit_profile_picture"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:background="@color/fui_transparent"/>
+            android:background="@color/fui_transparent"
+            android:src="@drawable/fake_dp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:layout_marginStart="60dp"
-            android:src="@drawable/ic_baseline_edit_24"/>
+
     </RelativeLayout>
 
     <Button

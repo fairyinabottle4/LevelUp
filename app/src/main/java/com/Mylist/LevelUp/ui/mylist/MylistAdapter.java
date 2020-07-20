@@ -26,6 +26,7 @@ import com.example.tryone.R;
 import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -117,7 +118,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     public void onBindViewHolder(@NonNull MylistAdapter.MylistViewHolder holder, final int position) {
         Occasion currentItem = mMylistList.get(position);
         UserItem user = MainActivity.currUser;
-        final String userID = user.getId();
+        final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String occID = currentItem.getOccasionID();
         final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
         final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
@@ -220,6 +221,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
                 mMylistList.remove(position);
                 notifyItemRemoved(position);
+                notifyItemRangeChanged(position, mMylistList.size());
+
             }
         };
 
@@ -233,12 +236,14 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
                 } else {
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-                    handler.postDelayed(myRun, 5000);
-                    String msg = "Item will be removed in 5s." + "\n" + "Press the + to add it back to your list.";
-                    Toast toast = Toast.makeText(buttonView.getContext(), msg, Toast.LENGTH_SHORT);
-                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                    v.setGravity(Gravity.CENTER);
-                    toast.show();
+                    handler.postDelayed(myRun, 0000);
+                    Toast.makeText(buttonView.getContext(), "Item removed from your list.", Toast.LENGTH_SHORT).show();
+
+//                    String msg = "Item will be removed in 5s." + "\n" + "Press the + to add it back to your list.";
+////                    Toast toast = Toast.makeText(buttonView.getContext(), msg, Toast.LENGTH_SHORT);
+////                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+////                    v.setGravity(Gravity.CENTER);
+////                    toast.show();
 
 
                 }
