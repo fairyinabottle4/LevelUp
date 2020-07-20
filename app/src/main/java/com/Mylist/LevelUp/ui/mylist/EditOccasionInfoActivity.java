@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -255,6 +256,27 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                             if (selectedOccID.equals(occID)) {
                                 String key = snapshot.getKey();
                                 mDatabaseReferenceEvents.child(key).removeValue();
+                                finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            JiosItem selected = snapshot.getValue(JiosItem.class);
+                            String selectedOccID = selected.getJioID();
+                            if (selectedOccID.equals(occID)) {
+                                String key = snapshot.getKey();
+                                mDatabaseReferenceJios.child(key).removeValue();
+                                finish();
                             }
                         }
                     }
@@ -265,18 +287,20 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                     }
                 });
             }
-
-            // ADD FOR JIOS LATER
         };
 
         deleteBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // run the runnable
-                    handler.postDelayed(myRun, 5000); // CHANGE TO 10S LATER
+                    // Run the runnable
+                    handler.postDelayed(myRun, 10000);
+                    Toast.makeText(buttonView.getContext(), "Item will be deleted in 10s", Toast.LENGTH_SHORT).show();
+
                 } else {
-                    // cancel runnable
+                    // Cancel runnable
+                    handler.removeCallbacks(myRun);
+                    Toast.makeText(EditOccasionInfoActivity.this, "Cancelled Delete", Toast.LENGTH_SHORT).show();
 
                 }
             }
