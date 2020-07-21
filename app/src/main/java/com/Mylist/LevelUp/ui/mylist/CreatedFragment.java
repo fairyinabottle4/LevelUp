@@ -44,6 +44,7 @@ public class CreatedFragment extends Fragment {
         Adapter adapter = new Adapter(getChildFragmentManager());
         adapter.addFragment(new JiosCreatedFragment(), "Jios");
         adapter.addFragment(new EventsCreatedFragment(), "Events");
+        adapter.addFragment(new MktplaceCreatedFragment(), "Market Place");
         viewPager.setAdapter(adapter);
     }
 
