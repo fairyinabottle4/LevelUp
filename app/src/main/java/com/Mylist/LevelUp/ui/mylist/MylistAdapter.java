@@ -1,5 +1,7 @@
 package com.Mylist.LevelUp.ui.mylist;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.Gravity;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.ActivityOccasionItem;
+import com.Events.LevelUp.ui.events.EventPage;
+import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
@@ -48,6 +52,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     private ArrayList<Occasion> mMylistListFull;
     private MylistAdapter.OnItemClickListener mListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+    private Context mContext;
 
     private StorageReference mProfileStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
@@ -65,6 +70,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     //the ViewHolder holds the content of the card
     public static class MylistViewHolder extends RecyclerView.ViewHolder {
         public String creatorName;
+        public String creatorUid;
+        public String occID;
+        public boolean isJio;
 
         public ToggleButton mAddButton;
         public ToggleButton mLikeButton;
@@ -76,7 +84,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public TextView mTextView5;
         public TextView mTextView6;
 
-        public MylistViewHolder(View itemView, final MylistAdapter.OnItemClickListener listener) {
+        public MylistViewHolder(final Context context, View itemView, final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mAddButton = itemView.findViewById(R.id.image_add);
@@ -87,16 +95,53 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.date);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(context, EventPage.class);
+                    if (isJio) {
+                        intent = new Intent(context, JiosPage.class);
+                        intent.putExtra("jioID", occID);
+                        // Toast.makeText(context, "JIO!", Toast.LENGTH_SHORT).show();
+                    }
+                    intent.putExtra("uid", creatorUid);
+                    intent.putExtra("creatorName", creatorName);
+                    intent.putExtra("title", mTextView1.getText().toString());
+                    intent.putExtra("description", mTextView2.getText().toString());
+                    intent.putExtra("date", mTextView5.getText().toString());
+                    intent.putExtra("location", mTextView4.getText().toString());
+                    intent.putExtra("time", mTextView3.getText().toString());
+                    intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("eventID", occID);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
         }
+
+        public void setCreatorUid(String creatorUid) {
+            this.creatorUid = creatorUid;
+        }
+
+        public void setOccID(String occID) {
+            this.occID = occID;
+        }
+
+        public void setIsJio(boolean jio) {
+            isJio = jio;
+        }
     } // static class ends here
 
     //Constructor for MylistAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MylistAdapter(ArrayList<Occasion> MylistList) {
+    public MylistAdapter(Context context, ArrayList<Occasion> MylistList) {
+        mContext = context;
         mMylistList = MylistList;
         mMylistListFull = new ArrayList<>(MylistList);
         mProfileStorageRef = FirebaseStorage.getInstance()
@@ -110,7 +155,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     @Override
     public MylistAdapter.MylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
-        MylistAdapter.MylistViewHolder evh = new MylistAdapter.MylistViewHolder(v, mListener);
+        MylistAdapter.MylistViewHolder evh = new MylistAdapter.MylistViewHolder(mContext, v, mListener);
         return evh;
     }
 
@@ -125,6 +170,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
         final MylistAdapter.MylistViewHolder holder1 = holder;
         final String creatorUID = currentItem.getCreatorID();
+        holder1.setCreatorUid(creatorUID);
+        holder1.setOccID(occID);
+        holder1.setIsJio(currentItem.isJio());
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -308,6 +356,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     };
 
     public MylistAdapter resetAdapter() {
-        return new MylistAdapter(mMylistListFull);
+        return new MylistAdapter(mContext, mMylistListFull);
     }
 }

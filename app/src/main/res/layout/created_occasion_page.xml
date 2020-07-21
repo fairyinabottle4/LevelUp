@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/events_page_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/event_page_image"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                tools:src="@drawable/fake_dp" />
+
+            <TextView
+                android:id="@+id/event_page_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_marginStart="115dp"
+                android:layout_marginEnd="20dp"
+                android:text="Title"
+                android:ellipsize="end"
+                android:textSize="24sp"
+                android:maxLines="2"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="115dp"
+                android:layout_below="@id/event_page_title">
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="2.5dp"
+                    app:srcCompat="@drawable/ic_location_on_black_24dp"/>
+
+                <TextView
+                    android:id="@+id/event_page_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:text="Location"
+                    android:maxLines="4"
+                    android:ellipsize="end"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp">
+            <TextView
+                android:id="@+id/creatorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Creator: " />
+
+            <TextView
+                android:id="@+id/event_page_creator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="78dp"
+                android:textSize="18sp"
+                android:text="Creator" />
+
+            <TextView
+                android:id="@+id/dateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="24dp"
+                android:text="Date: " />
+
+            <TextView
+                android:id="@+id/event_page_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="56dp"
+                android:textSize="18sp"
+                android:layout_marginTop="24dp"
+                android:text="Date" />
+
+            <TextView
+                android:id="@+id/timeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="48dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Time: " />
+
+            <TextView
+                android:id="@+id/event_page_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="59dp"
+                android:layout_marginTop="48dp"
+                android:textSize="18sp"
+                android:text="Time" />
+            <!--
+            <ImageView
+                android:id="@+id/events_page_clock_img"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="4dp"
+                app:srcCompat="@drawable/ic_access_time_black_24dp" />
+                -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="10dp">
+
+                <Button
+                    android:id="@+id/creator_page_edit"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/ic_baseline_edit_24_black" />
+
+                <ToggleButton
+                    android:id="@+id/events_page_image_like"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="4dp"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@drawable/ic_favorite_black_24dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <ScrollView
+            android:id="@+id/SCROLLER_ID"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:fillViewport="true"
+            android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/event_page_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="100dp"
+                android:textSize="18sp"/>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!--
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/events_page_main">
+
+        <ImageView
+            android:id="@+id/events_page_image_add_btm"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/ic_add_black_24dp" />
+
+        <ImageView
+            android:id="@+id/events_page_image_like_btm"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_favorite_black_24dp" />
+
+    </LinearLayout>
+    -->
+</androidx.constraintlayout.widget.ConstraintLayout>

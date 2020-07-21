@@ -38,6 +38,8 @@ public class EventsMyListFragment extends Fragment {
     public static ArrayList<String> mEventIDs = new ArrayList<>();
     public static ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
 
+    private static boolean refreshList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +50,26 @@ public class EventsMyListFragment extends Fragment {
         activity.setSupportActionBar(tb);
         tb.setTitle("Events I Signed Up For");
 
+
+
+        buildRecyclerView();
+
+        initializeList();
+
+        return rootView;
+
+    }
+
+    public void buildRecyclerView() {
+        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new MylistAdapter(getActivity(), mOccasionEvents);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void initializeList() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityEvent");
@@ -103,7 +125,7 @@ public class EventsMyListFragment extends Fragment {
                     }
                 }
 
-                MylistAdapter mylistAdapter = new MylistAdapter(mOccasionEvents);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionEvents);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -114,19 +136,17 @@ public class EventsMyListFragment extends Fragment {
 
             }
         });
-
-        buildRecyclerView();
-
-        return rootView;
-
     }
 
-    public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(mOccasionEvents);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    public static void setRefreshList(boolean refreshList) {
+        EventsMyListFragment.refreshList = refreshList;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (refreshList) {
+            initializeList();
+        }
+        super.onCreate(savedInstanceState);
     }
 }

@@ -110,7 +110,10 @@ public class EventsItem implements Occasion {
         return creatorID;
     }
 
-
+    @Override
+    public boolean isJio() {
+        return false;
+    }
 
     /*
     @Override

@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Events.LevelUp.ui.events.EventPage;
+import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
@@ -30,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdapter.MylistCreatedViewHolder> {
@@ -56,6 +59,10 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
     public static class MylistCreatedViewHolder extends RecyclerView.ViewHolder {
         public String creatorName;
+        public String creatorUid;
+        public String occID;
+        public boolean isJio;
+        public Date date;
 
         public Button mEditButton;
         public ImageView mImageView;
@@ -66,7 +73,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public TextView mTextView5;
         public TextView mTextView6;
 
-        public MylistCreatedViewHolder(Context context, View itemView, final MylistCreatedAdapter.OnItemClickListener listener) {
+        public MylistCreatedViewHolder(final Context context, View itemView, final MylistCreatedAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mEditButton = itemView.findViewById(R.id.image_edit);
@@ -76,10 +83,51 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.date);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(context, CreatedOccasionPage.class);
+//                    if (isJio) {
+//                        intent = new Intent(context, JiosPage.class);
+//                        intent.putExtra("jioID", occID);
+//                        // Toast.makeText(context, "JIO!", Toast.LENGTH_SHORT).show();
+//                    }
+                    intent.putExtra("uid", creatorUid);
+                    intent.putExtra("creatorName", creatorName);
+                    intent.putExtra("title", mTextView1.getText().toString());
+                    intent.putExtra("description", mTextView2.getText().toString());
+                    intent.putExtra("date", mTextView5.getText().toString());
+                    intent.putExtra("dateToShow", DateFormat.getDateInstance(DateFormat.MEDIUM).format(date));
+                    intent.putExtra("location", mTextView4.getText().toString());
+                    intent.putExtra("time", mTextView3.getText().toString());
+                    intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("eventID", occID);
+                    context.startActivity(intent);
+                }
+            });
         }
 
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
+        }
+
+        public void setCreatorUid(String creatorUid) {
+            this.creatorUid = creatorUid;
+        }
+
+        public void setOccID(String occID) {
+            this.occID = occID;
+        }
+
+        public void setIsJio(boolean jio) {
+            isJio = jio;
+        }
+
+        public void setDate(Date date) {
+            this.date = date;
         }
     } // static class ends here
 
@@ -112,6 +160,11 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
         final MylistCreatedAdapter.MylistCreatedViewHolder holder1 = holder;
         final String creatorUID = currentItem.getCreatorID();
+        holder1.setCreatorUid(creatorUID);
+        holder1.setOccID(occID);
+        holder1.setIsJio(currentItem.isJio());
+        holder1.setDate(currentItem.getDateInfo());
+
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -159,7 +212,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 // open Activity to Edit Info
                 // pass title location description date time
                 // pass item ID as well
-                // reuse the create events page
+                // reuse the create events page UI
 
                 Intent intent = new Intent(mContext, EditOccasionInfoActivity.class);
                 String title = currentItem.getTitle();

@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -90,6 +91,7 @@ public class MylistFragment extends Fragment {
     private String fbUID;
 
     private static boolean refreshUserDetails;
+    private static boolean refreshList;
 
     @Nullable
     @Override
@@ -99,8 +101,7 @@ public class MylistFragment extends Fragment {
         resi = rootView.findViewById(R.id.user_display_resi);
         profilePic = rootView.findViewById(R.id.user_display_picture);
 
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        fbUID = fbUIDFinal;
+        fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         if (MainActivity.display_name != null) {
             name.setText(MainActivity.display_name);
@@ -111,9 +112,26 @@ public class MylistFragment extends Fragment {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
+        buildRecyclerView();
+
         initializeUserDetails();
 
-        // pulling activityevent with my userID
+        initializeList();
+
+        // setting up toolbar
+        setHasOptionsMenu(true);
+        Toolbar toolbar = rootView.findViewById(R.id.mylist_toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        assert activity != null;
+        activity.setSupportActionBar(toolbar);
+
+        return rootView;
+    }
+
+    public void initializeList() {
+        mEventIDs.clear();
+        mJioIDs.clear();
+        final String fbUIDFinal = fbUID;
         mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
         mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
@@ -159,7 +177,7 @@ public class MylistFragment extends Fragment {
 
         mOccasionAll.clear();
 
-        mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionEvents.clear();
@@ -191,7 +209,7 @@ public class MylistFragment extends Fragment {
                 mOccasionEvents.addAll(mOccasionJios);
                 mOccasionAll = mOccasionEvents;
                 MainActivity.sort(mOccasionAll);
-                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -202,7 +220,7 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionJios.clear();
@@ -236,7 +254,7 @@ public class MylistFragment extends Fragment {
 
                 MainActivity.sort(mOccasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(mOccasionAll);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -247,16 +265,7 @@ public class MylistFragment extends Fragment {
 
             }
         });
-
-        // setting up toolbar
-        setHasOptionsMenu(true);
-        Toolbar toolbar = rootView.findViewById(R.id.mylist_toolbar);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        assert activity != null;
-        activity.setSupportActionBar(toolbar);
-
-        buildRecyclerView();
-        return rootView;
+        mAdapter.notifyDataSetChanged();
     }
 
     public void initializeUserDetails() {
@@ -376,7 +385,7 @@ public class MylistFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(mOccasionAll);
+        mAdapter = new MylistAdapter(getActivity(), mOccasionAll);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -476,10 +485,20 @@ public class MylistFragment extends Fragment {
         refreshUserDetails = toSet;
     }
 
+    public static void setRefreshList(boolean refreshList) {
+        MylistFragment.refreshList = refreshList;
+    }
+
     @Override
     public void onResume() {
         if (refreshUserDetails) {
             initializeUserDetails();
+            refreshUserDetails = false;
+        }
+        if (refreshList) {
+            initializeList();
+            // Toast.makeText(getActivity(), "asdasd", Toast.LENGTH_SHORT).show();
+            refreshList = false;
         }
         super.onResume();
     }

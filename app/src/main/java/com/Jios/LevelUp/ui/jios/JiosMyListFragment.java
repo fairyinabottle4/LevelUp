@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,8 @@ public class JiosMyListFragment extends Fragment {
     public static ArrayList<String> mJioIDs = new ArrayList<>();
     public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
 
+    private static boolean refreshList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +52,26 @@ public class JiosMyListFragment extends Fragment {
         activity.setSupportActionBar(tb);
         tb.setTitle("Jios I Signed Up For");
 
+
+
+        buildRecyclerView();
+
+        initializeList();
+
+        return rootView;
+
+    }
+
+    public void buildRecyclerView() {
+        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new MylistAdapter(getActivity(), mOccasionJios);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void initializeList() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
@@ -61,7 +84,6 @@ public class JiosMyListFragment extends Fragment {
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUIDFinal)) {
                         mJioIDs.add(selected.getOccasionID());
-                        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -103,7 +125,7 @@ public class JiosMyListFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mOccasionJios);
-                MylistAdapter mylistAdapter = new MylistAdapter(mOccasionJios);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -113,21 +135,19 @@ public class JiosMyListFragment extends Fragment {
 
             }
         });
-
-        buildRecyclerView();
-
-        return rootView;
-
+        mAdapter.notifyDataSetChanged();
     }
 
-    public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(mOccasionJios);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    public static void setRefreshList(boolean refreshList) {
+        JiosMyListFragment.refreshList = refreshList;
     }
 
-
+    @Override
+    public void onResume() {
+        if (refreshList) {
+            initializeList();
+            refreshList = false;
+        }
+        super.onResume();
+    }
 }

@@ -206,6 +206,8 @@ public class JiosPage extends AppCompatActivity {
         if (changes) {
             JiosFragment.setRefresh(true);
         }
+        MylistFragment.setRefreshList(true);
+        JiosMyListFragment.setRefreshList(true);
         super.onBackPressed();
     }
 }

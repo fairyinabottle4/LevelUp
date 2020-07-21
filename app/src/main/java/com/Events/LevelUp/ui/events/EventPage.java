@@ -15,6 +15,7 @@ import com.ActivityOccasionItem;
 import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.events.EventsFragment;
+import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -203,6 +204,8 @@ public class EventPage extends AppCompatActivity {
         if (changes) {
             EventsFragment.setRefresh(true);
         }
+        MylistFragment.setRefreshList(true);
+        EventsMyListFragment.setRefreshList(true);
         super.onBackPressed();
     }
 }

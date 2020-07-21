@@ -17,5 +17,6 @@ public interface Occasion {
      String getTimeInfo();
      String getCreatorID();
      String getOccasionID();
+     boolean isJio();
 
 }

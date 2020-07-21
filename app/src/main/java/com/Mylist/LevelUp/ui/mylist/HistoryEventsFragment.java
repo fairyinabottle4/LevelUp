@@ -100,7 +100,7 @@ public class HistoryEventsFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mPastOccasions);
-                MylistAdapter myListAdapter = new MylistAdapter(mPastOccasions);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mPastOccasions);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -118,7 +118,7 @@ public class HistoryEventsFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(mPastOccasions);
+        mAdapter = new MylistAdapter(getActivity(), mPastOccasions);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -87,5 +87,14 @@ public class JiosItem implements Occasion {
 
     public void setOccasionID(String newID) { this.jioID = newID; }
 
+    @Override
+    public boolean isJio() {
+        return true;
+    }
+
+    public void setjio(boolean newboolean) {
+
+    }
+
     // set
 }

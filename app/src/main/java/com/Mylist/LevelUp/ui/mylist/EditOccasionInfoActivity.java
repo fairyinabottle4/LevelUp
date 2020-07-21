@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.EventLog;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -152,13 +153,18 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                 EventsItem updatedEventsItem = null;
                                 try {
                                     updatedEventsItem = new EventsItem(occID, creatorID,
-                                            df.parse((String) dateTextView.getText()),
+                                            df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
                                             updatedLocationInfo, updatedTitle, updatedDescription);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
+
+//                                EventsItem updatedEventsItem = new EventsItem(occID, creatorID,
+//                                            selected.getDateInfo(),
+//                                            updatedTimeInfo, updatedHourOfDay, updatedMinute,
+//                                            updatedLocationInfo, updatedTitle, updatedDescription);
 
                                 // Toast.makeText(EditOccasionInfoActivity.this, dateTextView.getText(), Toast.LENGTH_SHORT).show();
                                 // mDatabaseReferenceEvents.child(occID).setValue(neww);
@@ -212,13 +218,18 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                 JiosItem updatedJiosItem = null;
                                 try {
                                     updatedJiosItem = new JiosItem(occID, creatorID,
-                                            df.parse((String) dateTextView.getText()),
+                                            df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
                                             updatedLocationInfo, updatedTitle, updatedDescription);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
+
+//                                    JiosItem updatedJiosItem = new JiosItem(occID, creatorID,
+//                                            selected.getDateInfo(),
+//                                            updatedTimeInfo, updatedHourOfDay, updatedMinute,
+//                                            updatedLocationInfo, updatedTitle, updatedDescription);
 
                                 // Toast.makeText(EditOccasionInfoActivity.this, dateTextView.getText(), Toast.LENGTH_SHORT).show();
                                 // mDatabaseReferenceEvents.child(occID).setValue(neww);
