@@ -189,6 +189,8 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         intent.putExtra("title", mItem.getName());
         intent.putExtra("location", mItem.getLocation());
         intent.putExtra("imageurl", mItem.getImageUrl());
+        intent.putExtra("creatorID", mItem.getCreatorID());
+
         startActivity(intent);
     }
 

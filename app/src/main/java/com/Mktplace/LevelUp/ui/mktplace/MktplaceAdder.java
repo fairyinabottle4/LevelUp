@@ -129,12 +129,14 @@ public class MktplaceAdder extends AppCompatActivity {
                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
-                            MktplaceItem title = new MktplaceItem(listingTitle.getText().toString().trim(),
+                            String key = mDatabaseRef.push().getKey();
+                            String creatorUID = MainActivity.currUser.getId();
+                            MktplaceItem title = new MktplaceItem(key, creatorUID, listingTitle.getText().toString().trim(),
                                     downloadUrl.toString(),
                                     meetupLocation.getText().toString().trim(),
                                     listingDescription.getText().toString().trim());
-                            String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(title);
+                            // String uploadId = mDatabaseRef.push().getKey();
+                            mDatabaseRef.child(key).setValue(title);
 //                            Intent intent = new Intent(MktplaceAdder.this, MainActivity.class);
 //                            startActivity(intent);
 
