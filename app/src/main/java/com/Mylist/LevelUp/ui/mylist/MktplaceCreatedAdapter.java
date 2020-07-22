@@ -1,11 +1,14 @@
 package com.Mylist.LevelUp.ui.mylist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +50,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         public ImageView mImageView;
         public TextView mTitle;
         public TextView mCreatorName;
+        public Button mEditButton;
         private MktplaceCreatedAdapter.OnItemClickListener mListener;
 
         public MktplaceCreatedViewHolder(final Context context, View itemView, final MktplaceCreatedAdapter.OnItemClickListener listener) {
@@ -54,6 +58,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
             mImageView = itemView.findViewById(R.id.imageView);
             mTitle = itemView.findViewById(R.id.textView);
             mCreatorName = itemView.findViewById(R.id.creatorTextView);
+            mEditButton = itemView.findViewById(R.id.mktplace_edit_btn);
             mListener = listener;
             itemView.setOnClickListener(this);
         }
@@ -90,11 +95,29 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
 
     @Override
     public void onBindViewHolder(@NonNull final MktplaceCreatedAdapter.MktplaceCreatedViewHolder holder, int position) {
-        MktplaceItem uploadCurrent = mMktplaceList.get(position);
-        String imageUrl = uploadCurrent.getImageUrl();
+        final MktplaceItem uploadCurrent = mMktplaceList.get(position);
+        final String imageUrl = uploadCurrent.getImageUrl();
+        final String mktplaceID = uploadCurrent.getMktPlaceID();
+        final String creatorUID = uploadCurrent.getCreatorID();
+        final String title = uploadCurrent.getName();
+        final String location = uploadCurrent.getLocation();
+        final String description = uploadCurrent.getDescription();
+
         holder.mTitle.setText(uploadCurrent.getName());
 
-        final String creatorUID = uploadCurrent.getCreatorID();
+        holder.mEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, EditMarketPlaceActivity.class);
+                intent.putExtra("imageurl", imageUrl);
+                intent.putExtra("mktplaceID", mktplaceID);
+                intent.putExtra("title", title);
+                intent.putExtra("location", location);
+                intent.putExtra("description", description);
+                intent.putExtra("creatorUID", creatorUID);
+                mContext.startActivity(intent);
+            }
+        });
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

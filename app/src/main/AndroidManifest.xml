@@ -65,6 +65,9 @@
         <activity
             android:name="com.Mylist.LevelUp.ui.mylist.CreatedOccasionPage"
             android:label="Created Occasion Page" />
+        <activity
+            android:name="com.Mylist.LevelUp.ui.mylist.EditMarketPlaceActivity"
+            android:label="Edit Market Place Activity" />
     </application>
 
 </manifest>
