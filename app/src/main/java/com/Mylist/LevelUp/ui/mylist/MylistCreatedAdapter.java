@@ -65,6 +65,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public Date date;
 
         public Button mEditButton;
+        public Button mPeopleButton;
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
@@ -77,6 +78,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mEditButton = itemView.findViewById(R.id.image_edit);
+            mPeopleButton = itemView.findViewById(R.id.image_people);
             mTextView1 = itemView.findViewById(R.id.title);
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.time);
@@ -104,7 +106,8 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     intent.putExtra("location", mTextView4.getText().toString());
                     intent.putExtra("time", mTextView3.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
-                    intent.putExtra("eventID", occID);
+                    intent.putExtra("occID", occID);
+                    intent.putExtra("isJio", isJio);
                     context.startActivity(intent);
                 }
             });
@@ -202,6 +205,22 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+        holder1.mPeopleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // new Activity
+                Intent intent = new Intent(mContext, CreatorViewNames.class);
+                String occID = currentItem.getOccasionID();
+                boolean isJio = currentItem.isJio();
+                intent.putExtra("occID", occID);
+                intent.putExtra("isJio", isJio);
+                mContext.startActivity(intent);
 
             }
         });

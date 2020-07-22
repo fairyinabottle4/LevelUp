@@ -68,6 +68,9 @@
         <activity
             android:name="com.Mylist.LevelUp.ui.mylist.EditMarketPlaceActivity"
             android:label="Edit Market Place Activity" />
+        <activity
+            android:name="com.Mylist.LevelUp.ui.mylist.CreatorViewNames"
+            android:label="Creator View Names" />
     </application>
 
 </manifest>

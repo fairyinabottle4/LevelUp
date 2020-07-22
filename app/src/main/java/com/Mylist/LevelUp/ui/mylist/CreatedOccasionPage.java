@@ -18,7 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventsItem;
+import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
+import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
+import com.UserItem;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,18 +35,24 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CreatedOccasionPage extends AppCompatActivity {
     private ImageView mImageView;
     private Button mEditButton;
-    private ToggleButton mLikeButton;
+    private Button mPeopleButton;
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
     private TextView mTextView4;
     private TextView mTextView5;
     private TextView mTextView6;
+
+    private String occaID;
+    private String creatorName1;
+    private Date updatedDate;
 
     private int position;
     // private Context mContext = this;
@@ -62,7 +71,7 @@ public class CreatedOccasionPage extends AppCompatActivity {
 
         mImageView = findViewById(R.id.event_page_image);
         mEditButton = findViewById(R.id.creator_page_edit);
-        mLikeButton = findViewById(R.id.events_page_image_like);
+        mPeopleButton = findViewById(R.id.creator_page_people);
         mTextView1 = findViewById(R.id.event_page_title);
         mTextView2 = findViewById(R.id.event_page_date);
         mTextView3 = findViewById(R.id.event_page_time);
@@ -80,9 +89,13 @@ public class CreatedOccasionPage extends AppCompatActivity {
         final String location = intent.getStringExtra("location");
         final String description = intent.getStringExtra("description");
         final String occID = intent.getStringExtra("occID");
+        occaID = occID;
+        creatorName1 = creatorName;
+        // Toast.makeText(this, occID, Toast.LENGTH_SHORT).show();
         final String creatorID = intent.getStringExtra("uid");
         position = intent.getIntExtra("position", 0);
         final String userID = MainActivity.currUser.getId();
+        final boolean isJio = intent.getBooleanExtra("isJio", true);
 
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(uid);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -110,11 +123,16 @@ public class CreatedOccasionPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CreatedOccasionPage.this, EditOccasionInfoActivity.class);
 
-                intent.putExtra("title", title);
-                intent.putExtra("location", location);
-                intent.putExtra("description", description);
-                intent.putExtra("date", dateToShow);
-                intent.putExtra("time", time);
+                intent.putExtra("title", mTextView1.getText().toString().trim());
+                intent.putExtra("location", mTextView4.getText().toString().trim());
+                intent.putExtra("description", mTextView5.getText().toString().trim());
+
+                if (updatedDate == null) {
+                    intent.putExtra("date", dateToShow);
+                } else {
+                    intent.putExtra("date", DateFormat.getDateInstance(DateFormat.MEDIUM).format(updatedDate));
+                }
+                intent.putExtra("time", mTextView3.getText().toString().trim());
                 intent.putExtra("occID", occID);
                 intent.putExtra("creatorID", creatorID);
 
@@ -122,25 +140,88 @@ public class CreatedOccasionPage extends AppCompatActivity {
             }
         });
 
-        mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mPeopleButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    // do wtv u need to when user clicks liked button
-                } else {
-                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    // do wtv u need to when user unlikes an event
+            public void onClick(View v) {
+                // new Activity
+                Intent intent = new Intent(CreatedOccasionPage.this, CreatorViewNames.class);
+                intent.putExtra("occID", occID);
+                intent.putExtra("isJio", isJio);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void refreshEvent() {
+        // get the occID, go DB repull then set all the views to it
+        // need title, loca, desc, date, time, - creator name and occid is the same
+        DatabaseReference mDatabaseEventsRef = mFirebaseDatabase.getReference("Events");
+        mDatabaseEventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    EventsItem selected = snapshot.getValue(EventsItem.class);
+                    if (occaID.equals(selected.getEventID())) {
+                        mTextView1.setText(selected.getTitle());
+                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected.getDateInfo()));
+                        updatedDate = selected.getDateInfo();
+                        mTextView3.setText(selected.getTimeInfo());
+                        mTextView4.setText(selected.getLocationInfo());
+                        mTextView5.setText(selected.getDescription());
+                        break;
+                    }
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void refreshJio() {
+        // get the occID, go DB repull then set all the views to it
+        // need title, loca, desc, date, time, - creator name and occid is the same
+        DatabaseReference mDatabaseJiosRef = mFirebaseDatabase.getReference("Jios");
+        mDatabaseJiosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    JiosItem selected = snapshot.getValue(JiosItem.class);
+                    if (occaID.equals(selected.getJioID())) {
+                        mTextView1.setText(selected.getTitle());
+                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected.getDateInfo()));
+                        updatedDate = selected.getDateInfo();
+                        mTextView3.setText(selected.getTimeInfo());
+                        mTextView4.setText(selected.getLocationInfo());
+                        mTextView5.setText(selected.getDescription());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        if (changes) {
-            EventsFragment.setRefresh(true);
-        }
+//        if (changes) {
+//            EventsFragment.setRefresh(true);
+//        }
+        // refresh the Jios Created Fragment and Events Created Fragment
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        refreshEvent();
+        refreshJio();
+        super.onResume();
     }
 }

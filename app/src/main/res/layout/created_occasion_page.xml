@@ -143,15 +143,13 @@
                     android:layout_marginTop="2dp"
                     android:background="@drawable/ic_baseline_edit_24_black" />
 
-                <ToggleButton
-                    android:id="@+id/events_page_image_like"
+                <Button
+                    android:id="@+id/creator_page_people"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginStart="4dp"
-                    android:textOn=""
-                    android:textOff=""
-                    android:background="@drawable/ic_favorite_black_24dp" />
+                    android:background="@drawable/ic_round_people_alt_24" />
 
             </LinearLayout>
         </RelativeLayout>
