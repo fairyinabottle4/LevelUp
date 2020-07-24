@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.MainActivity;
+import com.bumptech.glide.Glide;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -146,7 +147,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(editProfileImage);
+                Glide.with(getApplicationContext()).load(uri).into(editProfileImage);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
