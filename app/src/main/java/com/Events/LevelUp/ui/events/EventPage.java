@@ -12,6 +12,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.ActivityOccasionItem;
+import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.events.EventsFragment;
@@ -82,6 +83,7 @@ public class EventPage extends AppCompatActivity {
         String location = intent.getStringExtra("location");
         String description = intent.getStringExtra("description");
         boolean isChecked = intent.getBooleanExtra("stateChecked", true);
+        boolean isLiked = intent.getBooleanExtra("stateLiked", true);
         final String eventID = intent.getStringExtra("eventID");
         position = intent.getIntExtra("position", 0);
         final String userID = MainActivity.currUser.getId();
@@ -185,15 +187,50 @@ public class EventPage extends AppCompatActivity {
             }
         });
 
+        if (isLiked) {
+            mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+        } else {
+            mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+        }
+
+        mLikeButton.setChecked(isLiked);
+
+
         mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                changes = true;
                 if (isChecked) {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    // do wtv u need to when user clicks liked button
+
+                    DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
+                    mLikeEventRef.push().setValue(likeOccasionItem);
+
                 } else {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    // do wtv u need to when user unlikes an event
+
+                    // delete the entry from like DB
+                    final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                    mLikeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mLikeEventRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    MainActivity.mLikeEventIDs.remove(eventID);
                 }
             }
         });

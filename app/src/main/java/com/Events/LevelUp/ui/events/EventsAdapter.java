@@ -95,8 +95,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                      intent.putExtra("location", mTextView4.getText().toString());
                      intent.putExtra("time", mTextView5.getText().toString());
                      intent.putExtra("position", getAdapterPosition());
-                    intent.putExtra("stateChecked", isChecked);
-                    intent.putExtra("eventID", eventID);
+                     intent.putExtra("stateChecked", isChecked);
+                     intent.putExtra("stateLiked", isLiked);
+                     intent.putExtra("eventID", eventID);
                      context.startActivity(intent);
                 }
             });
@@ -354,7 +355,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ei.setNumLikes(currLikes - 1);
+
+                    MainActivity.mLikeEventIDs.remove(eventID);
                 }
+
             }
         });
 

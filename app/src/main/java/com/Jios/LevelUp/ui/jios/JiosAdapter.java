@@ -94,6 +94,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     intent.putExtra("time", mTextView5.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("stateChecked", isChecked);
+                    intent.putExtra("stateLiked", isLiked);
                     intent.putExtra("jioID", jioID);
                     context.startActivity(intent);
                 }
@@ -188,7 +189,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             }
         });
 
-        String jioID = currentItem.getJioID();
+        final String jioID = currentItem.getJioID();
         holder1.setJioID(jioID);
         if (MainActivity.mJioIDs.contains(jioID)) {
             holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
@@ -321,6 +322,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                     mJioRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ji.setNumLikes(currLikes - 1);
+
+                    MainActivity.mLikeJioIDs.remove(jioID);
                 }
             }
         });
