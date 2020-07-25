@@ -176,12 +176,11 @@ public class MylistFragment extends Fragment {
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
 
-        mOccasionAll.clear();
-
         mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionEvents.clear();
+                mOccasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     String eventID = selected.getOccasionID();
@@ -207,9 +206,13 @@ public class MylistFragment extends Fragment {
                         }
                     }
                 }
-                mOccasionEvents.addAll(mOccasionJios);
-                mOccasionAll = mOccasionEvents;
+
+                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
+                copyOfFullEvents.addAll(mOccasionJios);
+                mOccasionAll = copyOfFullEvents;
+
                 MainActivity.sort(mOccasionAll);
+
                 MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
@@ -225,6 +228,7 @@ public class MylistFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionJios.clear();
+                mOccasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
@@ -250,8 +254,10 @@ public class MylistFragment extends Fragment {
                         }
                     }
                 }
-                mOccasionJios.addAll(mOccasionEvents);
-                mOccasionAll = mOccasionJios;
+                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
+                copyOfFullJios.addAll(mOccasionEvents);
+
+                mOccasionAll = copyOfFullJios;
 
                 MainActivity.sort(mOccasionAll);
 
