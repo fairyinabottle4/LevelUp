@@ -230,6 +230,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 if (isChecked) {
                     // change to tick
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    holder1.setChecked(true);
 
                     EventsItem ei = mEventsList.get(position);
 
@@ -249,6 +250,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 } else {
                     // change back to plus
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    holder1.setChecked(false);
 
                     // delete the entry from activity DB
                     EventsItem ei = mEventsList.get(position);

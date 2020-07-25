@@ -199,6 +199,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 if (isChecked) {
                     // change to tick
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    holder1.setChecked(true);
 
                     JiosItem ji = mJiosList.get(position);
 
@@ -217,6 +218,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                 } else {
                     // change back to plus
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    holder1.setChecked(false);
 
                     // delete the entry from activity DB
                     JiosItem ji = mJiosList.get(position);
