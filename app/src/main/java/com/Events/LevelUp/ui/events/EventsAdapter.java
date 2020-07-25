@@ -57,6 +57,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public String eventID;
         public boolean isChecked;
         public boolean isLiked;
+        public int numLikes;
 
         public ImageView mImageView;
         public ToggleButton mAddButton;
@@ -97,6 +98,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                      intent.putExtra("position", getAdapterPosition());
                      intent.putExtra("stateChecked", isChecked);
                      intent.putExtra("stateLiked", isLiked);
+                     intent.putExtra("numLikes", numLikes);
                      intent.putExtra("eventID", eventID);
                      context.startActivity(intent);
                 }
@@ -120,6 +122,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         public void setLiked(boolean liked) {
             isLiked = liked;
+        }
+
+        public void setNumLikes(int numLikes) {
+            this.numLikes = numLikes;
         }
     } // static class EventsViewHolder ends here
 
@@ -299,6 +305,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             holder1.mLikeButton.setChecked(false);
         }
 
+        holder1.setNumLikes(currentItem.getNumLikes());
+
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -320,6 +328,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes + 1);
                     ei.setNumLikes(currLikes + 1);
+                    holder1.setNumLikes(currLikes + 1);
 
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
@@ -355,6 +364,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ei.setNumLikes(currLikes - 1);
+                    holder1.setNumLikes(currLikes -1);
 
                     MainActivity.mLikeEventIDs.remove(eventID);
                 }

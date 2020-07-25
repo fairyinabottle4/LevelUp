@@ -57,6 +57,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public String jioID;
         public boolean isChecked;
         public boolean isLiked;
+        public int numLikes;
 
         public ToggleButton mAddButton;
         public ToggleButton mLikeButton;
@@ -95,6 +96,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("stateChecked", isChecked);
                     intent.putExtra("stateLiked", isLiked);
+                    intent.putExtra("numLikes", numLikes);
                     intent.putExtra("jioID", jioID);
                     context.startActivity(intent);
                 }
@@ -117,6 +119,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
         public void setLiked(boolean liked) {
             isLiked = liked;
+        }
+
+        public void setNumLikes(int numLikes) {
+            this.numLikes = numLikes;
         }
     }
 
@@ -267,6 +273,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             holder1.mLikeButton.setChecked(false);
         }
 
+        holder1.setNumLikes(currentItem.getNumLikes());
+
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -288,6 +296,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                     mJioRef.child(eventID).child("numLikes").setValue(currLikes + 1);
                     ji.setNumLikes(currLikes + 1);
+                    holder1.setNumLikes(currLikes + 1);
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
                     holder1.setLiked(false);
@@ -322,6 +331,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                     mJioRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ji.setNumLikes(currLikes - 1);
+                    holder1.setNumLikes(currLikes -1);
 
                     MainActivity.mLikeJioIDs.remove(jioID);
                 }

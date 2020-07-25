@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventPage;
 import com.Jios.LevelUp.ui.jios.JiosPage;
+import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
 import com.example.LevelUp.ui.Occasion;
@@ -73,6 +74,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public String creatorUid;
         public String occID;
         public boolean isJio;
+        public boolean isLiked;
 
         public ToggleButton mAddButton;
         public ToggleButton mLikeButton;
@@ -116,6 +118,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     intent.putExtra("time", mTextView3.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("eventID", occID);
+                    intent.putExtra("stateLiked", isLiked);
                     context.startActivity(intent);
                 }
             });
@@ -135,6 +138,10 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
         public void setIsJio(boolean jio) {
             isJio = jio;
+        }
+
+        public void setLiked(boolean liked) {
+            isLiked = liked;
         }
     } // static class ends here
 
@@ -161,7 +168,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
     @Override
     public void onBindViewHolder(@NonNull MylistAdapter.MylistViewHolder holder, final int position) {
-        Occasion currentItem = mMylistList.get(position);
+        final Occasion currentItem = mMylistList.get(position);
         UserItem user = MainActivity.currUser;
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String occID = currentItem.getOccasionID();
@@ -298,12 +305,30 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
+        if (MainActivity.mLikeEventIDs.contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
+            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            holder1.setLiked(true);
+            holder1.mLikeButton.setChecked(true);
+        } else {
+            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            holder1.setLiked(false);
+            holder1.mLikeButton.setChecked(false);
+        }
+
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    // do wtv u need to when user clicks liked button
+
+                    if (currentItem.isJio()) {
+                        DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                        LikeOccasionItem likeOccasionItem = new LikeOccasionItem(occID, userID);
+                        mLikeJioRef.push().setValue(likeOccasionItem);
+                    } else {
+
+                    }
+
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
                     // do wtv u need to when user unlikes an event

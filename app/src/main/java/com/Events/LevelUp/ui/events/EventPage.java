@@ -35,6 +35,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EventPage extends AppCompatActivity {
 
@@ -84,6 +85,8 @@ public class EventPage extends AppCompatActivity {
         String description = intent.getStringExtra("description");
         boolean isChecked = intent.getBooleanExtra("stateChecked", true);
         boolean isLiked = intent.getBooleanExtra("stateLiked", true);
+        final int numLikes = intent.getIntExtra("numLikes", 0);
+        final ArrayList<Integer> numLikesArrLi = new ArrayList<>(Arrays.asList(numLikes));
         final String eventID = intent.getStringExtra("eventID");
         position = intent.getIntExtra("position", 0);
         final String userID = MainActivity.currUser.getId();
@@ -203,9 +206,16 @@ public class EventPage extends AppCompatActivity {
                 if (isChecked) {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
 
+                    // send to Database
                     DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
                     LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
                     mLikeEventRef.push().setValue(likeOccasionItem);
+
+                    // +1 to the Likes on the eventItem
+                    int currLikes = numLikesArrLi.get(0);
+                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                    mEventRef.child(eventID).child("numLikes").setValue(currLikes + 1);
+                    numLikesArrLi.set(0, currLikes + 1);
 
                 } else {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
@@ -230,6 +240,13 @@ public class EventPage extends AppCompatActivity {
 
                         }
                     });
+
+                    // -1 to the Likes on the eventItem
+                    int currLikes = numLikesArrLi.get(0);
+                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                    mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
+                    numLikesArrLi.set(0, currLikes - 1);
+
                     MainActivity.mLikeEventIDs.remove(eventID);
                 }
             }

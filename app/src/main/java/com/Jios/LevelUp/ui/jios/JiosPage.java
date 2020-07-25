@@ -34,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JiosPage extends AppCompatActivity {
 
@@ -81,6 +82,8 @@ public class JiosPage extends AppCompatActivity {
         String description = intent.getStringExtra("description");
         boolean isChecked = intent.getBooleanExtra("stateChecked", true);
         boolean isLiked = intent.getBooleanExtra("stateLiked", true);
+        int numLikes = intent.getIntExtra("numLikes", 0);
+        final ArrayList<Integer> numLikesArrLi = new ArrayList<>(Arrays.asList(numLikes));
         final String jioID = intent.getStringExtra("jioID");
         position = intent.getIntExtra("position", 0);
         final String userID = MainActivity.currUser.getId();
@@ -172,9 +175,16 @@ public class JiosPage extends AppCompatActivity {
                 if (isChecked) {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
 
+                    // send to Database
                     DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
                     LikeOccasionItem likeOccasionItem = new LikeOccasionItem(jioID, userID);
                     mLikeJioRef.push().setValue(likeOccasionItem);
+
+                    // +1 to the Likes on the jiosItem
+                    int currLikes = numLikesArrLi.get(0);
+                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
+                    mJioRef.child(jioID).child("numLikes").setValue(currLikes + 1);
+                    numLikesArrLi.set(0, currLikes + 1);
                 } else {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
 
@@ -198,6 +208,13 @@ public class JiosPage extends AppCompatActivity {
 
                         }
                     });
+
+                    // -1 to the Likes on the jioItem
+                    int currLikes = numLikesArrLi.get(0);
+                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
+                    mJioRef.child(jioID).child("numLikes").setValue(currLikes - 1);
+                    numLikesArrLi.set(0, currLikes - 1);
+
                     MainActivity.mLikeJioIDs.remove(jioID);
                 }
             }
