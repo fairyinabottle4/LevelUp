@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.ActivityOccasionItem;
 import com.Jios.LevelUp.ui.jios.JiosItem;
@@ -33,6 +34,8 @@ public class CreatorViewNames extends AppCompatActivity {
     public DatabaseReference mDatabaseRefActivityEvents;
     public DatabaseReference mDatabaseRefActivityJios;
 
+    public Toolbar tb;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.creator_names_view);
@@ -41,6 +44,9 @@ public class CreatorViewNames extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseRefActivityEvents = mFirebaseDatabase.getReference("ActivityEvent");
         mDatabaseRefActivityJios = mFirebaseDatabase.getReference("ActivityJio");
+
+        tb = findViewById(R.id.creator_names_toolbar);
+        setSupportActionBar(tb);
 
         Intent intent = getIntent();
         occID = intent.getStringExtra("occID");
@@ -66,8 +72,10 @@ public class CreatorViewNames extends AppCompatActivity {
                                             names.add("(" + intToRes(selectedUser.getResidential()) + ") " + selectedUser.getName());
                                         }
                                     }
+
                                     ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
                                     list.setAdapter(adapter);
+                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Signed Up");
                                 }
 
                                 @Override
@@ -102,8 +110,12 @@ public class CreatorViewNames extends AppCompatActivity {
                                             names.add("(" + intToRes(selectedUser.getResidential()) + ") " + selectedUser.getName());
                                         }
                                     }
+
                                     ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
                                     list.setAdapter(adapter);
+
+                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Signed Up");
+
                                 }
 
                                 @Override
@@ -121,12 +133,11 @@ public class CreatorViewNames extends AppCompatActivity {
             });
         }
 
-//        names.add("Mitch");
-//        names.add("Blake");
-//        names.add("Steve");
-
-//        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, names);
-//        list.setAdapter(adapter);
+//        if (names.size() == 0) {
+//            names.add("No one has signed up yet");
+//            ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
+//            list.setAdapter(adapter);
+//        }
 
         super.onCreate(savedInstanceState);
     }

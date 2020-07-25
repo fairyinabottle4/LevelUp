@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventPage;
+import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.LikeOccasionItem;
 import com.MainActivity;
@@ -75,6 +76,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public String occID;
         public boolean isJio;
         public boolean isLiked;
+        public int numLikes;
 
         public ToggleButton mAddButton;
         public ToggleButton mLikeButton;
@@ -119,6 +121,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("eventID", occID);
                     intent.putExtra("stateLiked", isLiked);
+                    intent.putExtra("numLikes", numLikes);
                     context.startActivity(intent);
                 }
             });
@@ -142,6 +145,10 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
         public void setLiked(boolean liked) {
             isLiked = liked;
+        }
+
+        public void setNumLikes(int numLikes) {
+            this.numLikes = numLikes;
         }
     } // static class ends here
 
@@ -315,6 +322,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             holder1.mLikeButton.setChecked(false);
         }
 
+        holder1.setNumLikes(currentItem.getNumLikes());
+
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -322,16 +331,93 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
 
                     if (currentItem.isJio()) {
+                        // push to LikeJio Database
                         DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
                         LikeOccasionItem likeOccasionItem = new LikeOccasionItem(occID, userID);
                         mLikeJioRef.push().setValue(likeOccasionItem);
-                    } else {
 
+                        // +1 to the Likes on the jiosItem
+                        int currLikes = currentItem.getNumLikes();
+                        DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
+                        mJioRef.child(occID).child("numLikes").setValue(currLikes + 1);
+                        holder1.setNumLikes(currLikes + 1);
+
+                    } else {
+                        // push to LikeEvent Database
+                        DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                        LikeOccasionItem likeOccasionItem = new LikeOccasionItem(occID, userID);
+                        mLikeEventRef.push().setValue(likeOccasionItem);
+
+                        // +1 to the Likes on the eventsItem
+                        int currLikes = currentItem.getNumLikes();
+                        DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                        mEventRef.child(occID).child("numLikes").setValue(currLikes + 1);
+                        holder1.setNumLikes(currLikes + 1);
                     }
 
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    // do wtv u need to when user unlikes an event
+
+                    // delete and -1 from both jio and events
+                    if (currentItem.isJio()) {
+                        // Delete the entry from LikeJio
+                        final DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                        mLikeJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                                    if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                        String key = snapshot.getKey();
+                                        mLikeJioRef.child(key).removeValue();
+                                        Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        // -1 from jioItem
+                        int currLikes = currentItem.getNumLikes();
+                        DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
+                        mJioRef.child(occID).child("numLikes").setValue(currLikes - 1);
+                        holder1.setNumLikes(currLikes - 1);
+
+                        MainActivity.mLikeJioIDs.remove(occID);
+                    } else {
+                        // delete item from LikeEvent
+                        final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                        mLikeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                                    if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                        String key = snapshot.getKey();
+                                        mLikeEventRef.child(key).removeValue();
+                                        Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        // -1 to the Likes on the eventItem
+                        int currLikes = currentItem.getNumLikes();
+                        DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                        mEventRef.child(occID).child("numLikes").setValue(currLikes - 1);
+                        holder1.setNumLikes(currLikes - 1);
+
+                        MainActivity.mLikeEventIDs.remove(occID);
+                    }
                 }
             }
         });

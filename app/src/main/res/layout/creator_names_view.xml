@@ -4,9 +4,10 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
     <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/creator_names_toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:title="People Signed Up"
+        app:title="No One Has Signed Up Yet"
         android:elevation="5dp"
         app:titleTextColor="@color/colorWhite"
         android:background="@color/colorPrimary" />

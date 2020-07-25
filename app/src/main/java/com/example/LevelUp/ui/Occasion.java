@@ -18,5 +18,5 @@ public interface Occasion {
      String getCreatorID();
      String getOccasionID();
      boolean isJio();
-
+     int getNumLikes();
 }
