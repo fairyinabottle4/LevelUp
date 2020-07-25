@@ -68,6 +68,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public TextView mTextView4;
         public TextView mTextView5;
         public TextView mTextView6;
+        public TextView mNumLikes;
 
         public JiosViewHolder(final Context context, View itemView) {
             super(itemView);
@@ -81,6 +82,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -172,6 +174,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         holder1.mTextView3.setText(df.format(currentItem.getDateInfo()));
         holder1.mTextView4.setText(currentItem.getLocationInfo());
         holder1.mTextView5.setText(currentItem.getTimeInfo());
+        holder1.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -297,6 +300,9 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     mJioRef.child(eventID).child("numLikes").setValue(currLikes + 1);
                     ji.setNumLikes(currLikes + 1);
                     holder1.setNumLikes(currLikes + 1);
+
+                    // for display only
+                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1));
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
                     holder1.setLiked(false);
@@ -331,7 +337,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                     mJioRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ji.setNumLikes(currLikes - 1);
-                    holder1.setNumLikes(currLikes -1);
+                    holder1.setNumLikes(currLikes - 1);
+
+                    // for display only
+                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1));
 
                     MainActivity.mLikeJioIDs.remove(jioID);
                 }

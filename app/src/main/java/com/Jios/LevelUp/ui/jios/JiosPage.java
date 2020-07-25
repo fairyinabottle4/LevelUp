@@ -47,6 +47,7 @@ public class JiosPage extends AppCompatActivity {
     private TextView mTextView4;
     private TextView mTextView5;
     private TextView mTextView6;
+    private TextView mNumLikes;
     private int position;
     private ArrayList<JiosItem> jiosItemArrayList = JiosFragment.getJiosItemList();
     private Context mContext = this;
@@ -71,6 +72,9 @@ public class JiosPage extends AppCompatActivity {
         mTextView4 = findViewById(R.id.event_page_location);
         mTextView5 = findViewById(R.id.event_page_description);
         mTextView6 = findViewById(R.id.event_page_creator);
+        mNumLikes = findViewById(R.id.numlikes_textview);
+
+
 
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
@@ -108,6 +112,8 @@ public class JiosPage extends AppCompatActivity {
         mTextView4.setText(location);
         mTextView5.setText(description);
         mTextView6.setText(creatorName);
+
+        mNumLikes.setText(Integer.toString(numLikes));
 
         if (isChecked) {
             mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
@@ -185,6 +191,7 @@ public class JiosPage extends AppCompatActivity {
                     DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                     mJioRef.child(jioID).child("numLikes").setValue(currLikes + 1);
                     numLikesArrLi.set(0, currLikes + 1);
+                    mNumLikes.setText(Integer.toString(currLikes + 1)); // for display only
                 } else {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
 
@@ -214,6 +221,7 @@ public class JiosPage extends AppCompatActivity {
                     DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                     mJioRef.child(jioID).child("numLikes").setValue(currLikes - 1);
                     numLikesArrLi.set(0, currLikes - 1);
+                    mNumLikes.setText(Integer.toString(currLikes - 1)); // for display only
 
                     MainActivity.mLikeJioIDs.remove(jioID);
                 }

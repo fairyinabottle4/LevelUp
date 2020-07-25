@@ -87,6 +87,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public TextView mTextView4;
         public TextView mTextView5;
         public TextView mTextView6;
+        public TextView mNumLikes;
 
         public MylistViewHolder(final Context context, View itemView, final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
@@ -99,6 +100,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.date);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -205,6 +207,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         holder1.mTextView3.setText(currentItem.getTimeInfo());
         holder1.mTextView4.setText(currentItem.getLocationInfo());
         holder1.mTextView5.setText(df.format(currentItem.getDateInfo()));
+        holder.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -327,8 +330,11 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int currLikes = currentItem.getNumLikes();
+
                 if (isChecked) {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1)); // for display only
 
                     if (currentItem.isJio()) {
                         // push to LikeJio Database
@@ -337,7 +343,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         mLikeJioRef.push().setValue(likeOccasionItem);
 
                         // +1 to the Likes on the jiosItem
-                        int currLikes = currentItem.getNumLikes();
                         DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                         mJioRef.child(occID).child("numLikes").setValue(currLikes + 1);
                         holder1.setNumLikes(currLikes + 1);
@@ -349,7 +354,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         mLikeEventRef.push().setValue(likeOccasionItem);
 
                         // +1 to the Likes on the eventsItem
-                        int currLikes = currentItem.getNumLikes();
                         DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                         mEventRef.child(occID).child("numLikes").setValue(currLikes + 1);
                         holder1.setNumLikes(currLikes + 1);
@@ -357,6 +361,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1)); // for display only
 
                     // delete and -1 from both jio and events
                     if (currentItem.isJio()) {
@@ -382,7 +387,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         });
 
                         // -1 from jioItem
-                        int currLikes = currentItem.getNumLikes();
                         DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
                         mJioRef.child(occID).child("numLikes").setValue(currLikes - 1);
                         holder1.setNumLikes(currLikes - 1);
@@ -411,7 +415,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         });
 
                         // -1 to the Likes on the eventItem
-                        int currLikes = currentItem.getNumLikes();
                         DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                         mEventRef.child(occID).child("numLikes").setValue(currLikes - 1);
                         holder1.setNumLikes(currLikes - 1);

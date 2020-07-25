@@ -68,6 +68,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView mTextView4;
         public TextView mTextView5;
         public TextView mTextView6;
+        public TextView mNumLikes;
 
         public View itemView;
 
@@ -83,6 +84,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,6 +181,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         String time = currentItem.getTimeInfo();
         holder1.mTextView5.setText(time);
+
+        holder1.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -330,6 +334,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     ei.setNumLikes(currLikes + 1);
                     holder1.setNumLikes(currLikes + 1);
 
+                    // for display only
+                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1));
+
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
                     holder1.setLiked(false);
@@ -365,6 +372,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ei.setNumLikes(currLikes - 1);
                     holder1.setNumLikes(currLikes -1);
+
+                    // for display only
+                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1));
 
                     MainActivity.mLikeEventIDs.remove(eventID);
                 }

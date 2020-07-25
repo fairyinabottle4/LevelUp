@@ -48,6 +48,7 @@ public class EventPage extends AppCompatActivity {
     private TextView mTextView4;
     private TextView mTextView5;
     private TextView mTextView6;
+    private TextView mNumLikes;
 
     private int position;
     private ArrayList<EventsItem> eventsItemArrayList = EventsFragment.getEventsItemList();
@@ -74,6 +75,7 @@ public class EventPage extends AppCompatActivity {
         mTextView4 = findViewById(R.id.event_page_location);
         mTextView5 = findViewById(R.id.event_page_description);
         mTextView6 = findViewById(R.id.event_page_creator);
+        mNumLikes = findViewById(R.id.numlikes_textview);
 
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
@@ -111,6 +113,8 @@ public class EventPage extends AppCompatActivity {
         mTextView4.setText(location);
         mTextView5.setText(description);
         mTextView6.setText(creatorName);
+
+        mNumLikes.setText(Integer.toString(numLikes));
 
 //        // add plus then add to my list
 //        mAddButton.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +220,7 @@ public class EventPage extends AppCompatActivity {
                     DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes + 1);
                     numLikesArrLi.set(0, currLikes + 1);
+                    mNumLikes.setText(Integer.toString(currLikes + 1)); // for display only
 
                 } else {
                     mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
@@ -246,6 +251,7 @@ public class EventPage extends AppCompatActivity {
                     DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     numLikesArrLi.set(0, currLikes - 1);
+                    mNumLikes.setText(Integer.toString(currLikes - 1)); // for display only
 
                     MainActivity.mLikeEventIDs.remove(eventID);
                 }
