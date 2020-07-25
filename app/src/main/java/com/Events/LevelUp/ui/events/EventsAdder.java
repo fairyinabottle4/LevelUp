@@ -94,7 +94,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                 String key = mDatabaseReference.push().getKey();
                 String eventCreatorUID = MainActivity.currUser.getId();
                 try {
-                    eventsItem = new EventsItem(key, eventCreatorUID,
+                    eventsItem = new EventsItem(0, key, eventCreatorUID,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
                             mEventTitle.getText().toString(), mEventDescription.getText().toString());

@@ -152,7 +152,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                 // Replacing Item with New Values
                                 EventsItem updatedEventsItem = null;
                                 try {
-                                    updatedEventsItem = new EventsItem(occID, creatorID,
+                                    updatedEventsItem = new EventsItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
                                             updatedLocationInfo, updatedTitle, updatedDescription);
@@ -217,7 +217,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                 // Replacing Item with New Values
                                 JiosItem updatedJiosItem = null;
                                 try {
-                                    updatedJiosItem = new JiosItem(occID, creatorID,
+                                    updatedJiosItem = new JiosItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
                                             updatedLocationInfo, updatedTitle, updatedDescription);

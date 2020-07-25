@@ -15,6 +15,7 @@ public class EventsItem implements Occasion {
 
     private String eventID;
     private String creatorID;
+    private int numLikes;
 
 
     public EventsItem(Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
@@ -29,7 +30,8 @@ public class EventsItem implements Occasion {
     }
 
     // Overloaded Constructor to push Event ID and Creator ID to Firebase
-    public EventsItem(String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public EventsItem(int numLikes, String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+        this.numLikes = numLikes;
         this.eventID = eventID;
         this.creatorID = creatorID;
         this.dateInfo = dateInfo;
@@ -108,6 +110,14 @@ public class EventsItem implements Occasion {
 
     public String getCreatorID() {
         return creatorID;
+    }
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
+    public void setNumLikes(int numLikes) {
+        this.numLikes = numLikes;
     }
 
     @Override

@@ -91,7 +91,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 String key = mDatabaseReference.push().getKey();
                 String jioCreatorUID = MainActivity.currUser.getId();
                 try {
-                    jiosItem = new JiosItem(key, jioCreatorUID,
+                    jiosItem = new JiosItem(0, key, jioCreatorUID,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
                             mEventTitle.getText().toString(), mEventDescription.getText().toString());

@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
 import com.example.tryone.R;
@@ -55,6 +56,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public String creatorName;
         public String eventID;
         public boolean isChecked;
+        public boolean isLiked;
 
         public ImageView mImageView;
         public ToggleButton mAddButton;
@@ -113,6 +115,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         public void setEventID(String eventID) {
             this.eventID = eventID;
+        }
+
+        public void setLiked(boolean liked) {
+            isLiked = liked;
         }
     } // static class EventsViewHolder ends here
 
@@ -212,7 +218,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 //        });
 
         // if currentItem is contained in Main's Event List, then mAddButton set state
-        String eventID = currentItem.getEventID();
+        final String eventID = currentItem.getEventID();
         holder1.setEventID(eventID);
         if (MainActivity.mEventIDs.contains(eventID)) {
             holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
@@ -282,15 +288,72 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             }
         });
 
+        if (MainActivity.mLikeEventIDs.contains(eventID)) {
+            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            holder1.setLiked(true);
+            holder1.mLikeButton.setChecked(true);
+        } else {
+            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            holder1.setLiked(false);
+            holder1.mLikeButton.setChecked(false);
+        }
+
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    // do wtv u need to when user clicks liked button
+                    holder1.setLiked(true);
+
+                    // send to LikeDatabase
+                    EventsItem ei = mEventsList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String eventID = ei.getEventID();
+                    final String userID = user.getId();
+                    DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
+                    mLikeEventRef.push().setValue(likeOccasionItem);
+
+                    // +1 to the Likes on the eventItem
+                    int currLikes = ei.getNumLikes();
+                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                    mEventRef.child(eventID).child("numLikes").setValue(currLikes + 1);
+                    ei.setNumLikes(currLikes + 1);
+
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    // do wtv u need to when user unlikes an event
+                    holder1.setLiked(false);
+
+                    // Delete the entry from LikeDatabse
+                    EventsItem ei = mEventsList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String eventID = ei.getEventID();
+                    final String userID = user.getId();
+                    final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                    mLikeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mLikeEventRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    // -1 to the Likes on the eventItem
+                    int currLikes = ei.getNumLikes();
+                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                    mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
+                    ei.setNumLikes(currLikes - 1);
                 }
             }
         });

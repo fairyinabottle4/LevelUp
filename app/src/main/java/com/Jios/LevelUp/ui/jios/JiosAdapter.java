@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.Events.LevelUp.ui.events.EventsItem;
+import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
 import com.example.tryone.R;
@@ -54,6 +56,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public String creatorName;
         public String jioID;
         public boolean isChecked;
+        public boolean isLiked;
 
         public ToggleButton mAddButton;
         public ToggleButton mLikeButton;
@@ -109,6 +112,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
         public void setJioID(String jioID) {
             this.jioID = jioID;
+        }
+
+        public void setLiked(boolean liked) {
+            isLiked = liked;
         }
     }
 
@@ -249,15 +256,71 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             }
         });
 
+        if (MainActivity.mLikeJioIDs.contains(jioID)) {
+            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            holder1.setLiked(true);
+            holder1.mLikeButton.setChecked(true);
+        } else {
+            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            holder1.setLiked(false);
+            holder1.mLikeButton.setChecked(false);
+        }
+
         holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    // do wtv u need to when user clicks liked button
+                    holder1.setLiked(true);
+
+                    // send to LikeDatabase
+                    JiosItem ji = mJiosList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String eventID = ji.getJioID();
+                    final String userID = user.getId();
+                    DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
+                    mLikeJioRef.push().setValue(likeOccasionItem);
+
+                    // +1 to the Likes on the eventItem
+                    int currLikes = ji.getNumLikes();
+                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
+                    mJioRef.child(eventID).child("numLikes").setValue(currLikes + 1);
+                    ji.setNumLikes(currLikes + 1);
                 } else {
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    // do wtv u need to when user unlikes an event
+                    holder1.setLiked(false);
+
+                    // Delete the entry from LikeDatabse
+                    JiosItem ji = mJiosList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String eventID = ji.getJioID();
+                    final String userID = user.getId();
+                    final DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                    mLikeJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mLikeJioRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    // -1 to the Likes on the eventItem
+                    int currLikes = ji.getNumLikes();
+                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
+                    mJioRef.child(eventID).child("numLikes").setValue(currLikes - 1);
+                    ji.setNumLikes(currLikes - 1);
                 }
             }
         });
