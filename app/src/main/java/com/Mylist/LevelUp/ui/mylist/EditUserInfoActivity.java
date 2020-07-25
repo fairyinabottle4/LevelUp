@@ -178,6 +178,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
             if (resultCode == Activity.RESULT_OK) {
+                deleteProfilePicture = false;
                 Uri imageUri = data.getData();
                 editProfileImage.setImageURI(imageUri);
                 profileImageUri = imageUri;
