@@ -26,8 +26,10 @@ import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.Jios.LevelUp.ui.jios.JiosLikedFragment;
 import com.Jios.LevelUp.ui.jios.JiosMyListFragment;
 import com.MainActivity;
+import com.Mylist.LevelUp.ui.mylist.JiosCreatedFragment;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ValueEventListener;
@@ -142,9 +144,16 @@ public class JiosFragment extends Fragment {
 
                 break;
             case R.id.action_cfmed_events: // the tick
-                JiosMyListFragment nextFrag= new JiosMyListFragment();
+                JiosMyListFragment nextFrag = new JiosMyListFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, nextFrag)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case R.id.action_fav: // the heart
+                JiosLikedFragment nextFrag2 = new JiosLikedFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, nextFrag2)
                         .addToBackStack(null)
                         .commit();
                 break;
