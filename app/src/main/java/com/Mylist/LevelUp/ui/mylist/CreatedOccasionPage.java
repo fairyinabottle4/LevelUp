@@ -43,6 +43,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
     private ImageView mImageView;
     private Button mEditButton;
     private Button mPeopleButton;
+    private Button mPeopleLikedButton;
+    private TextView mNumLikes;
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
@@ -72,6 +74,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
         mImageView = findViewById(R.id.event_page_image);
         mEditButton = findViewById(R.id.creator_page_edit);
         mPeopleButton = findViewById(R.id.creator_page_people);
+        mPeopleLikedButton = findViewById(R.id.image_people_liked);
+        mNumLikes = findViewById(R.id.numlikes_textview);
         mTextView1 = findViewById(R.id.event_page_title);
         mTextView2 = findViewById(R.id.event_page_date);
         mTextView3 = findViewById(R.id.event_page_time);
@@ -89,6 +93,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
         final String location = intent.getStringExtra("location");
         final String description = intent.getStringExtra("description");
         final String occID = intent.getStringExtra("occID");
+        final int numLikes = intent.getIntExtra("numLikes", 0);
+
         occaID = occID;
         creatorName1 = creatorName;
         // Toast.makeText(this, occID, Toast.LENGTH_SHORT).show();
@@ -117,6 +123,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
         mTextView4.setText(location);
         mTextView5.setText(description);
         mTextView6.setText(creatorName);
+
+        mNumLikes.setText(Integer.toString(numLikes));
 
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +158,17 @@ public class CreatedOccasionPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mPeopleLikedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreatedOccasionPage.this, CreatorViewLikeNames.class);
+                intent.putExtra("occID", occID);
+                intent.putExtra("isJio", isJio);
+                startActivity(intent);
+            }
+        });
+
 
     }
 

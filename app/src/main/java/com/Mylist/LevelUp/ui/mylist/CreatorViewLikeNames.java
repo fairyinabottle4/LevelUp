@@ -112,7 +112,7 @@ public class CreatorViewLikeNames extends AppCompatActivity {
                                     ArrayAdapter adapter = new ArrayAdapter(CreatorViewLikeNames.this, android.R.layout.simple_list_item_1, names);
                                     list.setAdapter(adapter);
 
-                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Signed Up");
+                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Liked");
 
                                 }
 

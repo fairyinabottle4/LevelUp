@@ -63,10 +63,12 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public String occID;
         public boolean isJio;
         public Date date;
+        public int numLikes;
 
         public Button mEditButton;
         public Button mPeopleButton;
         public Button mPeopleLikedButton;
+        public TextView mNumLikes;
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
@@ -81,6 +83,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             mEditButton = itemView.findViewById(R.id.image_edit);
             mPeopleButton = itemView.findViewById(R.id.image_people);
             mPeopleLikedButton = itemView.findViewById(R.id.image_people_liked);
+            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             mTextView1 = itemView.findViewById(R.id.title);
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.time);
@@ -108,6 +111,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     intent.putExtra("location", mTextView4.getText().toString());
                     intent.putExtra("time", mTextView3.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("numLikes", numLikes);
                     intent.putExtra("occID", occID);
                     intent.putExtra("isJio", isJio);
                     context.startActivity(intent);
@@ -133,6 +137,10 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
         public void setDate(Date date) {
             this.date = date;
+        }
+
+        public void setNumLikes(int numLikes) {
+            this.numLikes = numLikes;
         }
     } // static class ends here
 
@@ -188,6 +196,10 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         holder1.mTextView3.setText(currentItem.getTimeInfo());
         holder1.mTextView4.setText(currentItem.getLocationInfo());
         holder1.mTextView5.setText(df.format(currentItem.getDateInfo()));
+
+        int numLikes = currentItem.getNumLikes();
+        holder1.mNumLikes.setText(Integer.toString(numLikes));
+        holder1.setNumLikes(numLikes);
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
