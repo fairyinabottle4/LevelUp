@@ -55,6 +55,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     private MylistAdapter.OnItemClickListener mListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private Context mContext;
+    private boolean mFromLike;
 
     private StorageReference mProfileStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
@@ -156,9 +157,10 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
     //Constructor for MylistAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MylistAdapter(Context context, ArrayList<Occasion> MylistList) {
+    public MylistAdapter(Context context, ArrayList<Occasion> MylistList, boolean fromLike) {
         mContext = context;
         mMylistList = MylistList;
+        mFromLike = fromLike;
         mMylistListFull = new ArrayList<>(MylistList);
         mProfileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
@@ -421,6 +423,11 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
                         MainActivity.mLikeEventIDs.remove(occID);
                     }
+                    if (mFromLike) {
+                        mMylistList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, mMylistList.size());
+                    }
                 }
             }
         });
@@ -470,6 +477,6 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     };
 
     public MylistAdapter resetAdapter() {
-        return new MylistAdapter(mContext, mMylistListFull);
+        return new MylistAdapter(mContext, mMylistListFull, false);
     }
 }

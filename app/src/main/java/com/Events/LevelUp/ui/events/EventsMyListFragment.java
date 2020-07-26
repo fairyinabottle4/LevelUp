@@ -63,7 +63,7 @@ public class EventsMyListFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionEvents);
+        mAdapter = new MylistAdapter(getActivity(), mOccasionEvents, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -125,7 +125,7 @@ public class EventsMyListFragment extends Fragment {
                     }
                 }
 
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionEvents);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionEvents, false);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 

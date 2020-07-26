@@ -62,7 +62,7 @@ public class JiosLikedFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionJios);
+        mAdapter = new MylistAdapter(getActivity(), mOccasionJios, true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -122,7 +122,7 @@ public class JiosLikedFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mOccasionJios);
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios, true);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }

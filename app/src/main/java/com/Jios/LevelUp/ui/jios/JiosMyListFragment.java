@@ -65,7 +65,7 @@ public class JiosMyListFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionJios);
+        mAdapter = new MylistAdapter(getActivity(), mOccasionJios, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -125,7 +125,7 @@ public class JiosMyListFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mOccasionJios);
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios, false);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }

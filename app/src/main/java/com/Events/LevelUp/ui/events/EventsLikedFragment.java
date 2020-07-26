@@ -62,7 +62,7 @@ public class EventsLikedFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionEvents);
+        mAdapter = new MylistAdapter(getActivity(), mOccasionEvents, true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -124,7 +124,7 @@ public class EventsLikedFragment extends Fragment {
                     }
                 }
 
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionEvents);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionEvents, true);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
