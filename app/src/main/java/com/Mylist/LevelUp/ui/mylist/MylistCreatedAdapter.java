@@ -66,6 +66,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
         public Button mEditButton;
         public Button mPeopleButton;
+        public Button mPeopleLikedButton;
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
@@ -79,6 +80,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             mImageView = itemView.findViewById(R.id.imageView);
             mEditButton = itemView.findViewById(R.id.image_edit);
             mPeopleButton = itemView.findViewById(R.id.image_people);
+            mPeopleLikedButton = itemView.findViewById(R.id.image_people_liked);
             mTextView1 = itemView.findViewById(R.id.title);
             mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.time);
@@ -216,6 +218,20 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             public void onClick(View v) {
                 // new Activity
                 Intent intent = new Intent(mContext, CreatorViewNames.class);
+                String occID = currentItem.getOccasionID();
+                boolean isJio = currentItem.isJio();
+                intent.putExtra("occID", occID);
+                intent.putExtra("isJio", isJio);
+                mContext.startActivity(intent);
+
+            }
+        });
+
+        holder1.mPeopleLikedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // new Activity
+                Intent intent = new Intent(mContext, CreatorViewLikeNames.class);
                 String occID = currentItem.getOccasionID();
                 boolean isJio = currentItem.isJio();
                 intent.putExtra("occID", occID);

@@ -68,7 +68,7 @@ public class JiosLikedFragment extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void initializeList() { // CHANGE THIS TO PULL FROM LIKEJIO DB
+    private void initializeList() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabaseReferenceLikeJio = mFirebaseDatabase.getReference().child("LikeJio");

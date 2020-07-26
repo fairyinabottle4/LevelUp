@@ -71,6 +71,9 @@
         <activity
             android:name="com.Mylist.LevelUp.ui.mylist.CreatorViewNames"
             android:label="Creator View Names" />
+        <activity
+            android:name="com.Mylist.LevelUp.ui.mylist.CreatorViewLikeNames"
+            android:label="Creator View Like Names" />
     </application>
 
 </manifest>
