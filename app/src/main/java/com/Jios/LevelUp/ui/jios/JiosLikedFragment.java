@@ -15,9 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.Events.LevelUp.ui.events.EventsItem;
+import com.Events.LevelUp.ui.events.EventsLikedFragment;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
+import com.Mylist.LevelUp.ui.mylist.MylistLikedAdapter;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +37,9 @@ import java.util.Date;
 public class JiosLikedFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
+    private MylistLikedAdapter mAdapter;
     private View rootView;
+
     public static ArrayList<String> mJioIDs = new ArrayList<>();
     public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
 
@@ -51,6 +55,7 @@ public class JiosLikedFragment extends Fragment {
         activity.setSupportActionBar(tb);
         tb.setTitle("Jios I Liked");
 
+
         buildRecyclerView();
 
         initializeList();
@@ -62,7 +67,7 @@ public class JiosLikedFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionJios, true);
+        mAdapter = new MylistLikedAdapter(getActivity(), mOccasionJios);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -81,6 +86,7 @@ public class JiosLikedFragment extends Fragment {
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUIDFinal)) {
                         mJioIDs.add(selected.getOccasionID());
+                        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -91,15 +97,15 @@ public class JiosLikedFragment extends Fragment {
             }
         });
         DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionJios.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
+                    String eventID = selected.getOccasionID();
 
-                    if (mJioIDs.contains(jioID)) {
+                    if (mJioIDs.contains(eventID)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
@@ -114,17 +120,19 @@ public class JiosLikedFragment extends Fragment {
                         cal.set(Calendar.MINUTE, min);
                         Date eventDate = cal.getTime();
 
-                        Date currentDate = new Date();
 
+                        Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) >= 0) {
                             mOccasionJios.add(selected);
                         }
+                        // mOccasionEvents.add(selected);
                     }
                 }
                 MainActivity.sort(mOccasionJios);
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios, true);
+                MylistLikedAdapter mylistAdapter = new MylistLikedAdapter(getActivity(), mOccasionJios);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
+
             }
 
             @Override
@@ -132,7 +140,6 @@ public class JiosLikedFragment extends Fragment {
 
             }
         });
-        mAdapter.notifyDataSetChanged();
     }
 
     public static void setRefreshList(boolean refreshList) {
@@ -140,11 +147,11 @@ public class JiosLikedFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         if (refreshList) {
             initializeList();
             refreshList = false;
         }
-        super.onResume();
+        super.onCreate(savedInstanceState);
     }
 }

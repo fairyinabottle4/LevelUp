@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventPage;
 import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.Jios.LevelUp.ui.jios.JiosLikedFragment;
 import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.LikeOccasionItem;
 import com.MainActivity;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistViewHolder> implements Filterable {
+public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.MylistLikedViewHolder> {
     // ArrayList is passed in from Occasion.java
     // ?? isnt it  passed in from MylistFragment -yien
     private ArrayList<Occasion> mMylistList;
@@ -70,12 +71,13 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     }
 
     //the ViewHolder holds the content of the card
-    public static class MylistViewHolder extends RecyclerView.ViewHolder {
+    public static class MylistLikedViewHolder extends RecyclerView.ViewHolder {
         public String creatorName;
         public String creatorUid;
         public String occID;
         public boolean isJio;
         public boolean isLiked;
+        public boolean isChecked;
         public int numLikes;
 
         public ToggleButton mAddButton;
@@ -89,7 +91,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         public TextView mTextView6;
         public TextView mNumLikes;
 
-        public MylistViewHolder(final Context context, View itemView, final MylistAdapter.OnItemClickListener listener) {
+        public MylistLikedViewHolder(final Context context, View itemView, final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mAddButton = itemView.findViewById(R.id.image_add);
@@ -123,6 +125,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("eventID", occID);
                     intent.putExtra("stateLiked", isLiked);
+                    intent.putExtra("stateChecked", isChecked);
                     intent.putExtra("numLikes", numLikes);
                     context.startActivity(intent);
                 }
@@ -149,6 +152,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             isLiked = liked;
         }
 
+        public void setChecked(boolean toSet) {this.isChecked = toSet; }
+
         public void setNumLikes(int numLikes) {
             this.numLikes = numLikes;
         }
@@ -156,7 +161,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
     //Constructor for MylistAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MylistAdapter(Context context, ArrayList<Occasion> MylistList) {
+    public MylistLikedAdapter(Context context, ArrayList<Occasion> MylistList) {
         mContext = context;
         mMylistList = MylistList;
         mMylistListFull = new ArrayList<>(MylistList);
@@ -169,14 +174,14 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
     //inflate the items in a MylistViewHolder
     @NonNull
     @Override
-    public MylistAdapter.MylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MylistLikedAdapter.MylistLikedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
-        MylistAdapter.MylistViewHolder evh = new MylistAdapter.MylistViewHolder(mContext, v, mListener);
+        MylistLikedAdapter.MylistLikedViewHolder evh = new MylistLikedAdapter.MylistLikedViewHolder(mContext, v, mListener);
         return evh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MylistAdapter.MylistViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull MylistLikedAdapter.MylistLikedViewHolder holder, final int position) {
         final Occasion currentItem = mMylistList.get(position);
         UserItem user = MainActivity.currUser;
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -184,7 +189,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
         final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
 
-        final MylistAdapter.MylistViewHolder holder1 = holder;
+        final MylistLikedAdapter.MylistLikedViewHolder holder1 = holder;
         final String creatorUID = currentItem.getCreatorID();
         holder1.setCreatorUid(creatorUID);
         holder1.setOccID(occID);
@@ -231,8 +236,15 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
-        holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-        holder1.mAddButton.setChecked(true);
+        if (MainActivity.mJioIDs.contains(occID) || MainActivity.mEventIDs.contains(occID)) {
+            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            holder1.setChecked(true);
+            holder1.mAddButton.setChecked(true);
+        } else {
+            holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+            holder1.setChecked(false);
+            holder1.mAddButton.setChecked(false);
+        }
         final Handler handler = new Handler();
         final Runnable myRun = new Runnable() {
             @Override
@@ -284,9 +296,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                 }
 
 
-                mMylistList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mMylistList.size());
+//                mMylistList.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position, mMylistList.size());
 
             }
         };
@@ -297,7 +309,22 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                 if (isChecked) {
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
                     // handler.removeCallbacks(myRun);
-                    Toast.makeText(buttonView.getContext(), "Item added back to your list.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(buttonView.getContext(), "Item added to your list.", Toast.LENGTH_SHORT).show();
+                    if (currentItem.isJio()) {
+                        // add to jioActiivityDB
+                        DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                        ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(occID, userID);
+                        mActivityJioRef.push().setValue(activityOccasionItem);
+
+                        MainActivity.mJioIDs.add(currentItem.getOccasionID());
+                    } else {
+                        // add to eventActivityDB
+                        DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityEvent");
+                        ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(occID, userID);
+                        mActivityJioRef.push().setValue(activityOccasionItem);
+
+                        MainActivity.mEventIDs.add(currentItem.getOccasionID());
+                    }
 
                 } else {
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
@@ -363,6 +390,10 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
                     holder1.mNumLikes.setText(Integer.toString(currLikes - 1)); // for display only
 
+                    mMylistList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, mMylistList.size());
+
                     // delete and -1 from both jio and events
                     if (currentItem.isJio()) {
                         // Delete the entry from LikeJio
@@ -392,6 +423,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         holder1.setNumLikes(currLikes - 1);
 
                         MainActivity.mLikeJioIDs.remove(occID);
+
                     } else {
                         // delete item from LikeEvent
                         final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
@@ -420,7 +452,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         holder1.setNumLikes(currLikes - 1);
 
                         MainActivity.mLikeEventIDs.remove(occID);
+
                     }
+
                 }
             }
         });
@@ -432,44 +466,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         return mMylistList.size();
     }
 
-    @Override
-    public Filter getFilter() { // for the 'implements Filterable'
-        return myListFilter;
-    }
-
-    private Filter myListFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<Occasion> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(mMylistListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (Occasion item : mMylistListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mMylistList.clear();
-            mMylistList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-        }
-    };
-
-    public MylistAdapter resetAdapter() {
-        return new MylistAdapter(mContext, mMylistListFull);
+    public MylistLikedAdapter resetAdapter() {
+        return new MylistLikedAdapter(mContext, mMylistListFull);
     }
 }

@@ -213,7 +213,7 @@ public class MylistFragment extends Fragment {
 
                 MainActivity.sort(mOccasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll, false);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -261,7 +261,7 @@ public class MylistFragment extends Fragment {
 
                 MainActivity.sort(mOccasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll, false);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -392,7 +392,7 @@ public class MylistFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionAll, false);
+        mAdapter = new MylistAdapter(getActivity(), mOccasionAll);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -15,7 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.LikeOccasionItem;
+import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
+import com.Mylist.LevelUp.ui.mylist.MylistLikedAdapter;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +35,7 @@ import java.util.Date;
 public class EventsLikedFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
+    private MylistLikedAdapter mAdapter;
     private View rootView;
 
     public static ArrayList<String> mEventIDs = new ArrayList<>();
@@ -62,7 +65,7 @@ public class EventsLikedFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionEvents, true);
+        mAdapter = new MylistLikedAdapter(getActivity(), mOccasionEvents);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -71,13 +74,13 @@ public class EventsLikedFragment extends Fragment {
     private void initializeList() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("LikeEvent");
-        mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
+        DatabaseReference mDatabaseReferenceLikeEvent = mFirebaseDatabase.getReference().child("LikeEvent");
+        mDatabaseReferenceLikeEvent.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mEventIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUIDFinal)) {
                         mEventIDs.add(selected.getOccasionID());
@@ -123,8 +126,8 @@ public class EventsLikedFragment extends Fragment {
                         // mOccasionEvents.add(selected);
                     }
                 }
-
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionEvents, true);
+                MainActivity.sort(mOccasionEvents);
+                MylistLikedAdapter mylistAdapter = new MylistLikedAdapter(getActivity(), mOccasionEvents);
                 mAdapter = mylistAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -145,6 +148,7 @@ public class EventsLikedFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (refreshList) {
             initializeList();
+            refreshList = false;
         }
         super.onCreate(savedInstanceState);
     }

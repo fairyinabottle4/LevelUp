@@ -98,7 +98,7 @@ public class HistoryJiosFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mPastOccasions);
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mPastOccasions, false);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mPastOccasions);
                 mAdapter = myListAdapter;
                 mRecyclerView.setAdapter(mAdapter);
 
@@ -117,7 +117,7 @@ public class HistoryJiosFragment extends Fragment {
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mPastOccasions, false);
+        mAdapter = new MylistAdapter(getActivity(), mPastOccasions);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
