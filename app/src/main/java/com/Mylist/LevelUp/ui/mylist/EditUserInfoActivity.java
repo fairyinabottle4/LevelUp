@@ -37,12 +37,20 @@ import com.squareup.picasso.Picasso;
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private FirebaseAuth firebaseAuth;
     private static final int PICK_IMAGE_REQUEST = 1;
+
     private String name;
     private int residence;
+    private String telegram;
+    private String email;
+    private long phone;
 
     private EditText editTextName;
     private int finalResidence;
     private Button saveButton;
+
+    private EditText editTelegramHandle;
+    private EditText editEmailAddress;
+    private EditText editPhoneNumber;
 
     public static Uri profileImageUri;
     private ImageView editProfileImage;
@@ -70,6 +78,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         name = MainActivity.display_name;
         residence = MainActivity.currUser.getResidential();
+        telegram = MainActivity.display_telegram;
+        email = MainActivity.display_email;
+        phone = MainActivity.display_phone;
+
 
         final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUID);
@@ -92,6 +104,11 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             }
         });
 
+        //For updating Contact Information
+        editTelegramHandle = findViewById(R.id.edit_telegram_handle);
+        editEmailAddress = findViewById(R.id.edit_email);
+        editPhoneNumber = findViewById(R.id.edit_phone_number);
+
         // For Setting Name and Residence
         saveButton = findViewById(R.id.saveEditedDetailsBtn); // Button
         editTextName = findViewById(R.id.editTextDisplayName); // Text View
@@ -100,6 +117,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             public void onClick(View v) {
                 updateName();
                 updateResidence();
+                updateTelegramHandle();
+                updateEmailAddress();
+                updatePhoneNumber();
                 boolean pass = true;
                 if (deleteProfilePicture) {
                     deleteProfilePicture();
@@ -301,6 +321,41 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                     .child(MainActivity.currUser.getId())
                     .child("name")
                     .setValue(updatedName);
+            changes = true;
+        }
+    }
+
+    //incomplete
+    private void updateTelegramHandle() {
+        String inputHandle = editTelegramHandle.getText().toString().trim();
+        if (!inputHandle.equals(telegram)) {
+            mDatabaseRef
+                    .child(MainActivity.currUser.getId())
+                    .child("TelegramHandle")
+                    .setValue(inputHandle);
+            changes = true;
+        }
+    }
+
+    private void updateEmailAddress() {
+        String inputAddress = editEmailAddress.getText().toString().trim();
+        if (!inputAddress.equals(email)) {
+            mDatabaseRef
+                    .child(MainActivity.currUser.getId())
+                    .child("EmailAddress")
+                    .setValue(inputAddress);
+            changes = true;
+        }
+    }
+
+    private void updatePhoneNumber() {
+        String inputNumberString = editPhoneNumber.getText().toString().trim();
+        long inputNumber = Long.parseLong(inputNumberString);
+        if (inputNumber != phone) {
+            mDatabaseRef
+                    .child(MainActivity.currUser.getId())
+                    .child("PhoneNumber")
+                    .setValue(inputNumber);
             changes = true;
         }
     }

@@ -9,10 +9,6 @@ public class UserItem {
     public String email;
     public int residential;
 
-    // 1 for cinnamon, 2 for tembusu, 3 for CAPT, 4 for RC4
-    // halls ill do later
-    // -1 for not specified
-
     public UserItem(String id, String profilePictureUri, String name, String email, int residential) {
         this.id = id;
         this.profilePictureUri = profilePictureUri;

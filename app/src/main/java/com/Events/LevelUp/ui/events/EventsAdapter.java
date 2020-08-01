@@ -76,6 +76,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             super(itemView);
             this.itemView = itemView;
             mImageView = itemView.findViewById(R.id.imageView);
+//            mImageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(context, )
+//                }
+//            });
             mAddButton = itemView.findViewById(R.id.image_add);
             mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
@@ -195,7 +201,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                         String name = selected.getName();
                         holder1.mTextView6.setText(name);
                         holder1.setCreatorName(name);
-
                     }
                 }
             }
