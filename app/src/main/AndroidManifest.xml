@@ -74,6 +74,10 @@
         <activity
             android:name="com.Mylist.LevelUp.ui.mylist.CreatorViewLikeNames"
             android:label="Creator View Like Names" />
+        <activity
+            android:name="com.UserProfile"
+            android:label="User Profile" />
+
     </application>
 
 </manifest>

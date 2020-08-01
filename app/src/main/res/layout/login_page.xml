@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/setProfilePictureLogin"
@@ -30,6 +31,7 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@id/editTextLoginName"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
@@ -46,21 +48,41 @@
 
         <Spinner
             android:id="@+id/residential_spinner"
-            app:layout_constraintTop_toBottomOf="@id/editTextLoginName"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_width="190dp"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintTop_toBottomOf="@id/editTextLoginName" />
+
+
+        <EditText
+            android:id="@+id/enter_telegram_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Telegram Handle"
+            app:layout_constraintTop_toBottomOf="@id/residential_spinner"
+            app:layout_constraintStart_toStartOf="@id/residential_spinner" />
+
+
+        <EditText
+            android:id="@+id/enter_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Phone Number"
+            app:layout_constraintTop_toBottomOf="@+id/enter_telegram_handle"
+            app:layout_constraintStart_toStartOf="@id/enter_telegram_handle" />
 
         <Button
             android:id="@+id/Register_Btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/residential_spinner"
-            android:text="Register"/>
+            android:layout_marginTop="68dp"
+            android:text="Register"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+            app:layout_constraintEnd_toEndOf="@id/enter_phone_number"
+            app:layout_constraintTop_toBottomOf="@+id/enter_phone_number" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </RelativeLayout>

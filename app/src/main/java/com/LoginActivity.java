@@ -37,8 +37,12 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     // For Login
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText editTextName;
+    private EditText telegramBox;
+    private EditText phoneBox;
     private FirebaseUser fbUser;
     private String name;
+    private String telegramHandle;
+    private long phoneNumber;
     private int residence;
     // private static FirebaseAuth mAuth;
     // private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -82,6 +86,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         initializeFirebase();
 
         editTextName = findViewById(R.id.editTextLoginName);
+        telegramBox = findViewById(R.id.enter_telegram_handle);
+        phoneBox = findViewById(R.id.enter_phone_number);
 
         findViewById(R.id.Register_Btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +99,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                 }
 
                 registerName();
+                registerTelegram();
+                registerPhone();
 
                 if (allowed) {
                     sendToDatabase();
@@ -248,6 +256,21 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         }
     }
 
+    private void registerTelegram() {
+        telegramHandle = telegramBox.getText().toString().trim();
+
+        if (telegramHandle.isEmpty()) {
+            editTextName.setError("Please enter your name");
+            editTextName.requestFocus();
+            allowed = false;
+        }
+    }
+
+    private void registerPhone() {
+        String phoneString = phoneBox.getText().toString().trim();
+        phoneNumber = Long.parseLong(phoneString);
+    }
+
     private void sendToDatabase() {
         // new user(id, email, name) (eventually rc and profile pic)
         String userID = fbUser.getUid();
@@ -258,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         if (profileImageUri != null) {
             imageURI = profileImageUri.toString();
         }
-        UserItem userItem = new UserItem(userID, imageURI, name, email, residence);
+        UserItem userItem = new UserItem(userID, imageURI, name, email, residence, telegramHandle, phoneNumber);
         mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);
     }
