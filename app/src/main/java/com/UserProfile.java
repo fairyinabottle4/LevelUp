@@ -115,11 +115,13 @@ public class UserProfile extends AppCompatActivity {
                     for (DataSnapshot child :dataSnapshot.getChildren()) {
                         sumOfRatings += Integer.parseInt(child.getValue().toString());
                         numOfRatings++;
+                        if (child.getKey().equals(currUserId)) {
+                            ratingBar.setRating(Integer.parseInt(child.getValue().toString()));
+                        }
                     }
                 }
                 float averageRating = sumOfRatings / numOfRatings;
                 averageRatingGlobal = averageRating;
-                ratingBar.setRating(averageRating);
                 actualRating.setText(Float.toString(averageRating));
             }
 

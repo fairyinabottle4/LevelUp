@@ -136,7 +136,7 @@
                 android:id="@+id/IDBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Rating"
+                android:text="Average Rating"
                 android:textSize="20sp"/>
             <TextView
                 android:id="@+id/actual_score"

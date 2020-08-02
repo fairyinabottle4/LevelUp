@@ -124,30 +124,4 @@ public class EventsItem implements Occasion {
     public boolean isJio() {
         return false;
     }
-
-    /*
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(profilePicture);
-        dest.writeInt(hourOfDay);
-        dest.writeInt(minute);
-        dest.writeString(timeInfo);
-        dest.writeString(description);
-        dest.writeString(locationInfo);
-        dest.writeString(title);
-        dest.writeString(DateFormat.getInstance().format(dateInfo));
-    }
-
-     */
-
-
-
-
-
 }
