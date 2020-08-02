@@ -7,9 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -20,6 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.MainActivity;
+import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +42,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
     private DatabaseReference mDatabaseReference;
 
     private DateFormat df = DateFormat.getDateInstance();
+    private int selection;
     TextView mDateSelected;
     TextView mTimeSelected;
     EditText mEventTitle;
@@ -47,6 +52,10 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
     EditText mEventDescription;
     EditText mEventLocation;
     Uri currentUri;
+    Spinner eventSpinner;
+
+    private static final String[] categories = {"All",
+            "Arts", "Sports", "Talks", "Volunteering", "Others"};
     private int hourOfDay;
     private int minute;
     boolean validDate;
@@ -84,6 +93,9 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         mEventDescription = findViewById(R.id.event_description);
         mEventLocation = findViewById(R.id.location);
 
+
+        initializeSpinner();
+
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference().child("Events");
         mSaveJio = findViewById(R.id.save_jio);
@@ -97,7 +109,8 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                     eventsItem = new EventsItem(0, key, eventCreatorUID,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
-                            mEventTitle.getText().toString(), mEventDescription.getText().toString());
+                            mEventTitle.getText().toString(), mEventDescription.getText().toString(),
+                            selection);
                     // Toast.makeText(EventsAdder.this, key, Toast.LENGTH_SHORT).show();
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -157,4 +170,45 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         this.hourOfDay = hourOfDay;
         this.minute = minute;
     }
+
+    private void initializeSpinner() {
+        eventSpinner = findViewById(R.id.event_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(EventsAdder.this,
+                android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        eventSpinner.setAdapter(adapter);
+        eventSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        selection = 0;
+                        break;
+                    case 1:
+                        selection = 1;
+                        break;
+                    case 2:
+                        selection = 2;
+                        break;
+                    case 3:
+                        selection = 3;
+                        break;
+                    case 4:
+                        selection = 4;
+                        break;
+                    case 5:
+                        selection = 5;
+                        break;
+                    default:
+                        selection = 0;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
 }

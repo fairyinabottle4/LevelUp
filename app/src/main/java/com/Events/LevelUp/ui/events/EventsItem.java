@@ -12,6 +12,7 @@ public class EventsItem implements Occasion {
     private String locationInfo;
     private String title;
     private String description;
+    private int category;
 
     private String eventID;
     private String creatorID;
@@ -26,11 +27,10 @@ public class EventsItem implements Occasion {
         this.locationInfo = locationInfo;
         this.title = title;
         this.description = description;
-
     }
 
     // Overloaded Constructor to push Event ID and Creator ID to Firebase
-    public EventsItem(int numLikes, String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public EventsItem(int numLikes, String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description, int category) {
         this.numLikes = numLikes;
         this.eventID = eventID;
         this.creatorID = creatorID;
@@ -41,38 +41,12 @@ public class EventsItem implements Occasion {
         this.locationInfo = locationInfo;
         this.title = title;
         this.description = description;
+        this.category = category;
     }
 
     public EventsItem() {
 
     }
-
-    /*
-    public EventsItem(Parcel in) {
-        profilePicture = in.readInt();
-        timeInfo = in.readString();
-        hourOfDay = in.readInt();
-        minute = in.readInt();
-        locationInfo = in.readString();
-        title = in.readString();
-        description = in.readString();
-    }
-
-
-
-    public static final Creator<EventsItem> CREATOR = new Creator<EventsItem>() {
-        @Override
-        public EventsItem createFromParcel(Parcel in) {
-            return new EventsItem(in);
-        }
-
-        @Override
-        public EventsItem[] newArray(int size) {
-            return new EventsItem[size];
-        }
-    };
-
-     */
 
     public String getTitle() {
         return title;

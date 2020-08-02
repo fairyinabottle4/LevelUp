@@ -155,7 +155,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     updatedEventsItem = new EventsItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
-                                            updatedLocationInfo, updatedTitle, updatedDescription);
+                                            updatedLocationInfo, updatedTitle, updatedDescription, 0);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();

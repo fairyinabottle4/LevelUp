@@ -13,16 +13,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -60,6 +63,8 @@ public class EventsFragment extends Fragment {
     FirebaseDatabase mDatabase;
     DatabaseReference mDatabaseReference;
     ValueEventListener mValueEventListener;
+    private static final String[] categories = {"All",
+            "Arts", "Sports", "Talks", "Volunteering", "Others"};
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private EventsAdapter mAdapter;
@@ -153,6 +158,15 @@ public class EventsFragment extends Fragment {
                 });
 
                 break;
+
+            case R.id.action_filter:
+                Spinner eventSpinner = rootView.findViewById(R.id.action_filter);
+                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item, categories);
+                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                eventSpinner.setAdapter(spinnerAdapter);
+                break;
+
             case R.id.action_cfmed_events: // the tick
                 EventsMyListFragment nextFrag = new EventsMyListFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -199,9 +213,12 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        // ???
-        // searchItem.setOnMenuItemClickListener()
-
+        final MenuItem filterItem = menu.findItem(R.id.action_filter);
+        Spinner spinnerMenu = (Spinner) filterItem.getActionView();
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, categories);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMenu.setAdapter(spinnerAdapter);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

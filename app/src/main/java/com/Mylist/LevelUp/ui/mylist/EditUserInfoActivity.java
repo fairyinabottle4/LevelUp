@@ -58,7 +58,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
 
-    // eventually add halls
     private Spinner spinner;
     private static final String[] residentials = {"I don't stay on campus",
             "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
