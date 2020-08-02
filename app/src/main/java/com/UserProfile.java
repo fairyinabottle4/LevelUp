@@ -120,6 +120,7 @@ public class UserProfile extends AppCompatActivity {
                 float averageRating = sumOfRatings / numOfRatings;
                 averageRatingGlobal = averageRating;
                 ratingBar.setRating(averageRating);
+                actualRating.setText(Float.toString(averageRating));
             }
 
             @Override
@@ -128,8 +129,6 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-        //there is a bug here
-        actualRating.setText(Float.toString(averageRatingGlobal));
 
 
         //when the rating is changed.
@@ -138,15 +137,8 @@ public class UserProfile extends AppCompatActivity {
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 db.getReference().child("Users").child(currUserId).child("Ratings").child(creatorId).setValue(rating);
                 db.getReference().child("Users").child(creatorId).child("Ratings").child(currUserId).setValue(rating);
-                final String toastMessage = "Thank you for rating!" + averageRatingGlobal;
-                Toast.makeText(UserProfile.this, toastMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
-//        ratingBar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
     }
 }
