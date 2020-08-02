@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -137,7 +138,6 @@ public class EventsFragment extends Fragment {
 
         switch(item.getItemId()) {
             case R.id.action_search:
-
                 MenuItem searchItem = item;
                 SearchView searchView = (SearchView) searchItem.getActionView();
                 // searchView.setQueryHint("Search");
@@ -156,17 +156,28 @@ public class EventsFragment extends Fragment {
                         return false;
                     }
                 });
-
                 break;
 
             case R.id.action_filter:
-                Spinner eventSpinner = rootView.findViewById(R.id.action_filter);
-                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, categories);
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                eventSpinner.setAdapter(spinnerAdapter);
                 break;
-
+            case R.id.subitem1:
+                getSelectedCategoryData(0);
+                break;
+            case R.id.subitem2:
+                getSelectedCategoryData(1);
+                break;
+            case R.id.subitem3:
+                getSelectedCategoryData(2);
+                break;
+            case R.id.subitem4:
+                getSelectedCategoryData(3);
+                break;
+            case R.id.subitem5:
+                getSelectedCategoryData(4);
+                break;
+            case R.id.subitem6:
+                getSelectedCategoryData(5);
+                break;
             case R.id.action_cfmed_events: // the tick
                 EventsMyListFragment nextFrag = new EventsMyListFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -174,7 +185,7 @@ public class EventsFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 break;
-            case R.id.action_fav: // the tick
+            case R.id.action_fav: // the heart
                 EventsLikedFragment nextFrag2 = new EventsLikedFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, nextFrag2)
@@ -213,12 +224,13 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        final MenuItem filterItem = menu.findItem(R.id.action_filter);
-        Spinner spinnerMenu = (Spinner) filterItem.getActionView();
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, categories);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMenu.setAdapter(spinnerAdapter);
+//        MenuItem filterItem = menu.findItem(R.id.action_filter);
+//        Spinner spinnerMenu = (Spinner) filterItem.getActionView();
+//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(),
+//                android.R.layout.simple_spinner_item, categories);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerMenu.setAdapter(spinnerAdapter);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -290,6 +302,26 @@ public class EventsFragment extends Fragment {
         };
         mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void getSelectedCategoryData(int categoryID) {
+        //This arraylist will contain only those in the certain categories
+        ArrayList<EventsItem> list = new ArrayList<>();
+        EventsAdapter eventsAdapter;
+        if (categoryID == 0) {
+            eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
+        } else {
+            //filter by id
+            for (EventsItem eventsItem : EventsItemList) {
+                if (eventsItem.getCategory() == categoryID) {
+                    list.add(eventsItem);
+                }
+            }
+            eventsAdapter = new EventsAdapter(getActivity(), list);
+        }
+        mRecyclerView.setAdapter(eventsAdapter);
+        mAdapter = eventsAdapter;
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public static void setRefresh(boolean toSet) {

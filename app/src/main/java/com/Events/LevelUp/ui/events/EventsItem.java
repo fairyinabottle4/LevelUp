@@ -94,6 +94,10 @@ public class EventsItem implements Occasion {
         this.numLikes = numLikes;
     }
 
+    public int getCategory() {
+        return category;
+    }
+
     @Override
     public boolean isJio() {
         return false;
