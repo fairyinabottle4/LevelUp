@@ -99,7 +99,7 @@
         android:id="@+id/edit_telegram_handle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Telegram Handle"
+        android:hint="Edit Telegram Handle"
         app:layout_constraintBottom_toTopOf="@+id/edit_email"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -107,7 +107,7 @@
         android:id="@+id/edit_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Email Address"
+        android:hint="Edit Email Address"
         app:layout_constraintBottom_toTopOf="@+id/edit_phone_number"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -115,7 +115,7 @@
         android:id="@+id/edit_phone_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Phone Number"
+        android:hint="Edit Phone Number"
         app:layout_constraintBottom_toTopOf="@+id/saveEditedDetailsBtn"
         app:layout_constraintStart_toStartOf="parent" />
 
