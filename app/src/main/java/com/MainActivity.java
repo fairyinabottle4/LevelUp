@@ -358,4 +358,8 @@ public class MainActivity extends AppCompatActivity {
     public static void setCurrUserProfilePicture(String currUserProfilePicture) {
         MainActivity.currUserProfilePicture = currUserProfilePicture;
     }
+
+    public static UserItem getCurrentUser() {
+        return currUser;
+    }
 }
