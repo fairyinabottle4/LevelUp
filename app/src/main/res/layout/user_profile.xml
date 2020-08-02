@@ -112,7 +112,7 @@
                 android:id="@+id/DisplayPhoneTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="20dp"
                 android:text="Phone Number"
                 android:textSize="20sp" />
 
@@ -125,16 +125,49 @@
 
         </LinearLayout>
 
-    <RatingBar
-        android:id="@+id/UserRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/PhoneNumberLayout"
-        android:numStars="5"
-        android:stepSize="1"
-        android:layout_centerHorizontal="true">
-    </RatingBar>
+        <LinearLayout
+            android:id="@+id/rating_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/PhoneNumberLayout"
+            android:layout_marginBottom="15dp">
+            <TextView
+                android:id="@+id/IDBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Rating"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/actual_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No ratings yet"
+                android:layout_marginLeft="20dp"/>
+            <ImageView
+                android:id="@+id/rating_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_star_24"/>
+        </LinearLayout>
 
+        <TextView
+            android:id="@+id/rate_this_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate this user"
+            android:layout_below="@id/rating_layout"/>
+
+        <RatingBar
+            android:id="@+id/UserRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/rate_this_user"
+            android:numStars="5"
+            android:stepSize="1">
+
+        </RatingBar>
 
 
     </RelativeLayout>

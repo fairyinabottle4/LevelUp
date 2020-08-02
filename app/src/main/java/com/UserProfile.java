@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,12 +38,20 @@ public class UserProfile extends AppCompatActivity {
     private TextView telegramHandle;
     private TextView emailAddress;
     private TextView phoneNumber;
+    private TextView IDBox;
+    private TextView actualRating;
+    private ImageView ratingStar;
+    private TextView rateThisUser;
     private RatingBar ratingBar;
 
     private StorageReference mProfileStorageRef;
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String currUserId = MainActivity.getCurrentUser().getId();
+
+    int sumOfRatings = 0;
+    int numOfRatings = 0;
+    float averageRatingGlobal;
 
     private static final String[] residentials = {"I don't stay on campus",
             "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
@@ -64,11 +74,15 @@ public class UserProfile extends AppCompatActivity {
         emailAddress = findViewById(R.id.DisplayEmailAddress);
         phoneTitle = findViewById(R.id.DisplayPhoneTitle);
         phoneNumber = findViewById(R.id.DisplayPhoneNumber);
+        IDBox = findViewById(R.id.IDBox);
+        actualRating = findViewById(R.id.actual_score);
+        ratingStar = findViewById(R.id.rating_star);
+        rateThisUser = findViewById(R.id.rate_this_user);
         ratingBar = findViewById(R.id.UserRating);
 
         Intent intent = getIntent();
         final String creatorId = intent.getStringExtra("creatorid");
-        String name = intent.getStringExtra("name");
+        final String name = intent.getStringExtra("name");
         int residenceIndex = intent.getIntExtra("residence", 0);
         String telegram = intent.getStringExtra("telegram");
         String email = intent.getStringExtra("email");
@@ -92,11 +106,11 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
+
+        //pulling the rating from the database
         db.getReference().child("Users").child(creatorId).child("Ratings").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int sumOfRatings = 0;
-                int numOfRatings = 0;
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot child :dataSnapshot.getChildren()) {
                         sumOfRatings += Integer.parseInt(child.getValue().toString());
@@ -104,6 +118,7 @@ public class UserProfile extends AppCompatActivity {
                     }
                 }
                 float averageRating = sumOfRatings / numOfRatings;
+                averageRatingGlobal = averageRating;
                 ratingBar.setRating(averageRating);
             }
 
@@ -113,12 +128,25 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
+        //there is a bug here
+        actualRating.setText(Float.toString(averageRatingGlobal));
+
+
+        //when the rating is changed.
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 db.getReference().child("Users").child(currUserId).child("Ratings").child(creatorId).setValue(rating);
                 db.getReference().child("Users").child(creatorId).child("Ratings").child(currUserId).setValue(rating);
+                final String toastMessage = "Thank you for rating!" + averageRatingGlobal;
+                Toast.makeText(UserProfile.this, toastMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
+//        ratingBar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
     }
 }
