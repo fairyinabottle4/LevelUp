@@ -1,6 +1,8 @@
 package com.Mylist.LevelUp.ui.mylist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -162,7 +164,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             public void onClick(View v) {
                 // Open Gallery
                 Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent, 1000);
+                openGalleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(openGalleryIntent, PICK_IMAGE_REQUEST);
             }
         });
 
@@ -197,18 +200,32 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     // For picking profile picture
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
-            if (resultCode == Activity.RESULT_OK) {
-                deleteProfilePicture = false;
-                Uri imageUri = data.getData();
-                editProfileImage.setImageURI(imageUri);
-                profileImageUri = imageUri;
-
-                uploadImageToFireBase();
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditUserInfoActivity.this);
+        builder.setMessage("Set profile picture?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
+                            if (resultCode == Activity.RESULT_OK) {
+                                deleteProfilePicture = false;
+                                Uri imageUri = data.getData();
+                                editProfileImage.setImageURI(imageUri);
+                                profileImageUri = imageUri;
+                                uploadImageToFireBase();
+                            }
+                        }
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
             }
-        }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void uploadImageToFireBase() {
@@ -225,7 +242,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                 Toast.makeText(EditUserInfoActivity.this, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
-
         MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
         // send update to database
         String newUri = profileImageUri.toString();

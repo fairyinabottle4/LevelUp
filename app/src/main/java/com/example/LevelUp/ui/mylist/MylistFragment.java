@@ -322,7 +322,7 @@ public class MylistFragment extends Fragment {
 
             }
         });
-
+        buildRecyclerView();
     }
 
     @Override
