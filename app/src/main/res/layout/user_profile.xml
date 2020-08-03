@@ -165,7 +165,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/rate_this_user"
             android:numStars="5"
-            android:stepSize="1">
+            android:stepSize="0.5">
 
         </RatingBar>
 

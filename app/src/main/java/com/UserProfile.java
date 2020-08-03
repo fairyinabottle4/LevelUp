@@ -48,9 +48,10 @@ public class UserProfile extends AppCompatActivity {
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String currUserId = MainActivity.getCurrentUser().getId();
+    private String creatorId;
 
-    int sumOfRatings = 0;
-    int numOfRatings = 0;
+    float sumOfRatings = 0;
+    float numOfRatings = 0;
     float averageRatingGlobal;
 
     private static final String[] residentials = {"I don't stay on campus",
@@ -81,7 +82,12 @@ public class UserProfile extends AppCompatActivity {
         ratingBar = findViewById(R.id.UserRating);
 
         Intent intent = getIntent();
-        final String creatorId = intent.getStringExtra("creatorid");
+        String creatorIdCopy = intent.getStringExtra("creatorid");
+        if (creatorIdCopy == null) {
+            creatorId = currUserId;
+        } else {
+            creatorId = creatorIdCopy;
+        }
         final String name = intent.getStringExtra("name");
         int residenceIndex = intent.getIntExtra("residence", 0);
         String telegram = intent.getStringExtra("telegram");
@@ -113,16 +119,16 @@ public class UserProfile extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot child :dataSnapshot.getChildren()) {
-                        sumOfRatings += Integer.parseInt(child.getValue().toString());
+                        sumOfRatings += Float.parseFloat(child.getValue().toString());
                         numOfRatings++;
                         if (child.getKey().equals(currUserId)) {
-                            ratingBar.setRating(Integer.parseInt(child.getValue().toString()));
+                            ratingBar.setRating(Float.parseFloat(child.getValue().toString()));
                         }
                     }
                 }
                 float averageRating = sumOfRatings / numOfRatings;
                 averageRatingGlobal = averageRating;
-                actualRating.setText(Float.toString(averageRating));
+                actualRating.setText(String.format("%.2f", averageRating));
             }
 
             @Override

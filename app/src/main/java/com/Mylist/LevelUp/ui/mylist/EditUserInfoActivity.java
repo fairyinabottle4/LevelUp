@@ -105,8 +105,12 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         //For updating Contact Information
         editTelegramHandle = findViewById(R.id.edit_telegram_handle);
+        editTelegramHandle.setText(MainActivity.display_telegram);
         editEmailAddress = findViewById(R.id.edit_email);
+        editEmailAddress.setText(MainActivity.display_email);
         editPhoneNumber = findViewById(R.id.edit_phone_number);
+        editPhoneNumber.setText(Long.toString(MainActivity.display_phone));
+
 
         // For Setting Name and Residence
         saveButton = findViewById(R.id.saveEditedDetailsBtn); // Button
@@ -328,6 +332,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateTelegramHandle() {
         String inputHandle = editTelegramHandle.getText().toString().trim();
         if (!inputHandle.equals(telegram)) {
+            MainActivity.display_telegram = inputHandle;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("TelegramHandle")
@@ -339,9 +344,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateEmailAddress() {
         String inputAddress = editEmailAddress.getText().toString().trim();
         if (!inputAddress.equals(email)) {
+            MainActivity.display_email = inputAddress;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
-                    .child("EmailAddress")
+                    .child("email")
                     .setValue(inputAddress);
             changes = true;
         }
@@ -350,6 +356,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();
         long inputNumber = Long.parseLong(inputNumberString);
+        MainActivity.display_phone = inputNumber;
         if (inputNumber != phone) {
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
