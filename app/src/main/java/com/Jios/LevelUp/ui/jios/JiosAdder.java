@@ -38,7 +38,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseReference;
-    private DateFormat df = DateFormat.getDateInstance();
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private int selection;
     TextView mDateSelected;
     TextView mTimeSelected;
@@ -114,9 +114,9 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 String str = sdf.format(Calendar.getInstance().getTime());
                 int intCurrentTime = Integer.parseInt(str);
                 try {
-                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
+                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
                             .compareTo(df.parse(mDateSelected.getText().toString())) > 0;
-                    dateIsSame = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
+                    dateIsSame = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
                             .compareTo(df.parse(mDateSelected.getText().toString())) == 0;
                     if (!mTimeSelected.getText().toString().equals("No Time Selected") && dateIsSame) {
                         validTime = intCurrentTime > Integer.parseInt(mTimeSelected.getText().toString());
