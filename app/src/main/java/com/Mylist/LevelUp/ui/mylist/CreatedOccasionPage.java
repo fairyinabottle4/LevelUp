@@ -38,6 +38,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class CreatedOccasionPage extends AppCompatActivity {
     private ImageView mImageView;
@@ -138,7 +139,7 @@ public class CreatedOccasionPage extends AppCompatActivity {
                 if (updatedDate == null) {
                     intent.putExtra("date", dateToShow);
                 } else {
-                    intent.putExtra("date", DateFormat.getDateInstance(DateFormat.MEDIUM).format(updatedDate));
+                    intent.putExtra("date", DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(updatedDate));
                 }
                 intent.putExtra("time", mTextView3.getText().toString().trim());
                 intent.putExtra("occID", occID);
@@ -183,7 +184,7 @@ public class CreatedOccasionPage extends AppCompatActivity {
                     EventsItem selected = snapshot.getValue(EventsItem.class);
                     if (occaID.equals(selected.getEventID())) {
                         mTextView1.setText(selected.getTitle());
-                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected.getDateInfo()));
+                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(selected.getDateInfo()));
                         updatedDate = selected.getDateInfo();
                         mTextView3.setText(selected.getTimeInfo());
                         mTextView4.setText(selected.getLocationInfo());
@@ -211,7 +212,7 @@ public class CreatedOccasionPage extends AppCompatActivity {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
                     if (occaID.equals(selected.getJioID())) {
                         mTextView1.setText(selected.getTitle());
-                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected.getDateInfo()));
+                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(selected.getDateInfo()));
                         updatedDate = selected.getDateInfo();
                         mTextView3.setText(selected.getTimeInfo());
                         mTextView4.setText(selected.getLocationInfo());

@@ -38,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class EditOccasionInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
@@ -62,7 +63,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
 
     private boolean validDate;
 
-    private DateFormat df = DateFormat.getDateInstance();
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -137,7 +138,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                         && !dateTextView.getText().toString().equals("No Time Selected")
                                         && !timeTextView.getText().toString().equals("No Date Selected");
                                 try {
-                                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
+                                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
                                             .compareTo(df.parse(dateTextView.getText().toString())) > 0;
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -202,7 +203,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                         && !dateTextView.getText().toString().equals("No Time Selected")
                                         && !timeTextView.getText().toString().equals("No Date Selected");
                                 try {
-                                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Calendar.getInstance().getTime()))
+                                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
                                             .compareTo(df.parse(dateTextView.getText().toString())) > 0;
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -326,7 +327,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
+        String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(c.getTime());
         // Toast.makeText(this, currentDateString, Toast.LENGTH_SHORT).show();
         dateTextView.setText(currentDateString);
     }
@@ -337,7 +338,6 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         String after = minute < 10 ? "0" : "";
         String currentTimeString = initial + hourOfDay + after + minute;
         timeTextView.setText(currentTimeString);
-
         updatedTimeInfo = currentTimeString;
         this.updatedHourOfDay = hourOfDay;
         this.updatedMinute = minute;

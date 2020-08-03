@@ -88,7 +88,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
-                    intent.putExtra("creatorid", creatorUid);
+                    intent.putExtra("creatorfid", creatorUid);
                     intent.putExtra("name", creatorName);
                     intent.putExtra("residence", creatorResidence);
                     intent.putExtra("dpUri", profilePictureUri);

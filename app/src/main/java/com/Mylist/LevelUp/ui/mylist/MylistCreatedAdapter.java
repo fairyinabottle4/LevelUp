@@ -39,7 +39,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     private ArrayList<Occasion> mMylistList;
     private MylistCreatedAdapter.OnItemClickListener mListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-    private DateFormat df2 = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    private DateFormat df2 = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
     private Context mContext;
 
@@ -107,7 +107,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     intent.putExtra("title", mTextView1.getText().toString());
                     intent.putExtra("description", mTextView2.getText().toString());
                     intent.putExtra("date", mTextView5.getText().toString());
-                    intent.putExtra("dateToShow", DateFormat.getDateInstance(DateFormat.MEDIUM).format(date));
+                    intent.putExtra("dateToShow", DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(date));
                     intent.putExtra("location", mTextView4.getText().toString());
                     intent.putExtra("time", mTextView3.getText().toString());
                     intent.putExtra("position", getAdapterPosition());

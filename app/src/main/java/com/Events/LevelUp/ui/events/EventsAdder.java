@@ -34,6 +34,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class EventsAdder extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
@@ -41,7 +42,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseReference;
 
-    private DateFormat df = DateFormat.getDateInstance();
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private int selection;
     TextView mDateSelected;
     TextView mTimeSelected;
@@ -156,8 +157,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
-        // Toast.makeText(this, currentDateString, Toast.LENGTH_SHORT).show();
+        String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(c.getTime());
         mDateSelected.setText(currentDateString);
     }
 

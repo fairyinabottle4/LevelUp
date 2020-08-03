@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
@@ -141,7 +142,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
+        String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(c.getTime());
         mDateSelected.setText(currentDateString);
     }
 
