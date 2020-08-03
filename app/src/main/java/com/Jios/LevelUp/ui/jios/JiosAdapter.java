@@ -22,6 +22,7 @@ import com.Events.LevelUp.ui.events.EventsItem;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
+import com.UserProfile;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,6 +55,12 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     public static class JiosViewHolder extends RecyclerView.ViewHolder {
         public String creatorUid;
         public String creatorName;
+        public int creatorResidence;
+        public String profilePictureUri;
+        public String email;
+        public long phone;
+        public String telegram;
+
         public String jioID;
         public boolean isChecked;
         public boolean isLiked;
@@ -74,6 +81,20 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             super(itemView);
             final Context context1 = context;
             mImageView = itemView.findViewById(R.id.imageView);
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, UserProfile.class);
+                    intent.putExtra("creatorfid", creatorUid);
+                    intent.putExtra("name", creatorName);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
+                    context.startActivity(intent);
+                }
+            });
             mAddButton = itemView.findViewById(R.id.image_add);
             mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
@@ -82,6 +103,20 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+            mTextView6.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, UserProfile.class);
+                    intent.putExtra("creatorfid", creatorUid);
+                    intent.putExtra("name", creatorName);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
+                    context.startActivity(intent);
+                }
+            });
             mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,6 +135,11 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     intent.putExtra("stateLiked", isLiked);
                     intent.putExtra("numLikes", numLikes);
                     intent.putExtra("jioID", jioID);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
                     context.startActivity(intent);
                 }
             });
@@ -112,6 +152,16 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
         }
+
+        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+
+        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+
+        public void setEmail(String email) {this.email = email;}
+
+        public void setTelegram(String telegram) { this.telegram = telegram;}
+
+        public void setPhone(long phone) {this.phone = phone;}
 
         public void setChecked(boolean toSet) {this.isChecked = toSet; }
 
@@ -187,7 +237,17 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                         String name = selected.getName();
                         holder1.mTextView6.setText(name);
                         holder1.setCreatorName(name);
-
+                        int res = selected.getResidential();
+                        String telegram = selected.getTelegram();
+                        String email = selected.getEmail();
+                        String dpUri = selected.getProfilePictureUri();
+                        long phone = selected.getPhone();
+                        holder1.setCreatorName(name);
+                        holder1.setCreatorResidence(res);
+                        holder1.setTelegram(telegram);
+                        holder1.setEmail(email);
+                        holder1.setProfilePictureUri(dpUri);
+                        holder1.setPhone(phone);
                     }
                 }
             }

@@ -106,6 +106,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
             mTextView6 = itemView.findViewById(R.id.eventCreator);
+            mTextView6.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, UserProfile.class);
+                    intent.putExtra("creatorfid", creatorUid);
+                    intent.putExtra("name", creatorName);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
+                    context.startActivity(intent);
+                }
+            });
             mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,7 +138,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                      intent.putExtra("stateLiked", isLiked);
                      intent.putExtra("numLikes", numLikes);
                      intent.putExtra("eventID", eventID);
-                     context.startActivity(intent);
+                     intent.putExtra("residence", creatorResidence);
+                     intent.putExtra("dpUri", profilePictureUri);
+                     intent.putExtra("telegram", telegram);
+                     intent.putExtra("email", email);
+                     intent.putExtra("phone", phone);
+                    context.startActivity(intent);
                 }
             });
 

@@ -19,6 +19,7 @@ import com.ActivityOccasionItem;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
+import com.UserProfile;
 import com.example.LevelUp.ui.jios.JiosFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
@@ -54,6 +55,15 @@ public class JiosPage extends AppCompatActivity {
     private StorageReference mProfileStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
 
+    String uid;
+    String creatorName;
+    int creatorResidence;
+    String profilePictureUri;
+    String email;
+    long phone;
+    String telegram;
+
+
     private boolean changes = false;
 
     @Override
@@ -75,10 +85,14 @@ public class JiosPage extends AppCompatActivity {
         mNumLikes = findViewById(R.id.numlikes_textview);
 
 
-
         Intent intent = getIntent();
-        String uid = intent.getStringExtra("uid");
-        String creatorName = intent.getStringExtra("creatorName");
+        uid = intent.getStringExtra("uid");
+        creatorName = intent.getStringExtra("creatorName");
+        creatorResidence = intent.getIntExtra("residence", 0);
+        telegram = intent.getStringExtra("telegram");
+        email = intent.getStringExtra("email");
+        phone = intent.getLongExtra("phone", 0);
+
         String title = intent.getStringExtra("title");
         String date = intent.getStringExtra("date");
         String time = intent.getStringExtra("time");
@@ -91,6 +105,38 @@ public class JiosPage extends AppCompatActivity {
         final String jioID = intent.getStringExtra("jioID");
         position = intent.getIntExtra("position", 0);
         final String userID = MainActivity.currUser.getId();
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("creatorfid", uid);
+                intent.putExtra("name", creatorName);
+                intent.putExtra("residence", creatorResidence);
+                intent.putExtra("dpUri", profilePictureUri);
+                intent.putExtra("telegram", telegram);
+                intent.putExtra("email", email);
+                intent.putExtra("phone", phone);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        mTextView6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("creatorfid", uid);
+                intent.putExtra("name", creatorName);
+                intent.putExtra("residence", creatorResidence);
+                intent.putExtra("dpUri", profilePictureUri);
+                intent.putExtra("telegram", telegram);
+                intent.putExtra("email", email);
+                intent.putExtra("phone", phone);
+                getApplicationContext().startActivity(intent);
+            }
+        });
 
         StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(uid);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -230,6 +276,14 @@ public class JiosPage extends AppCompatActivity {
 
 
     }
+
+    public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+
+    public void setEmail(String email) {this.email = email;}
+
+    public void setTelegram(String telegram) { this.telegram = telegram;}
+
+    public void setPhone(long phone) {this.phone = phone;}
 
     @Override
     public void onBackPressed() {

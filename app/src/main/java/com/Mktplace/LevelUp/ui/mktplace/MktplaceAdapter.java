@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventPage;
 import com.UserItem;
+import com.UserProfile;
 import com.bumptech.glide.Glide;
 import com.example.tryone.R;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +47,11 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         public String creatorUid;
         public String creatorName;
         public String mktPlaceID;
+        public int creatorResidence;
+        public String profilePictureUri;
+        public String email;
+        public long phone;
+        public String telegram;
 
         public ImageView mImageView;
         public TextView mTitle;
@@ -57,6 +63,20 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
             mImageView = itemView.findViewById(R.id.imageView);
             mTitle = itemView.findViewById(R.id.textView);
             mCreatorName = itemView.findViewById(R.id.creatorTextView);
+            mCreatorName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, UserProfile.class);
+                    intent.putExtra("creatorfid", creatorUid);
+                    intent.putExtra("name", creatorName);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
+                    context.startActivity(intent);
+                }
+            });
             mListener = listener;
             itemView.setOnClickListener(this);
         }
@@ -66,9 +86,24 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
             mListener.onItemClick(getAdapterPosition());
         }
 
+        public void setCreatorUid(String newUID) {
+            this.creatorUid = newUID;
+        }
+
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
         }
+
+        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+
+        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+
+        public void setEmail(String email) {this.email = email;}
+
+        public void setTelegram(String telegram) { this.telegram = telegram;}
+
+        public void setPhone(long phone) {this.phone = phone;}
+
     }
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
@@ -98,7 +133,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         holder.mTitle.setText(uploadCurrent.getName());
 
         final String creatorUID = uploadCurrent.getCreatorID();
-
+        holder.setCreatorUid(creatorUID);
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -110,6 +145,17 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                         String name = selected.getName();
                         holder.mCreatorName.setText(name);
                         holder.setCreatorName(name);
+                        int res = selected.getResidential();
+                        String telegram = selected.getTelegram();
+                        String email = selected.getEmail();
+                        String dpUri = selected.getProfilePictureUri();
+                        long phone = selected.getPhone();
+                        holder.setCreatorName(name);
+                        holder.setCreatorResidence(res);
+                        holder.setTelegram(telegram);
+                        holder.setEmail(email);
+                        holder.setProfilePictureUri(dpUri);
+                        holder.setPhone(phone);
 
                     }
                 }

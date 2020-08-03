@@ -82,7 +82,7 @@ public class UserProfile extends AppCompatActivity {
         ratingBar = findViewById(R.id.UserRating);
 
         Intent intent = getIntent();
-        String creatorIdCopy = intent.getStringExtra("creatorid");
+        String creatorIdCopy = intent.getStringExtra("creatorfid");
         if (creatorIdCopy == null) {
             creatorId = currUserId;
         } else {
@@ -128,7 +128,11 @@ public class UserProfile extends AppCompatActivity {
                 }
                 float averageRating = sumOfRatings / numOfRatings;
                 averageRatingGlobal = averageRating;
-                actualRating.setText(String.format("%.2f", averageRating));
+                if (numOfRatings == 0) {
+                    actualRating.setText("No ratings yet!");
+                } else {
+                    actualRating.setText(String.format("%.1f", averageRating));
+                }
             }
 
             @Override

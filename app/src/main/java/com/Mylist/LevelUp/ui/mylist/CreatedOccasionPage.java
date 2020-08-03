@@ -22,6 +22,7 @@ import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
 import com.UserItem;
+import com.UserProfile;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,6 +58,15 @@ public class CreatedOccasionPage extends AppCompatActivity {
     private String creatorName1;
     private Date updatedDate;
 
+    String uid;
+    String creatorName;
+    int creatorResidence;
+    String profilePictureUri;
+    String email;
+    long phone;
+    String telegram;
+
+
     private int position;
     // private Context mContext = this;
     private StorageReference mProfileStorageRef;
@@ -85,8 +95,13 @@ public class CreatedOccasionPage extends AppCompatActivity {
         mTextView6 = findViewById(R.id.event_page_creator);
 
         Intent intent = getIntent();
-        String uid = intent.getStringExtra("uid");
-        String creatorName = intent.getStringExtra("creatorName");
+        uid = intent.getStringExtra("uid");
+        creatorName = intent.getStringExtra("creatorName");
+        creatorResidence = intent.getIntExtra("residence", 0);
+        telegram = intent.getStringExtra("telegram");
+        email = intent.getStringExtra("email");
+        phone = intent.getLongExtra("phone", 0);
+
         final String title = intent.getStringExtra("title");
         final String date = intent.getStringExtra("date");
         final String dateToShow = intent.getStringExtra("dateToShow");
@@ -95,6 +110,38 @@ public class CreatedOccasionPage extends AppCompatActivity {
         final String description = intent.getStringExtra("description");
         final String occID = intent.getStringExtra("occID");
         final int numLikes = intent.getIntExtra("numLikes", 0);
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("creatorfid", uid);
+                intent.putExtra("name", creatorName);
+                intent.putExtra("residence", creatorResidence);
+                intent.putExtra("dpUri", profilePictureUri);
+                intent.putExtra("telegram", telegram);
+                intent.putExtra("email", email);
+                intent.putExtra("phone", phone);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        mTextView6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("creatorfid", uid);
+                intent.putExtra("name", creatorName);
+                intent.putExtra("residence", creatorResidence);
+                intent.putExtra("dpUri", profilePictureUri);
+                intent.putExtra("telegram", telegram);
+                intent.putExtra("email", email);
+                intent.putExtra("phone", phone);
+                getApplicationContext().startActivity(intent);
+            }
+        });
 
         occaID = occID;
         creatorName1 = creatorName;
@@ -228,6 +275,14 @@ public class CreatedOccasionPage extends AppCompatActivity {
             }
         });
     }
+
+    public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+
+    public void setEmail(String email) {this.email = email;}
+
+    public void setTelegram(String telegram) { this.telegram = telegram;}
+
+    public void setPhone(long phone) {this.phone = phone;}
 
     @Override
     public void onBackPressed() {

@@ -17,6 +17,7 @@ import com.Events.LevelUp.ui.events.EventPage;
 import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.MainActivity;
 import com.UserItem;
+import com.UserProfile;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,6 +61,12 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     public static class MylistCreatedViewHolder extends RecyclerView.ViewHolder {
         public String creatorName;
         public String creatorUid;
+        public int creatorResidence;
+        public String profilePictureUri;
+        public String email;
+        public long phone;
+        public String telegram;
+
         public String occID;
         public boolean isJio;
         public Date date;
@@ -80,6 +87,20 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public MylistCreatedViewHolder(final Context context, View itemView, final MylistCreatedAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, UserProfile.class);
+                    intent.putExtra("creatorfid", creatorUid);
+                    intent.putExtra("name", creatorName);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
+                    context.startActivity(intent);
+                }
+            });
             mEditButton = itemView.findViewById(R.id.image_edit);
             mPeopleButton = itemView.findViewById(R.id.image_people);
             mPeopleLikedButton = itemView.findViewById(R.id.image_people_liked);
@@ -114,6 +135,11 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     intent.putExtra("numLikes", numLikes);
                     intent.putExtra("occID", occID);
                     intent.putExtra("isJio", isJio);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
                     context.startActivity(intent);
                 }
             });
@@ -126,6 +152,16 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public void setCreatorUid(String creatorUid) {
             this.creatorUid = creatorUid;
         }
+
+        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+
+        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+
+        public void setEmail(String email) {this.email = email;}
+
+        public void setTelegram(String telegram) { this.telegram = telegram;}
+
+        public void setPhone(long phone) {this.phone = phone;}
 
         public void setOccID(String occID) {
             this.occID = occID;
@@ -212,7 +248,17 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                         String name = selected.getName();
                         holder1.mTextView6.setText(name);
                         holder1.setCreatorName(name);
-
+                        int res = selected.getResidential();
+                        String telegram = selected.getTelegram();
+                        String email = selected.getEmail();
+                        String dpUri = selected.getProfilePictureUri();
+                        long phone = selected.getPhone();
+                        holder1.setCreatorName(name);
+                        holder1.setCreatorResidence(res);
+                        holder1.setTelegram(telegram);
+                        holder1.setEmail(email);
+                        holder1.setProfilePictureUri(dpUri);
+                        holder1.setPhone(phone);
                     }
                 }
             }

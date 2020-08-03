@@ -8,8 +8,8 @@ public class UserItem {
     public String name;
     public String email;
     public int residential;
-    public String telegram;
-    public long phone;
+    public String TelegramHandle;
+    public long PhoneNumber;
 
     public UserItem(String id, String profilePictureUri, String name, String email, int residential, String telegram, long phone) {
         this.id = id;
@@ -17,8 +17,8 @@ public class UserItem {
         this.name = name;
         this.email = email;
         this.residential = residential;
-        this.telegram = telegram;
-        this.phone = phone;
+        this.TelegramHandle = telegram;
+        this.PhoneNumber = phone;
     }
 
 
@@ -62,9 +62,9 @@ public class UserItem {
         return profilePictureUri;
     }
 
-    public String getTelegram() { return telegram; }
+    public String getTelegram() { return TelegramHandle; }
 
-    public long getPhone() { return phone;}
+    public long getPhone() { return PhoneNumber;}
 
     public void setProfilePictureUri(String profilePictureUri) {
         this.profilePictureUri = profilePictureUri;
