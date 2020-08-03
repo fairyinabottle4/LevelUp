@@ -13,6 +13,7 @@ public class JiosItem implements Occasion {
     private String locationInfo;
     private String title;
     private String description;
+    private int category;
 
     private String jioID;
     private String creatorID;
@@ -29,7 +30,7 @@ public class JiosItem implements Occasion {
     }
 
     // Overloaded Constructor to push Jio ID and Creator ID to Firebase
-    public JiosItem(int numLikes, String jioID, String creatorID, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public JiosItem(int numLikes, String jioID, String creatorID, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description, int category) {
         this.numLikes = numLikes;
         this.jioID = jioID;
         this.creatorID = creatorID;
@@ -40,6 +41,7 @@ public class JiosItem implements Occasion {
         this.locationInfo = locationInfo;
         this.title = title;
         this.description = description;
+        this.category = category;
     }
 
     public JiosItem() {
@@ -95,6 +97,10 @@ public class JiosItem implements Occasion {
 
     public void setNumLikes(int numLikes) {
         this.numLikes = numLikes;
+    }
+
+    public int getCategory() {
+        return category;
     }
 
     @Override

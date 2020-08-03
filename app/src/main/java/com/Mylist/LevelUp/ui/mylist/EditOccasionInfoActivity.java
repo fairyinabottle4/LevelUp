@@ -221,7 +221,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     updatedJiosItem = new JiosItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
-                                            updatedLocationInfo, updatedTitle, updatedDescription);
+                                            updatedLocationInfo, updatedTitle, updatedDescription,0);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();

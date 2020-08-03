@@ -65,7 +65,7 @@ public class EventsFragment extends Fragment {
     DatabaseReference mDatabaseReference;
     ValueEventListener mValueEventListener;
     private static final String[] categories = {"All",
-            "Arts", "Sports", "Talks", "Volunteering", "Others"};
+            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private EventsAdapter mAdapter;
@@ -177,6 +177,9 @@ public class EventsFragment extends Fragment {
                 break;
             case R.id.subitem6:
                 getSelectedCategoryData(5);
+                break;
+            case R.id.subitem7:
+                getSelectedCategoryData(6);
                 break;
             case R.id.action_cfmed_events: // the tick
                 EventsMyListFragment nextFrag = new EventsMyListFragment();

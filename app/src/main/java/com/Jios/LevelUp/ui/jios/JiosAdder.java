@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -36,6 +39,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseReference;
     private DateFormat df = DateFormat.getDateInstance();
+    private int selection;
     TextView mDateSelected;
     TextView mTimeSelected;
     EditText mEventTitle;
@@ -50,6 +54,11 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     boolean validDate;
     boolean validTime = false;
     boolean dateIsSame;
+
+    Spinner jioSpinner;
+
+    private static final String[] categories = {"All",
+            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
         mEventDescription = findViewById(R.id.event_description);
         mEventLocation = findViewById(R.id.location);
 
+        initializeSpinner();
+
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mDatabase.getReference().child("Jios");
         mSaveJio = findViewById(R.id.save_jio);
@@ -95,7 +106,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                     jiosItem = new JiosItem(0, key, jioCreatorUID,
                             df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
                             hourOfDay, minute, mEventLocation.getText().toString(),
-                            mEventTitle.getText().toString(), mEventDescription.getText().toString());
+                            mEventTitle.getText().toString(), mEventDescription.getText().toString(), selection);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -129,8 +140,6 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                     Toast.makeText(JiosAdder.this, "Jio saved successfully", Toast.LENGTH_LONG).show();
                     JiosFragment.setRefresh(true);
                     onBackPressed();
-                    // Intent intent = new Intent(JiosAdder.this, MainActivity.class);
-                    // startActivity(intent);
                 }
             }
         });
@@ -154,5 +163,47 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
         mTimeSelected.setText(currentTimeString);
         this.hourOfDay = hourOfDay;
         this.minute = minute;
+    }
+
+    private void initializeSpinner() {
+        jioSpinner = findViewById(R.id.jio_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(JiosAdder.this,
+                android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        jioSpinner.setAdapter(adapter);
+        jioSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        selection = 0;
+                        break;
+                    case 1:
+                        selection = 1;
+                        break;
+                    case 2:
+                        selection = 2;
+                        break;
+                    case 3:
+                        selection = 3;
+                        break;
+                    case 4:
+                        selection = 4;
+                        break;
+                    case 5:
+                        selection = 5;
+                        break;
+                    case 6:
+                        selection = 6;
+                    default:
+                        selection = 0;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

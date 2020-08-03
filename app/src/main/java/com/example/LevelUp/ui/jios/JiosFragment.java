@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
+import com.Events.LevelUp.ui.events.EventsAdapter;
+import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
 import com.Jios.LevelUp.ui.jios.JiosItem;
@@ -58,6 +60,10 @@ public class JiosFragment extends Fragment {
     private View rootView;
     public FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final String[] categories = {"All",
+            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
+
 
     public static boolean refresh;
 
@@ -143,6 +149,30 @@ public class JiosFragment extends Fragment {
                 });
 
                 break;
+            case R.id.action_filter:
+                break;
+            case R.id.subitem1:
+                getSelectedCategoryData(0);
+                break;
+            case R.id.subitem2:
+                getSelectedCategoryData(1);
+                break;
+            case R.id.subitem3:
+                getSelectedCategoryData(2);
+                break;
+            case R.id.subitem4:
+                getSelectedCategoryData(3);
+                break;
+            case R.id.subitem5:
+                getSelectedCategoryData(4);
+                break;
+            case R.id.subitem6:
+                getSelectedCategoryData(5);
+                break;
+            case R.id.subitem7:
+                getSelectedCategoryData(6);
+                break;
+
             case R.id.action_cfmed_events: // the tick
                 JiosMyListFragment nextFrag = new JiosMyListFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
@@ -215,6 +245,26 @@ public class JiosFragment extends Fragment {
 
     public static ArrayList<JiosItem> getJiosItemList() {
         return JiosItemList;
+    }
+
+    private void getSelectedCategoryData(int categoryID) {
+        //This arraylist will contain only those in the certain categories
+        ArrayList<JiosItem> list = new ArrayList<>();
+        JiosAdapter jiosAdapter;
+        if (categoryID == 0) {
+            jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
+        } else {
+            //filter by id
+            for (JiosItem jiosItem : JiosItemList) {
+                if (jiosItem.getCategory() == categoryID) {
+                    list.add(jiosItem);
+                }
+            }
+            jiosAdapter = new JiosAdapter(getActivity(), list);
+        }
+        mRecyclerView.setAdapter(jiosAdapter);
+        mAdapter = jiosAdapter;
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void loadDataJios() {

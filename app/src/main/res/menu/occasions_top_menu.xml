@@ -36,7 +36,10 @@
                 android:title="Volunteering" />
             <item
                 android:id="@+id/subitem6"
-                android:title="Others" />
+                android:title="Food" />
+            <item
+                android:id="@+id/subitem7"
+                android:title="Others"/>
         </menu>
     </item>
 
