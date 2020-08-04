@@ -20,6 +20,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,17 +29,37 @@ import com.Dashboard.LevelUp.ui.dashboard.DashboardSettingsActivity;
 import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Dashboard.LevelUp.ui.dashboard.UpcomingEventsFragment;
 import com.Dashboard.LevelUp.ui.dashboard.UpcomingJiosFragment;
+import com.Events.LevelUp.ui.events.EventsAdapter;
+import com.Events.LevelUp.ui.events.EventsItem;
+import com.LikeOccasionItem;
 import com.MainActivity;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
+import com.Mylist.LevelUp.ui.mylist.MylistLikedAdapter;
+import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
     private View rootView;
+
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private MylistLikedAdapter mAdapter;
+
+    public static ArrayList<String> mOccIDs = new ArrayList<>();
+    public static ArrayList<Occasion> mOccasions = new ArrayList<>();
 
 
     @Nullable
@@ -46,46 +68,13 @@ public class DashboardFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         // for Trending Page
-        CardView trendingCard = rootView.findViewById(R.id.trending);
-        trendingCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Toast.makeText(getActivity(), "Trending!", Toast.LENGTH_SHORT).show();
-                TrendingFragment nextFrag= new TrendingFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+
 
         // for upcoming jios
-        CardView jiosCard = rootView.findViewById(R.id.upcoming_jios);
-        jiosCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Toast.makeText(getActivity(), "Trending!", Toast.LENGTH_SHORT).show();
-                UpcomingJiosFragment nextFrag= new UpcomingJiosFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+
 
         // for upcoming events
-        CardView eventsCard = rootView.findViewById(R.id.upcoming_events);
-        eventsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Toast.makeText(getActivity(), "Trending!", Toast.LENGTH_SHORT).show();
-                UpcomingEventsFragment nextFrag= new UpcomingEventsFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+
 
         // setting up toolbar
         setHasOptionsMenu(true);
@@ -94,27 +83,57 @@ public class DashboardFragment extends Fragment {
         assert activity != null;
         activity.setSupportActionBar(toolbar);
 
+        buildTrendingRecyclerView();
+        buildTodayRecyclerView();
+        buildNewOccasionsTrendingRecyclerView();
+
+        initializeList();
+
         return rootView;
     }
-    /*
-    private DashboardViewModel dashboardViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+    public void buildTrendingRecyclerView() {
+        mRecyclerView = rootView.findViewById(R.id.trending);
+        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                mLayoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-     */
+    public void buildTodayRecyclerView() {
+        mRecyclerView = rootView.findViewById(R.id.today);
+        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                mLayoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    public void buildNewOccasionsTrendingRecyclerView() {
+        mRecyclerView = rootView.findViewById(R.id.newOccasions);
+        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+//                mLayoutManager.getOrientation());
+//        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -134,4 +153,61 @@ public class DashboardFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    private void initializeList() {
+        ValueEventListener mValueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOccasions.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    EventsItem selected = snapshot.getValue(EventsItem.class);
+                    // EventsItemList.add(selected);
+
+                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
+
+                    if (selected.getTimeInfo().length() > 4) {
+                        continue;
+                    }
+
+                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                    Date eventDateZero = selected.getDateInfo();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDateZero);
+                    cal.set(Calendar.HOUR_OF_DAY, hour);
+                    cal.set(Calendar.MINUTE, min);
+                    Date eventDate = cal.getTime();
+
+                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
+
+                    Date currentDate = new Date();
+                    // eventDate.compareTo(currentDate) >= 0
+                    //eventDate.after(currentDate)
+                    if (eventDate.compareTo(currentDate) >= 0) {
+                        mOccasions.add(selected);
+                    }
+                }
+                MainActivity.sort(mOccasions);
+                MylistLikedAdapter occAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+                mRecyclerView.setAdapter(occAdapter);
+                mAdapter = occAdapter;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseReference = mDatabase.getReference().child("Events");
+        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 }
