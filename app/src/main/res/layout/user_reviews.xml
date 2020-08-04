@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/event_layout"
+    tools:context="com.UserReviews">
+
+    <include layout="@layout/activity_main"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshlayoutreviews"
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerviewReviews"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="56dp"
+            android:background="@android:color/darker_gray"
+            android:padding="4dp"
+            android:scrollbars="vertical" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/reviews_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="76dp"
+        android:gravity="end"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view">
+
+        <EditText
+            android:id="@+id/review_box"
+            android:hint="Write a review!"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/submit_review_button"
+            android:text="Submit Review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

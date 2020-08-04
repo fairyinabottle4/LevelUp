@@ -17,67 +17,6 @@
         android:background="@color/colorPrimary"
         app:menu="@menu/occasions_top_menu" />
 
-    <!--
-        <LinearLayout
-            android:id="@+id/events_top"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:layout_width="135dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="7dp"
-                android:gravity="left"
-                android:text="@string/title_events"
-                android:textColor="@color/colorWhite"
-                android:textSize="22sp"/>
-
-            <ImageButton
-                android:id="@+id/history_btn"
-                android:layout_width="0dp"
-                android:layout_marginStart="50dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:src="@drawable/ic_history_clock" />
-            <ImageButton
-                android:id="@+id/cfmed_events_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:src="@drawable/ic_done_white_24dp" />
-            <ImageButton
-                android:id="@+id/favourited_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:src="@drawable/ic_favorite_white_24dp" />
-            <ImageButton
-                android:id="@+id/filter_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:src="@drawable/ic_sliders" />
-            <ImageButton
-                android:id="@+id/search_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_search_white_24dp" />
-
-    </LinearLayout>
-    -->
-
     <include layout="@layout/activity_main"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

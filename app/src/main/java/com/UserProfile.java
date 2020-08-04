@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ public class UserProfile extends AppCompatActivity {
     private ImageView ratingStar;
     private TextView rateThisUser;
     private RatingBar ratingBar;
+    private Button reviewButton;
 
     private StorageReference mProfileStorageRef;
 
@@ -80,6 +82,7 @@ public class UserProfile extends AppCompatActivity {
         ratingStar = findViewById(R.id.rating_star);
         rateThisUser = findViewById(R.id.rate_this_user);
         ratingBar = findViewById(R.id.UserRating);
+        reviewButton = findViewById(R.id.review_button);
 
         Intent intent = getIntent();
         String creatorIdCopy = intent.getStringExtra("creatorfid");
@@ -141,14 +144,23 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-
-
         //when the rating is changed.
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 db.getReference().child("Users").child(currUserId).child("Ratings").child(creatorId).setValue(rating);
                 db.getReference().child("Users").child(creatorId).child("Ratings").child(currUserId).setValue(rating);
+            }
+        });
+
+        reviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserReviews.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("name", name);
+                intent.putExtra("creatorid", creatorId);
+                getApplicationContext().startActivity(intent);
             }
         });
 
