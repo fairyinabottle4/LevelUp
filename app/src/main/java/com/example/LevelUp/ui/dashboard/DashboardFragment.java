@@ -50,6 +50,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -104,7 +106,9 @@ public class DashboardFragment extends Fragment {
         buildNewOccasionsTrendingRecyclerView();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+
         initializeListTrending();
+        initializeListToday();
 
 
         return rootView;
@@ -132,7 +136,7 @@ public class DashboardFragment extends Fragment {
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapterToday = new DashboardAdapter(getActivity(), mOccasionAll);
+        mAdapterToday = new DashboardAdapter(getActivity(), mOccasionToday);
         mRecyclerViewToday.setLayoutManager(mLayoutManagerToday);
         mRecyclerViewToday.setAdapter(mAdapterToday);
         mRecyclerViewToday.setItemAnimator(new DefaultItemAnimator());
@@ -146,7 +150,7 @@ public class DashboardFragment extends Fragment {
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapterNewOcc = new DashboardAdapter(getActivity(), mOccasionAll);
+        mAdapterNewOcc = new DashboardAdapter(getActivity(), mOccasionNewOcc);
         mRecyclerViewNewOcc.setLayoutManager(mLayoutManagerNewOcc);
         mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
         mRecyclerViewNewOcc.setItemAnimator(new DefaultItemAnimator());
@@ -170,102 +174,6 @@ public class DashboardFragment extends Fragment {
 
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-//    private void initializeEvents() {
-//        ValueEventListener mValueEventListener = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                mEventsList.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    EventsItem selected = snapshot.getValue(EventsItem.class);
-//                    // EventsItemList.add(selected);
-//
-//                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
-//
-//                    if (selected.getTimeInfo().length() > 4) {
-//                        continue;
-//                    }
-//
-//                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-//                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
-//
-//                    Date eventDateZero = selected.getDateInfo();
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(eventDateZero);
-//                    cal.set(Calendar.HOUR_OF_DAY, hour);
-//                    cal.set(Calendar.MINUTE, min);
-//                    Date eventDate = cal.getTime();
-//
-//                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
-//
-//                    Date currentDate = new Date();
-//                    // eventDate.compareTo(currentDate) >= 0
-//                    //eventDate.after(currentDate)
-//                    if (eventDate.compareTo(currentDate) >= 0) {
-//                        mEventsList.add(selected);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//
-//        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-//        DatabaseReference mDatabaseReferenceEvents = mDatabase.getReference().child("Events");
-//        mDatabaseReferenceEvents.addListenerForSingleValueEvent(mValueEventListener);
-//    }
-//
-//    private void initializeJios() {
-//        ValueEventListener mValueEventListener = new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                mJiosList.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    JiosItem selected = snapshot.getValue(JiosItem.class);
-//                    // EventsItemList.add(selected);
-//
-//                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
-//
-//                    if (selected.getTimeInfo().length() > 4) {
-//                        continue;
-//                    }
-//
-//                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-//                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
-//
-//                    Date eventDateZero = selected.getDateInfo();
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(eventDateZero);
-//                    cal.set(Calendar.HOUR_OF_DAY, hour);
-//                    cal.set(Calendar.MINUTE, min);
-//                    Date eventDate = cal.getTime();
-//
-//                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
-//
-//                    Date currentDate = new Date();
-//                    // eventDate.compareTo(currentDate) >= 0
-//                    //eventDate.after(currentDate)
-//                    if (eventDate.compareTo(currentDate) >= 0) {
-//                        mJiosList.add(selected);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//
-//        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-//        DatabaseReference mDatabaseReferenceJios = mDatabase.getReference().child("Jios");
-//        mDatabaseReferenceJios.addListenerForSingleValueEvent(mValueEventListener);
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -408,4 +316,156 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+
+    public void initializeListToday() {
+        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+
+        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOccasionEvents.clear();
+                mOccasionAll.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Occasion selected = snapshot.getValue(EventsItem.class);
+                    if (selected.getTimeInfo().length() > 4) {
+                        continue;
+                    }
+
+                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                    Date eventDateZero = selected.getDateInfo();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDateZero);
+                    cal.set(Calendar.HOUR_OF_DAY, hour);
+                    cal.set(Calendar.MINUTE, min);
+                    Date eventDate = cal.getTime();
+
+
+                    Date currentDate = new Date();
+                    if (eventDate.compareTo(currentDate) >= 0) {
+                        mOccasionEvents.add(selected);
+                    }
+                }
+
+                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
+                copyOfFullEvents.addAll(mOccasionJios);
+                mOccasionAll = copyOfFullEvents;
+
+                MainActivity.sort(mOccasionAll);
+
+                // At this point, mOccasionAll will have full list of Occasions
+
+                // LOGIC GOES FROM HERE
+                // get Today's date but set time to 0
+                // get all Occasions that are compareTo returns 0
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                Date currentDate = cal.getTime();
+
+                ArrayList<Occasion> todayOcc = new ArrayList<>();
+
+                for (Occasion occ : mOccasionAll) {
+                    if (occ.getDateInfo().compareTo(currentDate) == 0) {
+                        todayOcc.add(occ);
+                    }
+                }
+
+
+                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), todayOcc);
+                mAdapterToday = dashboardAdapter;
+//                mAdapterToday = dashboardAdapter;
+//                mAdapterNewOcc = dashboardAdapter;
+
+                mRecyclerViewToday.setAdapter(mAdapterToday);
+
+                // TO HERE
+//                mRecyclerViewToday.setAdapter(mAdapterToday);
+//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOccasionJios.clear();
+                mOccasionAll.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Occasion selected = snapshot.getValue(JiosItem.class);
+                    String jioID = selected.getOccasionID();
+                    if (selected.getTimeInfo().length() > 4) {
+                        continue;
+                    }
+
+                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                    Date eventDateZero = selected.getDateInfo();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDateZero);
+                    cal.set(Calendar.HOUR_OF_DAY, hour);
+                    cal.set(Calendar.MINUTE, min);
+                    Date eventDate = cal.getTime();
+
+
+                    Date currentDate = new Date();
+                    if (eventDate.compareTo(currentDate) >= 0) {
+                        mOccasionJios.add(selected);
+                    }
+                }
+
+                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
+                copyOfFullJios.addAll(mOccasionEvents);
+
+                mOccasionAll = copyOfFullJios;
+
+                MainActivity.sort(mOccasionAll);
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                Date currentDate = cal.getTime();
+
+                ArrayList<Occasion> todayOcc = new ArrayList<>();
+
+                for (Occasion occ : mOccasionAll) {
+                    if (occ.getDateInfo().compareTo(currentDate) == 0) {
+                        todayOcc.add(occ);
+                    }
+                }
+
+
+                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), todayOcc);
+                mAdapterToday = dashboardAdapter;
+//                mAdapterToday = dashboardAdapter;
+//                mAdapterNewOcc = dashboardAdapter;
+
+                mRecyclerViewToday.setAdapter(mAdapterToday);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
 }
