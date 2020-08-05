@@ -14,9 +14,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewReview"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="14dp"
+            android:layout_width="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
             android:padding="2dp" />
 
         <TextView
@@ -24,9 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="59dp"
             android:layout_below="@+id/image_add"
-            android:layout_marginTop="69dp"
+            android:layout_marginTop="76dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="14dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="Line 2"
@@ -37,9 +38,12 @@
             android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="12dp"
             android:paddingRight="20dp"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="@color/colorPrimaryText"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Author" />
@@ -48,8 +52,8 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginLeft="80dp"
+            android:layout_below="@id/author"
             android:paddingRight="20dp"
             android:ellipsize="end"
             android:maxLines="1"

@@ -16,8 +16,7 @@
             android:id="@+id/imageView"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="14dp"
-            android:padding="2dp" />
+            android:layout_marginTop="14dp"/>
 
         <TextView
             android:id="@+id/title"
