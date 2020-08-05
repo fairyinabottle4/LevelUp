@@ -32,6 +32,7 @@ import com.Dashboard.LevelUp.ui.dashboard.UpcomingEventsFragment;
 import com.Dashboard.LevelUp.ui.dashboard.UpcomingJiosFragment;
 import com.Events.LevelUp.ui.events.EventsAdapter;
 import com.Events.LevelUp.ui.events.EventsItem;
+import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
@@ -61,6 +62,8 @@ public class DashboardFragment extends Fragment {
 
     public static ArrayList<String> mOccIDs = new ArrayList<>();
     public static ArrayList<Occasion> mOccasions = new ArrayList<>();
+    public static ArrayList<EventsItem> mEventsList = new ArrayList<>();
+    public static ArrayList<JiosItem> mJiosList = new ArrayList<>();
 
 
     @Nullable
@@ -75,11 +78,14 @@ public class DashboardFragment extends Fragment {
         assert activity != null;
         activity.setSupportActionBar(toolbar);
 
+
+        initializeEvents();
+        initializeJios();
+
         buildTrendingRecyclerView();
         buildTodayRecyclerView();
         buildNewOccasionsTrendingRecyclerView();
 
-        initializeList();
 
         return rootView;
     }
@@ -145,7 +151,7 @@ public class DashboardFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void initializeList() {
+    private void initializeEvents() {
         ValueEventListener mValueEventListener = new ValueEventListener() {
 
             @Override
@@ -153,6 +159,55 @@ public class DashboardFragment extends Fragment {
                 mOccasions.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     EventsItem selected = snapshot.getValue(EventsItem.class);
+                    // EventsItemList.add(selected);
+
+                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
+
+                    if (selected.getTimeInfo().length() > 4) {
+                        continue;
+                    }
+
+                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                    Date eventDateZero = selected.getDateInfo();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(eventDateZero);
+                    cal.set(Calendar.HOUR_OF_DAY, hour);
+                    cal.set(Calendar.MINUTE, min);
+                    Date eventDate = cal.getTime();
+
+                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
+
+                    Date currentDate = new Date();
+                    // eventDate.compareTo(currentDate) >= 0
+                    //eventDate.after(currentDate)
+                    if (eventDate.compareTo(currentDate) >= 0) {
+                        mEventsList.add(selected);
+                    }
+                }
+                MainActivity.sort(mEventsList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseReferenceEvents = mDatabase.getReference().child("Events");
+        mDatabaseReferenceEvents.addListenerForSingleValueEvent(mValueEventListener);
+    }
+
+    private void initializeJios() {
+        ValueEventListener mValueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOccasions.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    JiosItem selected = snapshot.getValue(JiosItem.class);
                     // EventsItemList.add(selected);
 
                     // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
@@ -193,9 +248,8 @@ public class DashboardFragment extends Fragment {
         };
 
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseReference = mDatabase.getReference().child("Events");
-        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
-        mAdapter.notifyDataSetChanged();
+        DatabaseReference mDatabaseReferenceJios = mDatabase.getReference().child("Jios");
+        mDatabaseReferenceJios.addListenerForSingleValueEvent(mValueEventListener);
     }
 
     @Override
