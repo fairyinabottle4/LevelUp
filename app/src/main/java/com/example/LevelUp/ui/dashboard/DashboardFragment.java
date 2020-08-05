@@ -81,6 +81,9 @@ public class DashboardFragment extends Fragment {
 
         initializeEvents();
         initializeJios();
+        mOccasions.addAll(mJiosList);
+        mOccasions.addAll(mEventsList);
+        MainActivity.sort(mOccasions);
 
         buildTrendingRecyclerView();
         buildTodayRecyclerView();
@@ -156,7 +159,7 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasions.clear();
+                mEventsList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     EventsItem selected = snapshot.getValue(EventsItem.class);
                     // EventsItemList.add(selected);
@@ -186,7 +189,6 @@ public class DashboardFragment extends Fragment {
                         mEventsList.add(selected);
                     }
                 }
-                MainActivity.sort(mEventsList);
             }
 
             @Override
@@ -205,7 +207,7 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasions.clear();
+                mJiosList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
                     // EventsItemList.add(selected);
@@ -232,13 +234,9 @@ public class DashboardFragment extends Fragment {
                     // eventDate.compareTo(currentDate) >= 0
                     //eventDate.after(currentDate)
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasions.add(selected);
+                        mJiosList.add(selected);
                     }
                 }
-                MainActivity.sort(mOccasions);
-                DashboardAdapter occAdapter = new DashboardAdapter(getActivity(), mOccasions);
-                mRecyclerView.setAdapter(occAdapter);
-                mAdapter = occAdapter;
             }
 
             @Override
