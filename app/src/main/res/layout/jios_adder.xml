@@ -72,11 +72,24 @@
 
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/jio_spinner"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Category: "
+            android:textColor="@color/colorPrimaryText"
+            android:layout_marginStart="4dp"
+            android:layout_gravity="center"/>
+        <Spinner
+            android:id="@+id/jio_spinner"
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <Button
         android:id="@+id/save_jio"

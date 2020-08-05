@@ -20,4 +20,5 @@ public interface Occasion {
      boolean isJio();
      int getNumLikes();
      void setNumLikes(int numLikes);
+     int getCategory();
 }

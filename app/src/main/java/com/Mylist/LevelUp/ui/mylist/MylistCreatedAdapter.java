@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,6 +67,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public String email;
         public long phone;
         public String telegram;
+        public int category;
 
         public String occID;
         public boolean isJio;
@@ -178,6 +180,10 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public void setNumLikes(int numLikes) {
             this.numLikes = numLikes;
         }
+
+        public void setCategory(int category) {
+            this.category = category;
+        }
     } // static class ends here
 
     //Constructor
@@ -236,6 +242,8 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         int numLikes = currentItem.getNumLikes();
         holder1.mNumLikes.setText(Integer.toString(numLikes));
         holder1.setNumLikes(numLikes);
+
+        holder1.setCategory(currentItem.getCategory());
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -315,6 +323,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 String time = currentItem.getTimeInfo();
                 String occID = currentItem.getOccasionID();
                 String creatorID = currentItem.getCreatorID();
+                int category = currentItem.getCategory();
 
                 intent.putExtra("title", title);
                 intent.putExtra("location", location);
@@ -323,6 +332,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 intent.putExtra("time", time);
                 intent.putExtra("occID", occID);
                 intent.putExtra("creatorID", creatorID);
+                intent.putExtra("category", category);
 
                 mContext.startActivity(intent);
 

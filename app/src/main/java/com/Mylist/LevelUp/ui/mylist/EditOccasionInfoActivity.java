@@ -8,10 +8,13 @@ import android.os.Handler;
 import android.util.EventLog;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -41,7 +44,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class EditOccasionInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
-        DatePickerDialog.OnDateSetListener {
+        DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
     private ImageButton editDateBtn;
     private ImageButton editTimeBtn;
     private Button saveBtn;
@@ -50,6 +53,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
     private TextView timeTextView;
     private String occID;
     private String creatorID;
+    private Spinner categorySpinner;
     private FirebaseDatabase mFirebaseDatabase;
 
     // public EventsItem(String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description)
@@ -60,6 +64,11 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
     private String updatedLocationInfo;
     private String updatedTitle;
     private String updatedDescription;
+    private int updatedCategory;
+
+    private int category;
+    private static final String[] categories = {"All",
+            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     private boolean validDate;
 
@@ -75,6 +84,8 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         String description = intent.getStringExtra("description");
         String date = intent.getStringExtra("date");
         String time = intent.getStringExtra("time");
+        category = intent.getIntExtra("category", -1);
+        // Toast.makeText(this, Integer.toString(category), Toast.LENGTH_SHORT).show();
         occID = intent.getStringExtra("occID");
         creatorID = intent.getStringExtra("creatorID");
 
@@ -87,6 +98,8 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         deleteBtn = findViewById(R.id.delete_btn);
         dateTextView = findViewById(R.id.date_selected);
         timeTextView = findViewById(R.id.time_selected);
+
+        initializeOccSpinner();
 
         titleTextView.setText(title);
         locationTextView.setText(location);
@@ -156,7 +169,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     updatedEventsItem = new EventsItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
-                                            updatedLocationInfo, updatedTitle, updatedDescription, 0);
+                                            updatedLocationInfo, updatedTitle, updatedDescription, updatedCategory);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -221,7 +234,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     updatedJiosItem = new JiosItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
-                                            updatedLocationInfo, updatedTitle, updatedDescription,0);
+                                            updatedLocationInfo, updatedTitle, updatedDescription,updatedCategory);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -342,4 +355,25 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         this.updatedHourOfDay = hourOfDay;
         this.updatedMinute = minute;
     }
+
+    private void initializeOccSpinner() {
+        categorySpinner = findViewById(R.id.occ_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditOccasionInfoActivity.this,
+                android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+        categorySpinner.setSelection(category);
+        categorySpinner.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        updatedCategory = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
 }
