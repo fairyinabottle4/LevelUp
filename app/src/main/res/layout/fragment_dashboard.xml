@@ -27,7 +27,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -47,7 +47,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -63,11 +63,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/today"
-        android:text="New ??? idk what u wna call stuff"
+        android:text="Newly Created"
         android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView

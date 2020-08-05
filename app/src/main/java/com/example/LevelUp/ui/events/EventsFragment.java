@@ -161,25 +161,24 @@ public class EventsFragment extends Fragment {
             case R.id.action_filter:
                 break;
             case R.id.subitem1:
+                loadDataEvents();
+            case R.id.subitem2:
                 getSelectedCategoryData(0);
                 break;
-            case R.id.subitem2:
+            case R.id.subitem3:
                 getSelectedCategoryData(1);
                 break;
-            case R.id.subitem3:
+            case R.id.subitem4:
                 getSelectedCategoryData(2);
                 break;
-            case R.id.subitem4:
+            case R.id.subitem5:
                 getSelectedCategoryData(3);
                 break;
-            case R.id.subitem5:
+            case R.id.subitem6:
                 getSelectedCategoryData(4);
                 break;
-            case R.id.subitem6:
-                getSelectedCategoryData(5);
-                break;
             case R.id.subitem7:
-                getSelectedCategoryData(6);
+                getSelectedCategoryData(5);
                 break;
             case R.id.action_cfmed_events: // the tick
                 EventsMyListFragment nextFrag = new EventsMyListFragment();
@@ -311,9 +310,9 @@ public class EventsFragment extends Fragment {
         //This arraylist will contain only those in the certain categories
         ArrayList<EventsItem> list = new ArrayList<>();
         EventsAdapter eventsAdapter;
-        if (categoryID == 0) {
-            eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-        } else {
+//        if (categoryID == 0) {
+//            eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
+//        } else {
             //filter by id
             for (EventsItem eventsItem : EventsItemList) {
                 if (eventsItem.getCategory() == categoryID) {
@@ -321,7 +320,7 @@ public class EventsFragment extends Fragment {
                 }
             }
             eventsAdapter = new EventsAdapter(getActivity(), list);
-        }
+        // }
         mRecyclerView.setAdapter(eventsAdapter);
         mAdapter = eventsAdapter;
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

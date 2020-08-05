@@ -55,7 +55,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
     Uri currentUri;
     Spinner eventSpinner;
 
-    private static final String[] categories = {"All",
+    private static final String[] categories = {
             "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private int hourOfDay;
     private int minute;
@@ -199,8 +199,6 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                     case 5:
                         selection = 5;
                         break;
-                    case 6:
-                        selection = 6;
                     default:
                         selection = 0;
                 }

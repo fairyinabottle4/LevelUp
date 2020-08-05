@@ -152,25 +152,25 @@ public class JiosFragment extends Fragment {
             case R.id.action_filter:
                 break;
             case R.id.subitem1:
-                getSelectedCategoryData(0);
+                loadDataJios();
                 break;
             case R.id.subitem2:
-                getSelectedCategoryData(1);
+                getSelectedCategoryData(0);
                 break;
             case R.id.subitem3:
-                getSelectedCategoryData(2);
+                getSelectedCategoryData(1);
                 break;
             case R.id.subitem4:
-                getSelectedCategoryData(3);
+                getSelectedCategoryData(2);
                 break;
             case R.id.subitem5:
-                getSelectedCategoryData(4);
+                getSelectedCategoryData(3);
                 break;
             case R.id.subitem6:
-                getSelectedCategoryData(5);
+                getSelectedCategoryData(4);
                 break;
             case R.id.subitem7:
-                getSelectedCategoryData(6);
+                getSelectedCategoryData(5);
                 break;
 
             case R.id.action_cfmed_events: // the tick
@@ -251,9 +251,9 @@ public class JiosFragment extends Fragment {
         //This arraylist will contain only those in the certain categories
         ArrayList<JiosItem> list = new ArrayList<>();
         JiosAdapter jiosAdapter;
-        if (categoryID == 0) {
-            jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-        } else {
+//        if (categoryID == 0) {
+//            jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
+//        } else {
             //filter by id
             for (JiosItem jiosItem : JiosItemList) {
                 if (jiosItem.getCategory() == categoryID) {
@@ -261,7 +261,7 @@ public class JiosFragment extends Fragment {
                 }
             }
             jiosAdapter = new JiosAdapter(getActivity(), list);
-        }
+        // }
         mRecyclerView.setAdapter(jiosAdapter);
         mAdapter = jiosAdapter;
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
