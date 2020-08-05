@@ -52,6 +52,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -71,6 +73,10 @@ public class DashboardFragment extends Fragment {
     private DashboardAdapter mAdapterNewOcc;
 
     ArrayList<Occasion> mOccasionAll = new ArrayList<>();
+    ArrayList<Occasion> mOccasionTrending = new ArrayList<>();
+    ArrayList<Occasion> mOccasionToday = new ArrayList<>();
+    ArrayList<Occasion> mOccasionNewOcc = new ArrayList<>();
+
     ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
     ArrayList<Occasion> mOccasionJios = new ArrayList<>();
     ArrayList<String> mEventIDs = new ArrayList<>();
@@ -98,7 +104,7 @@ public class DashboardFragment extends Fragment {
         buildNewOccasionsTrendingRecyclerView();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        initializeList();
+        initializeListTrending();
 
 
         return rootView;
@@ -112,7 +118,7 @@ public class DashboardFragment extends Fragment {
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapterTrending = new DashboardAdapter(getActivity(), mOccasionAll);
+        mAdapterTrending = new DashboardAdapter(getActivity(), mOccasionTrending);
         mRecyclerViewTrending.setLayoutManager(mLayoutManagerTrending);
         mRecyclerViewTrending.setAdapter(mAdapterTrending);
         mRecyclerViewTrending.setItemAnimator(new DefaultItemAnimator());
@@ -266,7 +272,7 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public void initializeList() {
+    public void initializeListTrending() {
         final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
@@ -306,14 +312,31 @@ public class DashboardFragment extends Fragment {
 
                 MainActivity.sort(mOccasionAll);
 
-                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionAll);
+                // At this point, mOccasionAll will have full list of Occasions
+                // Sort by likes then take 1st 5
+
+                // LOGIC GOES FROM HERE
+
+                Collections.sort(mOccasionAll, new Comparator<Occasion>(){
+                    public int compare(Occasion s1,Occasion s2) {
+                        return s2.getNumLikes() - s1.getNumLikes();
+                }});
+
+                ArrayList<Occasion> topFive = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    topFive.add(mOccasionAll.get(i));
+                }
+
+                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
                 mAdapterTrending = dashboardAdapter;
-                mAdapterToday = dashboardAdapter;
-                mAdapterNewOcc = dashboardAdapter;
+//                mAdapterToday = dashboardAdapter;
+//                mAdapterNewOcc = dashboardAdapter;
 
                 mRecyclerViewTrending.setAdapter(mAdapterTrending);
-                mRecyclerViewToday.setAdapter(mAdapterToday);
-                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
+
+                // TO HERE
+//                mRecyclerViewToday.setAdapter(mAdapterToday);
+//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
             }
 
             @Override
@@ -358,14 +381,24 @@ public class DashboardFragment extends Fragment {
 
                 MainActivity.sort(mOccasionAll);
 
-                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionAll);
+                Collections.sort(mOccasionAll, new Comparator<Occasion>(){
+                    public int compare(Occasion s1,Occasion s2) {
+                        return s2.getNumLikes() - s1.getNumLikes();
+                    }});
+
+                ArrayList<Occasion> topFive = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    topFive.add(mOccasionAll.get(i));
+                }
+
+                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
                 mAdapterTrending = dashboardAdapter;
-                mAdapterToday = dashboardAdapter;
-                mAdapterNewOcc = dashboardAdapter;
+//                mAdapterToday = dashboardAdapter;
+//                mAdapterNewOcc = dashboardAdapter;
 
                 mRecyclerViewTrending.setAdapter(mAdapterTrending);
-                mRecyclerViewToday.setAdapter(mAdapterToday);
-                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
+//                mRecyclerViewToday.setAdapter(mAdapterToday);
+//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
 
             }
 
