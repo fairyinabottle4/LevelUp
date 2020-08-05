@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="56dp"
-    android:background="@color/colorLightGrey">
+    android:background="@drawable/dashboard_bg">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
@@ -24,10 +24,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dashboard_toolbar"
         android:text="Trending"
+        android:fontFamily="@font/bebas"
         android:layout_marginTop="4dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="22sp"
+        android:textSize="28sp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -44,10 +45,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/trending"
         android:text="Today"
+        android:fontFamily="@font/bebas"
         android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="22sp"
+        android:textSize="28sp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -64,10 +66,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/today"
         android:text="Newly Created"
+        android:fontFamily="@font/bebas"
         android:layout_marginTop="8dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="22sp"
+        android:textSize="28sp"
         android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
