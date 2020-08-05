@@ -7,18 +7,27 @@
     android:id="@+id/event_layout"
     tools:context="com.UserReviews">
 
-    <include layout="@layout/activity_main"/>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/reviews_page_toolbar"
+        app:title="User Reviews"
+        android:elevation="5dp"
+        app:titleTextColor="@color/colorWhite"
+        android:background="@color/colorPrimary" />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshlayoutreviews"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_below="@id/reviews_page_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/reviews_linear_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerviewReviews"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="56dp"
+            android:layout_height="200dp"
             android:background="@android:color/darker_gray"
             android:padding="4dp"
             android:scrollbars="vertical" />
@@ -30,7 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="76dp"
         android:gravity="end"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/nav_view">

@@ -19,4 +19,5 @@ public interface Occasion {
      String getOccasionID();
      boolean isJio();
      int getNumLikes();
+     void setNumLikes(int numLikes);
 }

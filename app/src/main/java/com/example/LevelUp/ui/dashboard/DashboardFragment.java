@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Dashboard.LevelUp.ui.dashboard.DashboardAdapter;
 import com.Dashboard.LevelUp.ui.dashboard.DashboardSettingsActivity;
 import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
 import com.Dashboard.LevelUp.ui.dashboard.UpcomingEventsFragment;
@@ -56,7 +57,7 @@ public class DashboardFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private MylistLikedAdapter mAdapter;
+    private DashboardAdapter mAdapter;
 
     public static ArrayList<String> mOccIDs = new ArrayList<>();
     public static ArrayList<Occasion> mOccasions = new ArrayList<>();
@@ -66,15 +67,6 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
-        // for Trending Page
-
-
-        // for upcoming jios
-
-
-        // for upcoming events
-
 
         // setting up toolbar
         setHasOptionsMenu(true);
@@ -100,7 +92,7 @@ public class DashboardFragment extends Fragment {
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+        mAdapter = new DashboardAdapter(getActivity(), mOccasions);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -114,7 +106,7 @@ public class DashboardFragment extends Fragment {
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+        mAdapter = new DashboardAdapter(getActivity(), mOccasions);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -128,7 +120,7 @@ public class DashboardFragment extends Fragment {
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+        mAdapter = new DashboardAdapter(getActivity(), mOccasions);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -189,7 +181,7 @@ public class DashboardFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(mOccasions);
-                MylistLikedAdapter occAdapter = new MylistLikedAdapter(getActivity(), mOccasions);
+                DashboardAdapter occAdapter = new DashboardAdapter(getActivity(), mOccasions);
                 mRecyclerView.setAdapter(occAdapter);
                 mAdapter = occAdapter;
             }
