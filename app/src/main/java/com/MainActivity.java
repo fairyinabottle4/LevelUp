@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     public static String display_name;
     public static String display_residential;
     public static String display_telegram = "default";
-    public static String display_email = "default";
     public static long display_phone = 0;
 
     // For things in MyList

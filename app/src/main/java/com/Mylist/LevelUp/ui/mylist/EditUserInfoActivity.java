@@ -80,7 +80,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         name = MainActivity.display_name;
         residence = MainActivity.currUser.getResidential();
         telegram = MainActivity.display_telegram;
-        email = MainActivity.display_email;
         phone = MainActivity.display_phone;
 
 
@@ -108,10 +107,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         //For updating Contact Information
         editTelegramHandle = findViewById(R.id.edit_telegram_handle);
         editTelegramHandle.setText(MainActivity.display_telegram);
-        editEmailAddress = findViewById(R.id.edit_email);
-        editEmailAddress.setText(MainActivity.display_email);
         editPhoneNumber = findViewById(R.id.edit_phone_number);
         editPhoneNumber.setText(Long.toString(MainActivity.display_phone));
+
 
 
         // For Setting Name and Residence
@@ -123,7 +121,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                 updateName();
                 updateResidence();
                 updateTelegramHandle();
-                updateEmailAddress();
                 updatePhoneNumber();
                 boolean pass = true;
                 if (deleteProfilePicture) {
@@ -357,17 +354,17 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
-    private void updateEmailAddress() {
-        String inputAddress = editEmailAddress.getText().toString().trim();
-        if (!inputAddress.equals(email)) {
-            MainActivity.display_email = inputAddress;
-            mDatabaseRef
-                    .child(MainActivity.currUser.getId())
-                    .child("email")
-                    .setValue(inputAddress);
-            changes = true;
-        }
-    }
+//    private void updateEmailAddress() {
+//        String inputAddress = editEmailAddress.getText().toString().trim();
+//        if (!inputAddress.equals(email)) {
+//            MainActivity.display_email = inputAddress;
+//            mDatabaseRef
+//                    .child(MainActivity.currUser.getId())
+//                    .child("email")
+//                    .setValue(inputAddress);
+//            changes = true;
+//        }
+//    }
 
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();

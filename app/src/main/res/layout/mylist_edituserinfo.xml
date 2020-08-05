@@ -49,7 +49,6 @@
                 android:id="@+id/editSpinnerResidenceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/editTextDisplayName" />
 
@@ -62,7 +61,24 @@
                 android:text="Delete profile picture"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_phone_number" />
+
+            <EditText
+                android:id="@+id/edit_telegram_handle"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="Edit Telegram Handle"
                 app:layout_constraintTop_toBottomOf="@id/editSpinnerResidenceName" />
+
+            <EditText
+                android:id="@+id/edit_phone_number"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="Edit Phone Number"
+                app:layout_constraintTop_toBottomOf="@id/edit_telegram_handle" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
@@ -81,7 +97,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/fui_transparent"
             android:src="@drawable/fake_dp" />
-
+<!--
         <RatingBar
             android:id="@+id/MyRating"
             android:layout_width="wrap_content"
@@ -91,33 +107,12 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="245dp"
             android:layout_marginBottom="323dp" />
+            -->
 
 
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/edit_telegram_handle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Edit Telegram Handle"
-        app:layout_constraintBottom_toTopOf="@+id/edit_email"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Edit Email Address"
-        app:layout_constraintBottom_toTopOf="@+id/edit_phone_number"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_phone_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Edit Phone Number"
-        app:layout_constraintBottom_toTopOf="@+id/saveEditedDetailsBtn"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
     <Button

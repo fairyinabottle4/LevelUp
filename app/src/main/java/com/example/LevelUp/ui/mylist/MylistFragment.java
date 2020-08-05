@@ -313,6 +313,9 @@ public class MylistFragment extends Fragment {
                         intToRes(user.getResidential());
                         resiFinal.setText(residence_name);
                         MainActivity.display_residential = residence_name;
+
+                        MainActivity.display_phone = user.getPhone();
+                        MainActivity.display_telegram = user.getTelegram();
                     }
                 }
             }
