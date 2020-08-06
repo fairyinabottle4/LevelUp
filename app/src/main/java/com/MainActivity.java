@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,12 +61,14 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReferenceActivityJio;
     private DatabaseReference mDatabaseReferenceLikeEvent;
     private DatabaseReference mDatabaseReferenceLikeJio;
+    private DatabaseReference mDatabaseReferenceLikeMktplace;
 
     public static final ArrayList<String> mEventIDs = new ArrayList<>();
     public static final ArrayList<String> mJioIDs = new ArrayList<>();
 
     public static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
     public static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
+    public static final ArrayList<String > mLikeMktplaceIDs = new ArrayList<>();
 
 
     private static final int RC_SIGN_IN = 1;
@@ -179,6 +182,25 @@ public class MainActivity extends AppCompatActivity {
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUIDFinal)) {
                         mLikeJioIDs.add(selected.getOccasionID());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        mDatabaseReferenceLikeMktplace = mFirebaseDatabase.getReference().child("LikeMktplace");
+        mDatabaseReferenceLikeMktplace.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mLikeMktplaceIDs.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                    String selectedUserID = selected.getUserID();
+                    if (selectedUserID.equals(fbUIDFinal)) {
+                        mLikeMktplaceIDs.add(selected.getOccasionID());
                     }
                 }
             }

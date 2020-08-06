@@ -131,7 +131,7 @@ public class MktplaceAdder extends AppCompatActivity {
                             Uri downloadUrl = urlTask.getResult();
                             String key = mDatabaseRef.push().getKey();
                             String creatorUID = MainActivity.currUser.getId();
-                            MktplaceItem title = new MktplaceItem(key, creatorUID, listingTitle.getText().toString().trim(),
+                            MktplaceItem title = new MktplaceItem(0, key, creatorUID, listingTitle.getText().toString().trim(),
                                     downloadUrl.toString(),
                                     meetupLocation.getText().toString().trim(),
                                     listingDescription.getText().toString().trim());

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.MainActivity;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
@@ -190,6 +191,12 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         intent.putExtra("location", mItem.getLocation());
         intent.putExtra("imageurl", mItem.getImageUrl());
         intent.putExtra("creatorID", mItem.getCreatorID());
+        intent.putExtra("mktplaceID", mItem.getMktPlaceID());
+
+        boolean isLiked = MainActivity.mLikeMktplaceIDs.contains(mItem.getMktPlaceID());
+        intent.putExtra("stateLiked", isLiked);
+
+        intent.putExtra("numLikes", mItem.getNumLikes());
 
         startActivity(intent);
     }

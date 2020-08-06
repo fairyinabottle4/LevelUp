@@ -6,14 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventPage;
+import com.Events.LevelUp.ui.events.EventsItem;
+import com.LikeOccasionItem;
+import com.MainActivity;
 import com.UserItem;
 import com.UserProfile;
 import com.bumptech.glide.Glide;
@@ -58,9 +65,15 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         public TextView mCreatorName;
         private OnItemClickListener mListener;
 
+        public ToggleButton mLikeButton;
+        public TextView mNumLikes;
+        public boolean isLiked;
+        public int numLikes;
+
         public MktplaceViewHolder(final Context context, View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
+            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             mTitle = itemView.findViewById(R.id.textView);
             mCreatorName = itemView.findViewById(R.id.creatorTextView);
             mCreatorName.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +92,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
             });
             mListener = listener;
             itemView.setOnClickListener(this);
+            mLikeButton = itemView.findViewById(R.id.image_like);
         }
 
         @Override
@@ -104,6 +118,13 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
         public void setPhone(long phone) {this.phone = phone;}
 
+        public void setLiked(boolean liked) {
+            isLiked = liked;
+        }
+
+        public void setNumLikes(int numLikes) {
+            this.numLikes = numLikes;
+        }
     }
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
@@ -127,7 +148,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MktplaceViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MktplaceViewHolder holder, final int position) {
         MktplaceItem uploadCurrent = mMktplaceList.get(position);
         String imageUrl = uploadCurrent.getImageUrl();
         holder.mTitle.setText(uploadCurrent.getName());
@@ -168,6 +189,90 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         });
 
         Glide.with(holder.mImageView.getContext()).load(imageUrl).into(holder.mImageView);
+
+        holder.mNumLikes.setText(Integer.toString(uploadCurrent.getNumLikes()));
+        holder.setNumLikes(uploadCurrent.getNumLikes());
+        String mktplaceID = uploadCurrent.getMktPlaceID();
+        if (MainActivity.mLikeMktplaceIDs.contains(mktplaceID)) {
+            holder.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            holder.setLiked(true);
+            holder.mLikeButton.setChecked(true);
+        } else {
+            holder.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            holder.setLiked(false);
+            holder.mLikeButton.setChecked(false);
+        }
+
+        holder.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    holder.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    holder.setLiked(true);
+
+                    // send to LikeDatabase
+                    MktplaceItem mi = mMktplaceList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String mktplaceID = mi.getMktPlaceID();
+                    final String userID = user.getId();
+                    DatabaseReference mLikeMktplaceRef = mFirebaseDatabase.getReference("LikeMktplace");
+                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(mktplaceID, userID);
+                    mLikeMktplaceRef.push().setValue(likeOccasionItem);
+
+                    // +1 to the Likes on the MktplaceItem
+                    int currLikes = mi.getNumLikes();
+                    DatabaseReference mMktplaceRef = mFirebaseDatabase.getReference("mktplace uploads");
+                    mMktplaceRef.child(mktplaceID).child("numLikes").setValue(currLikes + 1);
+                    mi.setNumLikes(currLikes + 1);
+                    holder.setNumLikes(currLikes + 1);
+
+                    // for display only
+                    holder.mNumLikes.setText(Integer.toString(currLikes + 1));
+
+                } else {
+                    holder.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    holder.setLiked(false);
+
+                    // Delete the entry from LikeDatabase
+                    MktplaceItem mi = mMktplaceList.get(position);
+                    UserItem user = MainActivity.currUser;
+                    final String mktplaceID = mi.getMktPlaceID();
+                    final String userID = user.getId();
+                    final DatabaseReference mLikeMktplaceRef = mFirebaseDatabase.getReference("LikeMktplace");
+                    mLikeMktplaceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                                if (mktplaceID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                    String key = snapshot.getKey();
+                                    mLikeMktplaceRef.child(key).removeValue();
+                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    // -1 to the Likes on the eventItem
+                    int currLikes = mi.getNumLikes();
+                    DatabaseReference mMktplaceRef = mFirebaseDatabase.getReference("mktplace uploads");
+                    mMktplaceRef.child(mktplaceID).child("numLikes").setValue(currLikes - 1);
+                    mi.setNumLikes(currLikes - 1);
+                    holder.setNumLikes(currLikes -1);
+
+                    // for display only
+                    holder.mNumLikes.setText(Integer.toString(currLikes - 1));
+
+                    MainActivity.mLikeMktplaceIDs.remove(mktplaceID);
+
+                }
+            }
+        });
     }
 
 

@@ -9,6 +9,8 @@ public class MktplaceItem {
     private String location;
     private String description;
 
+    private int numLikes;
+
     public MktplaceItem(String name, String imageUrl, String location, String description) {
         if (name.trim().equals("")) {
             name = "No Name";
@@ -19,7 +21,8 @@ public class MktplaceItem {
         this.description = description;
     }
 
-    public MktplaceItem(String mktPlaceID, String creatorID, String name, String imageUrl, String location, String description) {
+    public MktplaceItem(int numLikes, String mktPlaceID, String creatorID, String name, String imageUrl, String location, String description) {
+        this.numLikes = numLikes;
         this.mktPlaceID = mktPlaceID;
         this.creatorID = creatorID;
         if (name.trim().equals("")) {
@@ -63,5 +66,13 @@ public class MktplaceItem {
 
     public String getMktPlaceID() {
         return mktPlaceID;
+    }
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
+    public void setNumLikes(int numLikes) {
+        this.numLikes = numLikes;
     }
 }

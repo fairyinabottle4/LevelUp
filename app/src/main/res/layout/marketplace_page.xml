@@ -36,14 +36,25 @@
             android:id="@+id/buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
-            <ImageView
-                android:id="@+id/like_button"
+            android:layout_alignParentRight="true"
+            android:gravity="center">
+            <ToggleButton
+                android:id="@+id/image_like"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
-                app:srcCompat="@drawable/ic_favorite_black_24dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="4dp"/>
+                android:background="@drawable/ic_favorite_black_24dp"
+                android:textOff=""
+                android:layout_marginTop="2dp"
+                android:textOn=""/>
+            <TextView
+                android:id="@+id/numlikes_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/colorSecondaryText"/>
             <!--
             <ImageView
                 android:id="@+id/chat_bubble"
