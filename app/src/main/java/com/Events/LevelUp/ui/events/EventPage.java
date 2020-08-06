@@ -16,6 +16,7 @@ import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
 import com.UserProfile;
+import com.example.LevelUp.ui.dashboard.DashboardFragment;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
@@ -324,6 +325,7 @@ public class EventPage extends AppCompatActivity {
         }
         MylistFragment.setRefreshList(true);
         EventsMyListFragment.setRefreshList(true);
+        DashboardFragment.setRefresh(true);
         super.onBackPressed();
     }
 }

@@ -252,6 +252,25 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         });
 
         final String eventID = currentItem.getOccasionID();
+        holder1.setEventID(eventID);
+
+        // set stateChecked and stateLiked to pass into the intent
+        if (currentItem.isJio()) {
+            if (MainActivity.mJioIDs.contains(currentItem.getOccasionID())) {
+                holder1.setChecked(true);
+            }
+            if (MainActivity.mLikeJioIDs.contains(currentItem.getOccasionID())) {
+                holder1.setLiked(true);
+            }
+        } else {
+            if (MainActivity.mEventIDs.contains(currentItem.getOccasionID())) {
+                holder1.setChecked(true);
+            }
+            if (MainActivity.mLikeEventIDs.contains(currentItem.getOccasionID())) {
+                holder1.setLiked(true);
+            }
+        }
+
 //        holder1.setEventID(eventID);
 //        if (MainActivity.mEventIDs.contains(eventID)) {
 //            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);

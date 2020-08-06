@@ -42,6 +42,8 @@ import java.util.Date;
 public class DashboardFragment extends Fragment {
     private View rootView;
 
+    public static boolean refresh;
+
     private RecyclerView mRecyclerViewTrending;
     private LinearLayoutManager mLayoutManagerTrending;
     private DashboardAdapter mAdapterTrending;
@@ -471,5 +473,20 @@ public class DashboardFragment extends Fragment {
 
             }
         });
+    }
+
+    public static void setRefresh(boolean toSet) {
+        refresh = toSet;
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            initializeListTrending();
+            initializeListToday();
+            initializeListNewlyCreated();
+            refresh = false;
+        }
+        super.onResume();
     }
 }
