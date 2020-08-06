@@ -13,4 +13,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
     </style>
+    <style name="SplashScreen" parent="Theme.AppCompat">
+        <item name = "android:windowBackground">@drawable/splashscreen</item>
+    </style>
 </resources>
