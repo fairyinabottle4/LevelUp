@@ -22,16 +22,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.Dashboard.LevelUp.ui.dashboard.TrendingFragment;
-import com.Events.LevelUp.ui.events.EventsAdapter;
-import com.Events.LevelUp.ui.events.EventsItem;
 import com.Jios.LevelUp.ui.jios.JiosAdder;
 import com.Jios.LevelUp.ui.jios.JiosAdapter;
 import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.Jios.LevelUp.ui.jios.JiosLikedFragment;
 import com.Jios.LevelUp.ui.jios.JiosMyListFragment;
 import com.MainActivity;
-import com.Mylist.LevelUp.ui.mylist.JiosCreatedFragment;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ValueEventListener;
@@ -40,12 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 public class JiosFragment extends Fragment {
