@@ -163,7 +163,6 @@ public class DashboardFragment extends Fragment {
     }
 
     public void initializeListTrending() {
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
@@ -272,7 +271,6 @@ public class DashboardFragment extends Fragment {
     }
 
     public void initializeListToday() {
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
@@ -384,7 +382,6 @@ public class DashboardFragment extends Fragment {
     }
 
     public void initializeListNewlyCreated() {
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
