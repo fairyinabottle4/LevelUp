@@ -163,7 +163,6 @@ public class DashboardFragment extends Fragment {
     }
 
     public void initializeListTrending() {
-
         mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
 
