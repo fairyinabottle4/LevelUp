@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -91,7 +92,6 @@ public class DashboardFragment extends Fragment {
         initializeListTrending();
         initializeListToday();
         initializeListNewlyCreated();
-
 
         return rootView;
     }
@@ -199,34 +199,7 @@ public class DashboardFragment extends Fragment {
                 ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
                 copyOfFullEvents.addAll(mOccasionJios);
                 mOccasionAll = copyOfFullEvents;
-
                 MainActivity.sort(mOccasionAll);
-
-                // At this point, mOccasionAll will have full list of Occasions
-                // Sort by likes then take 1st 5
-
-                // LOGIC GOES FROM HERE
-
-//                Collections.sort(mOccasionAll, new Comparator<Occasion>(){
-//                    public int compare(Occasion s1,Occasion s2) {
-//                        return s2.getNumLikes() - s1.getNumLikes();
-//                }});
-//
-//                ArrayList<Occasion> topFive = new ArrayList<>();
-//                for (int i = 0; i < 5; i++) {
-//                    topFive.add(mOccasionAll.get(i));
-//                }
-
-//                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
-//                mAdapterTrending = dashboardAdapter;
-//                mAdapterToday = dashboardAdapter;
-//                mAdapterNewOcc = dashboardAdapter;
-
-                mRecyclerViewTrending.setAdapter(mAdapterTrending);
-
-                // TO HERE
-//                mRecyclerViewToday.setAdapter(mAdapterToday);
-//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
             }
 
             @Override
@@ -271,6 +244,11 @@ public class DashboardFragment extends Fragment {
 
                 MainActivity.sort(mOccasionAll);
 
+                // At this point, mOccasionAll will have full list of Occasions
+                // Sort by likes then take 1st 5
+
+                // LOGIC GOES FROM HERE
+
                 Collections.sort(mOccasionAll, new Comparator<Occasion>(){
                     public int compare(Occasion s1,Occasion s2) {
                         return s2.getNumLikes() - s1.getNumLikes();
@@ -283,13 +261,7 @@ public class DashboardFragment extends Fragment {
 
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
                 mAdapterTrending = dashboardAdapter;
-//                mAdapterToday = dashboardAdapter;
-//                mAdapterNewOcc = dashboardAdapter;
-
                 mRecyclerViewTrending.setAdapter(mAdapterTrending);
-//                mRecyclerViewToday.setAdapter(mAdapterToday);
-//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
-
             }
 
             @Override
@@ -336,41 +308,6 @@ public class DashboardFragment extends Fragment {
                 ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
                 copyOfFullEvents.addAll(mOccasionJios);
                 mOccasionAll = copyOfFullEvents;
-
-                MainActivity.sort(mOccasionAll);
-
-                // At this point, mOccasionAll will have full list of Occasions
-
-                // LOGIC GOES FROM HERE
-                // get Today's date but set time to 0
-                // get all Occasions that are compareTo returns 0
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                Date currentDate = cal.getTime();
-
-                ArrayList<Occasion> todayOcc = new ArrayList<>();
-
-                for (Occasion occ : mOccasionAll) {
-                    if (occ.getDateInfo().compareTo(currentDate) == 0) {
-                        todayOcc.add(occ);
-                    }
-                }
-
-
-                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), todayOcc);
-                mAdapterToday = dashboardAdapter;
-//                mAdapterToday = dashboardAdapter;
-//                mAdapterNewOcc = dashboardAdapter;
-
-                mRecyclerViewToday.setAdapter(mAdapterToday);
-
-                // TO HERE
-//                mRecyclerViewToday.setAdapter(mAdapterToday);
-//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
             }
 
             @Override
@@ -413,8 +350,10 @@ public class DashboardFragment extends Fragment {
 
                 mOccasionAll = copyOfFullJios;
 
-                MainActivity.sort(mOccasionAll);
-
+                // At this point, mOccasionAll will have full list of Occasions
+                // LOGIC GOES FROM HERE
+                // get Today's date but set time to 0
+                // get all Occasions that are compareTo returns 0
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
@@ -429,16 +368,10 @@ public class DashboardFragment extends Fragment {
                         todayOcc.add(occ);
                     }
                 }
-
-
+                MainActivity.sort(todayOcc);
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), todayOcc);
                 mAdapterToday = dashboardAdapter;
-//                mAdapterToday = dashboardAdapter;
-//                mAdapterNewOcc = dashboardAdapter;
-
                 mRecyclerViewToday.setAdapter(mAdapterToday);
-
-
             }
 
             @Override
@@ -488,30 +421,6 @@ public class DashboardFragment extends Fragment {
                 for (int i = mOccasionEvents.size() - 1; i > mOccasionEvents.size() - 4; i--) {
                     mNewlyCreatedEvents.add(mOccasionEvents.get(i));
                 }
-
-                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
-                copyOfFullEvents.addAll(mOccasionJios);
-                mOccasionAll = copyOfFullEvents;
-
-                MainActivity.sort(mOccasionAll);
-
-                // At this point, mOccasionAll will have full list of Occasions
-
-                // LOGIC GOES FROM HERE
-                // get Today's date but set time to 0
-                // get all Occasions that are compareTo returns 0
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                Date currentDate = cal.getTime();
-                mRecyclerViewToday.setAdapter(mAdapterToday);
-
-                // TO HERE
-//                mRecyclerViewToday.setAdapter(mAdapterToday);
-//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
             }
 
             @Override
@@ -542,7 +451,6 @@ public class DashboardFragment extends Fragment {
                     cal.set(Calendar.MINUTE, min);
                     Date eventDate = cal.getTime();
 
-
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
                         mOccasionJios.add(selected);
@@ -550,23 +458,9 @@ public class DashboardFragment extends Fragment {
                 }
 
                 //add into mNewlyCreatedJios
-                for (int i = mOccasionJios.size() - 1; i > mOccasionEvents.size() - 4; i--) {
+                for (int i = mOccasionJios.size() - 1; i > mOccasionJios.size() - 4; i--) {
                     mNewlyCreatedJios.add(mOccasionJios.get(i));
                 }
-
-                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
-                copyOfFullJios.addAll(mOccasionEvents);
-
-                mOccasionAll = copyOfFullJios;
-
-                MainActivity.sort(mOccasionAll);
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                Date currentDate = cal.getTime();
 
                 //logic for creating Newly Added
                 mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
@@ -575,23 +469,7 @@ public class DashboardFragment extends Fragment {
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionNewlyCreated);
                 mAdapterNewlyCreated = dashboardAdapter;
                 mRecyclerViewNewlyCreated.setAdapter(mAdapterNewlyCreated);
-
-//                mAdapterNewOcc = dashboardAdapter;
-//                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
-//                mAdapterTrending = dashboardAdapter;
-//                mAdapterToday = dashboardAdapter;
-//                mAdapterNewOcc = dashboardAdapter;
-
-//                mRecyclerViewTrending.setAdapter(mAdapterTrending);
-//                mRecyclerViewToday.setAdapter(mAdapterToday);
-//                mRecyclerViewNewOcc.setAdapter(mAdapterNewOcc);
-
-
-
-
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
