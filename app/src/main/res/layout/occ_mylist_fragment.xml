@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/jios_toolbar"
         android:layout_alignBottom="@+id/nav_view"
-        android:background="@android:color/darker_gray"
+        android:background="@drawable/overall_bg"
         android:padding="4dp"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="56dp"
