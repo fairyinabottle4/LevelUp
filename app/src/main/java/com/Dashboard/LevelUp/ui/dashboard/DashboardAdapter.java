@@ -1,6 +1,7 @@
 package com.Dashboard.LevelUp.ui.dashboard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ActivityOccasionItem;
+import com.Events.LevelUp.ui.events.EventPage;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
@@ -53,6 +55,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         public String email;
         public long phone;
         public String telegram;
+        public String description;
 
         public String eventID;
         public boolean isChecked;
@@ -60,28 +63,54 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         public int numLikes;
         
         public ImageView mImageView;
-        // public ToggleButton mAddButton;
-        // public ToggleButton mLikeButton;
+         public ToggleButton mAddButton;
+         public ToggleButton mLikeButton;
         public TextView mTextView1;
-        // public TextView mTextView2;
+         public TextView mTextView2;
         public TextView mTextView3;
         public TextView mTextView4;
         public TextView mTextView5;
         // public TextView mTextView6;
-        // public TextView mNumLikes;
+         public TextView mNumLikes;
 
-        public DashboardViewHolder (Context context, View itemView) {
+        public DashboardViewHolder (final Context context, View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.category_imageView);
             // mAddButton = itemView.findViewById(R.id.image_add);
             // mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
-            // mTextView2 = itemView.findViewById(R.id.event_description);
+//            mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.date);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
             // mTextView6 = itemView.findViewById(R.id.eventCreator);
             // mNumLikes = itemView.findViewById(R.id.numlikes_textview);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, EventPage.class);
+                    intent.putExtra("uid", creatorUid);
+                    intent.putExtra("creatorName", creatorName);
+                    intent.putExtra("title", mTextView1.getText().toString());
+                    intent.putExtra("description", description);
+                    intent.putExtra("date", mTextView3.getText().toString());
+                    intent.putExtra("location", mTextView4.getText().toString());
+                    intent.putExtra("time", mTextView5.getText().toString());
+                    intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("stateChecked", isChecked);
+                    intent.putExtra("stateLiked", isLiked);
+                    intent.putExtra("numLikes", numLikes);
+                    intent.putExtra("eventID", eventID);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
+                    context.startActivity(intent);
+                }
+            });
+
         }
 
         public void setCreatorUid(String newUID) {
@@ -180,7 +209,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 //        });
 
         holder1.mTextView1.setText(currentItem.getTitle());
-        // holder1.mTextView2.setText(currentItem.getDescription());
+        holder1.description = currentItem.getDescription();
         holder1.mTextView4.setText(currentItem.getLocationInfo());
 
         String date = df.format(currentItem.getDateInfo());
@@ -222,7 +251,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             }
         });
 
-//        final String eventID = currentItem.getOccasionID();
+        final String eventID = currentItem.getOccasionID();
 //        holder1.setEventID(eventID);
 //        if (MainActivity.mEventIDs.contains(eventID)) {
 //            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
@@ -291,7 +320,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 //                }
 //            }
 //        });
-
+//
 //        if (MainActivity.mLikeEventIDs.contains(eventID)) {
 //            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
 //            holder1.setLiked(true);
@@ -374,8 +403,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 //
 //            }
 //        });
-        
-        
+
+
     }    
 
     @Override
