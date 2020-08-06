@@ -206,7 +206,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     }
 
     public void loadDataMktplace() {
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mktplaceItemList.clear();

@@ -185,7 +185,7 @@ public class MktplacePage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MylistFragment.setRefreshList(true);
+//        MylistFragment.setRefreshList(true);
         MktplaceFragment.setRefresh(true);
         super.onBackPressed();
     }
