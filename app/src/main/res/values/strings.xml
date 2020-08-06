@@ -14,9 +14,9 @@
     <string name="menu_myActivities">My Activities</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="keith_writeup">Keith has used an Android phone his whole life and has often expressed his distaste for iPhones, much to his friends dismay. This project was inspired by his interest in Android development as well as his experience learning Java and Object-Oriented Programming in CS2030</string>
-    <string name="thank_you">We would like to express our sincere gratitude to Prof Zhao Jin for offering us this opportunity through CP2106 Orbital to give us a space to learn about application development. We would like to thank our advisor, Ms Wang Yuting, for her prompt guidance and support. We would also like to thank all our peer groups that have offered us suggestions on how to make the app better. </string>
+    <string name="thank_you">We would like to express our sincere gratitude to Prof Zhao Jin for offering us this opportunity through CP2106 Orbital to give us a space to learn about application development. \n\nWe would like to thank our advisor, Ms Wang Yuting, for her prompt guidance and support. \n\nWe would also like to thank all our peer groups that have offered us suggestions on how to make the app better. </string>
     <string name="yien_writeup">Yi En has used an iPhone her whole life and have often expressed her distaste for Android phones. This project was inspired by pre-Covid UTown and the Java knowledge she has acquired from CS2030.</string>
-    <string name="contact_info">You can contact us on Telegram at @yoongyoong (yien) and @fairyinabottle4 (keith)</string>
+    <string name="contact_info">You can contact us on Telegram at @yoongyoong (yien) and @fairyinabottle4 (keith) \n\nIcons made by Freepik from www.flaticon.com</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -368,6 +369,12 @@ public class DashboardFragment extends Fragment {
                     }
                 }
                 MainActivity.sort(todayOcc);
+
+                if (todayOcc.size() == 0) {
+                    TextView t = rootView.findViewById(R.id.today_textView);
+                    t.setText("\n" + "There is nothing happening today :(" + "\n");
+                }
+
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), todayOcc);
                 mAdapterToday = dashboardAdapter;
                 mRecyclerViewToday.setAdapter(mAdapterToday);
@@ -467,6 +474,7 @@ public class DashboardFragment extends Fragment {
                 mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
                 mOccasionNewlyCreated.addAll(mNewlyCreatedJios);
                 MainActivity.sort(mOccasionNewlyCreated);
+
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionNewlyCreated);
                 mAdapterNewlyCreated = dashboardAdapter;
                 mRecyclerViewNewlyCreated.setAdapter(mAdapterNewlyCreated);
