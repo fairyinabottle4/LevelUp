@@ -281,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         if (profileImageUri != null) {
             imageURI = profileImageUri.toString();
         }
-        UserItem userItem = new UserItem(userID, imageURI, name, email, residence, telegramHandle, phoneNumber);
+        UserItem userItem = new UserItem(userID, imageURI, name, email, residence, telegramHandle, phoneNumber, false);
         mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);
     }

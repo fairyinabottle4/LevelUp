@@ -10,8 +10,9 @@ public class UserItem {
     public int residential;
     public String TelegramHandle;
     public long PhoneNumber;
+    private boolean isStaff;
 
-    public UserItem(String id, String profilePictureUri, String name, String email, int residential, String telegram, long phone) {
+    public UserItem(String id, String profilePictureUri, String name, String email, int residential, String telegram, long phone, boolean isStaff) {
         this.id = id;
         this.profilePictureUri = profilePictureUri;
         this.name = name;
@@ -19,6 +20,7 @@ public class UserItem {
         this.residential = residential;
         this.TelegramHandle = telegram;
         this.PhoneNumber = phone;
+        this.isStaff = isStaff;
     }
 
 
@@ -68,5 +70,9 @@ public class UserItem {
 
     public void setProfilePictureUri(String profilePictureUri) {
         this.profilePictureUri = profilePictureUri;
+    }
+
+    public boolean getIsStaff() {
+        return this.isStaff;
     }
 }

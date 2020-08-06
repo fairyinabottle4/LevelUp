@@ -89,15 +89,18 @@ public class EventsFragment extends Fragment {
 
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
-        floatingActionButton.setAlpha(0.50f); // setting transparency
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), EventsAdder.class);
-                startActivity(intent);
-            }
-        });
-
+        if (MainActivity.getCurrentUser().getIsStaff()) {
+            floatingActionButton.setAlpha(0.50f); // setting transparency
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), EventsAdder.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            floatingActionButton.setVisibility(View.INVISIBLE);
+        }
         loadDataEvents();
 
         // setting up toolbar
