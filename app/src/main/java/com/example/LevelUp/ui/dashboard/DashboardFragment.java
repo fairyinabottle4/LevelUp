@@ -392,6 +392,9 @@ public class DashboardFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionEvents.clear();
                 mOccasionAll.clear();
+                mNewlyCreatedJios.clear();
+                mNewlyCreatedEvents.clear();
+                mOccasionNewlyCreated.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     if (selected.getTimeInfo().length() > 4) {

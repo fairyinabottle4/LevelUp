@@ -2,19 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_history"
-        android:icon="@drawable/ic_history_clock"
-        android:title="@string/menu_history"
-        app:showAsAction="always"/>
-
     <item android:id="@+id/action_createdoccasions"
         android:icon="@drawable/ic_favorite_white_24dp"
         android:title="@string/menu_favourites"
-        app:showAsAction="always"/>
-
-    <item android:id="@+id/action_filter"
-        android:icon="@drawable/ic_sliders"
-        android:title="@string/menu_filter"
         app:showAsAction="always"/>
 
     <item android:id="@+id/action_search"
