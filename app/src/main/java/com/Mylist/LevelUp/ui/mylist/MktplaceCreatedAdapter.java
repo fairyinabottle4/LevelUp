@@ -58,6 +58,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         public TextView mTitle;
         public TextView mCreatorName;
         public Button mEditButton;
+        public Button mPeopleLikedButton;
         private MktplaceCreatedAdapter.OnItemClickListener mListener;
 
         public MktplaceCreatedViewHolder(final Context context, View itemView, final MktplaceCreatedAdapter.OnItemClickListener listener) {
@@ -80,6 +81,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
                 }
             });
             mEditButton = itemView.findViewById(R.id.mktplace_edit_btn);
+            mPeopleLikedButton = itemView.findViewById(R.id.image_people_liked);
             mListener = listener;
             itemView.setOnClickListener(this);
         }
@@ -152,6 +154,16 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
                 intent.putExtra("location", location);
                 intent.putExtra("description", description);
                 intent.putExtra("creatorUID", creatorUID);
+                mContext.startActivity(intent);
+            }
+        });
+
+        holder.mPeopleLikedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CreatorViewLikeNamesMktplace.class);
+                String occID = uploadCurrent.getMktPlaceID();
+                intent.putExtra("occID", occID);
                 mContext.startActivity(intent);
             }
         });

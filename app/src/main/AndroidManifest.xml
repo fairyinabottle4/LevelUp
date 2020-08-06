@@ -81,6 +81,9 @@
             android:name="com.UserReviews"
             android:label="User Reviews"/>
         <activity
+            android:name="com.Mylist.LevelUp.ui.mylist.CreatorViewLikeNamesMktplace"
+            android:label="Creator View Like Names Marketplace"/>
+        <activity
             android:name="com.SplashScreenActivity"
             android:theme="@style/SplashScreen">
             <intent-filter>
