@@ -4,7 +4,7 @@
 
 
     <item android:id="@+id/action_dashboard_settings"
-        android:icon="@drawable/ic_baseline_emoji_people_24"
+        android:icon="@drawable/info2"
         android:title="Settings"
         app:showAsAction="always"/>
 
