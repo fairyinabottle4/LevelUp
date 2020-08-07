@@ -16,6 +16,7 @@
         android:id="@+id/names_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/dashboard_bg"
         android:listSelector="@color/fui_transparent"
         android:layout_marginBottom="56dp"/>
 </LinearLayout>

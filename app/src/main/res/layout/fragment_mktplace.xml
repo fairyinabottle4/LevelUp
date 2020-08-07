@@ -59,4 +59,15 @@
             android:src="@drawable/ic_add_white_24dp"
             app:backgroundTint="@color/colorPrimary" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/nothing2"
+        android:visibility="gone"
+        android:textSize="30sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="There is nothing here at the moment :("/>
 </RelativeLayout>

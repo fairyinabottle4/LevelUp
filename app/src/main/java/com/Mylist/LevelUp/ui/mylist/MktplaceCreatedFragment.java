@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.mktplace_plain, container, false);
+        TextView nothingView = rootView.findViewById(R.id.nothing);
 
         createMktplaceList();
 
@@ -60,6 +62,12 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
         loadDataMktplace();
+
+        if (!mktplaceItemList.isEmpty()) {
+            nothingView.setVisibility(View.VISIBLE);
+        } else {
+            nothingView.setVisibility(View.GONE);
+        }
 
         return rootView;
     }

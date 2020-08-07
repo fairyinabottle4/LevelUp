@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class MktplaceFragment extends Fragment {
@@ -45,14 +48,14 @@ public class MktplaceFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseReference mDatabaseRef;
-
+    TextView nothingView;
     public static boolean refresh;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mktplace, container, false);
-
+        nothingView = rootView.findViewById(R.id.nothing2);
         createMktplaceList();
 
         buildRecyclerView();
@@ -86,6 +89,11 @@ public class MktplaceFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+        if (!mktplaceItemList.isEmpty()) {
+            nothingView.setVisibility(View.VISIBLE);
+        } else {
+            nothingView.setVisibility(View.GONE);
+        }
         return rootView;
     }
 
