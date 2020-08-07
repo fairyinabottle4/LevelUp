@@ -322,4 +322,9 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         this.mMktplaceList = mMktplaceListFull;
     }
 
+    @Override
+    public int getItemViewType(int position){
+        return position;
+    }
+
 }
