@@ -92,10 +92,10 @@ public class UserProfile extends AppCompatActivity {
             creatorId = creatorIdCopy;
         }
         final String name = intent.getStringExtra("name");
-        int residenceIndex = intent.getIntExtra("residence", 0);
-        String telegram = intent.getStringExtra("telegram");
-        String email = intent.getStringExtra("email");
-        Long phone = intent.getLongExtra("phone", 0);
+        final int residenceIndex = intent.getIntExtra("residence", 0);
+        final String telegram = intent.getStringExtra("telegram");
+        final String email = intent.getStringExtra("email");
+        final Long phone = intent.getLongExtra("phone", 0);
 
         displayName.setText(name);
         residence.setText(residentials[residenceIndex]);

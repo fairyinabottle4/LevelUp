@@ -2,6 +2,7 @@ package com.Mktplace.LevelUp.ui.mktplace;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.Events.LevelUp.ui.events.EventsMyListFragment;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
+import com.UserProfile;
 import com.bumptech.glide.Glide;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.mktplace.MktplaceFragment;
@@ -48,6 +50,13 @@ public class MktplacePage extends AppCompatActivity {
     private String creatorID;
     private String mktplaceID;
 
+    private String creatorName;
+    private int creatorResidence;
+    private String profilePictureUri;
+    private String telegram;
+    private String email;
+    private long phone;
+
     private boolean isLiked;
     private int numLikes;
     private ToggleButton mLikeButton;
@@ -77,6 +86,12 @@ public class MktplacePage extends AppCompatActivity {
         isLiked = extras.getBoolean("stateLiked", false);
         numLikes = extras.getInt("numLikes", 0);
         mktplaceID = extras.getString("mktplaceID");
+        creatorName = extras.getString("name");
+        creatorResidence = extras.getInt("residence");
+        profilePictureUri = extras.getString("profilePictureUri");
+        telegram = extras.getString("telegram");
+        email = extras.getString("email");
+        phone = extras.getLong("phone");
 
         mNumLikesTextView.setText(Integer.toString(numLikes));
 
@@ -179,6 +194,22 @@ public class MktplacePage extends AppCompatActivity {
 
                     MainActivity.mLikeMktplaceIDs.remove(mktplaceID);
                 }
+            }
+        });
+
+        mTextView4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("creatorfid", creatorID);
+                intent.putExtra("name", creatorName);
+                intent.putExtra("residence", creatorResidence);
+                intent.putExtra("dpUri", profilePictureUri);
+                intent.putExtra("telegram", telegram);
+                intent.putExtra("email", email);
+                intent.putExtra("phone", phone);
+                getApplicationContext().startActivity(intent);
             }
         });
     }

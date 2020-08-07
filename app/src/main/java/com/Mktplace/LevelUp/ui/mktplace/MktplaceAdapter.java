@@ -100,7 +100,13 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                     intent.putExtra("mktplaceID", mktPlaceID);
                     intent.putExtra("creatorName", creatorName);
                     intent.putExtra("stateLiked", isLiked);
-
+                    intent.putExtra("creatorfid", creatorUid);
+                    intent.putExtra("name", creatorName);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
                     intent.putExtra("numLikes", numLikes);
 
                     context.startActivity(intent);
