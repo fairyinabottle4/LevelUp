@@ -36,7 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItemClickListener {
+public class MktplaceFragment extends Fragment {
     private static ArrayList<MktplaceItem> mktplaceItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -45,7 +45,6 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseReference mDatabaseRef;
-    private MktplaceAdapter.OnItemClickListener mListener = this;
 
     public static boolean refresh;
 
@@ -115,7 +114,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new MktplaceAdapter(getContext(), mktplaceItemList, this);
+        mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -181,30 +180,6 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
-    @Override
-    public void onItemClick(int position) {
-        MktplaceItem mItem = mktplaceItemList.get(position);
-        Intent intent = new Intent(getActivity(), MktplacePage.class);
-        intent.putExtra("description", mItem.getDescription());
-        intent.putExtra("title", mItem.getName());
-        intent.putExtra("location", mItem.getLocation());
-        intent.putExtra("imageurl", mItem.getImageUrl());
-        intent.putExtra("creatorID", mItem.getCreatorID());
-        intent.putExtra("mktplaceID", mItem.getMktPlaceID());
-
-        boolean isLiked = MainActivity.mLikeMktplaceIDs.contains(mItem.getMktPlaceID());
-        intent.putExtra("stateLiked", isLiked);
-
-        intent.putExtra("numLikes", mItem.getNumLikes());
-
-        startActivity(intent);
-    }
-
-    public static void setMktplaceItemList(ArrayList<MktplaceItem> list) {
-        mktplaceItemList = list;
-    }
-
     public void loadDataMktplace() {
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -215,7 +190,7 @@ public class MktplaceFragment extends Fragment implements MktplaceAdapter.OnItem
                     mktplaceItemList.add(upload);
                 }
 
-                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList, mListener);
+                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
                 mRecyclerView.setAdapter(mAdapter);
             }
 

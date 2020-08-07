@@ -15,6 +15,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Events.LevelUp.ui.events.EventPage;
@@ -36,21 +37,16 @@ import java.util.List;
 
 public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.MktplaceViewHolder> implements Filterable {
     //ArrayList is passed in from MktplaceItem.java
-    private Context mContext;
+    private FragmentActivity mContext;
 
     private ArrayList<MktplaceItem> mMktplaceList;
     private ArrayList<MktplaceItem> mMktplaceListFull;
-    private OnItemClickListener mAdapterListener;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserRef;
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
     //the ViewHolder holds the content of the card
-    public static class MktplaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class MktplaceViewHolder extends RecyclerView.ViewHolder {
         public String creatorUid;
         public String creatorName;
         public String mktPlaceID;
@@ -63,14 +59,16 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         public ImageView mImageView;
         public TextView mTitle;
         public TextView mCreatorName;
-        private OnItemClickListener mListener;
+        public String description;
+        public String location;
+        public String imageUrl;
 
         public ToggleButton mLikeButton;
         public TextView mNumLikes;
         public boolean isLiked;
         public int numLikes;
 
-        public MktplaceViewHolder(final Context context, View itemView, final OnItemClickListener listener) {
+        public MktplaceViewHolder(final Context context, View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mNumLikes = itemView.findViewById(R.id.numlikes_textview);
@@ -90,14 +88,26 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                     context.startActivity(intent);
                 }
             });
-            mListener = listener;
-            itemView.setOnClickListener(this);
-            mLikeButton = itemView.findViewById(R.id.image_like);
-        }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, MktplacePage.class);
+                    intent.putExtra("description", description);
+                    intent.putExtra("title", mTitle.getText().toString());
+                    intent.putExtra("location", location);
+                    intent.putExtra("imageurl", imageUrl);
+                    intent.putExtra("creatorID", creatorUid);
+                    intent.putExtra("mktplaceID", mktPlaceID);
+                    intent.putExtra("creatorName", creatorName);
+                    intent.putExtra("stateLiked", isLiked);
 
-        @Override
-        public void onClick(View v) {
-            mListener.onItemClick(getAdapterPosition());
+                    intent.putExtra("numLikes", numLikes);
+
+                    context.startActivity(intent);
+
+                }
+            });
+            mLikeButton = itemView.findViewById(R.id.image_like);
         }
 
         public void setCreatorUid(String newUID) {
@@ -129,11 +139,10 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MktplaceAdapter(Context context, ArrayList<MktplaceItem> MktplaceList, OnItemClickListener listener) {
+    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> MktplaceList) {
         this.mContext = context;
         mMktplaceList = MktplaceList;
         mMktplaceListFull = new ArrayList<>(MktplaceList);
-        mAdapterListener = listener;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserRef = mFirebaseDatabase.getReference("Users");
     }
@@ -143,7 +152,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     @Override
     public MktplaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.marketplace_item, parent, false);
-        MktplaceViewHolder evh = new MktplaceViewHolder(mContext,v, mAdapterListener);
+        MktplaceViewHolder evh = new MktplaceViewHolder(mContext,v);
         return evh;
     }
 
@@ -152,7 +161,12 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         MktplaceItem uploadCurrent = mMktplaceList.get(position);
         String imageUrl = uploadCurrent.getImageUrl();
         holder.mTitle.setText(uploadCurrent.getName());
-
+        holder.setLiked(MainActivity.mLikeMktplaceIDs.contains(uploadCurrent.getMktPlaceID()));
+        holder.description = uploadCurrent.getDescription();
+        holder.location = uploadCurrent.getLocation();
+        holder.imageUrl = uploadCurrent.getImageUrl();
+        holder.numLikes = uploadCurrent.getNumLikes();
+        holder.mktPlaceID = uploadCurrent.getMktPlaceID();
         final String creatorUID = uploadCurrent.getCreatorID();
         holder.setCreatorUid(creatorUID);
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -322,4 +336,8 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         this.mMktplaceList = mMktplaceListFull;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
