@@ -41,6 +41,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             mReviewerName = itemView.findViewById(R.id.author);
             mReviewDate = itemView.findViewById(R.id.date);
             mReview = itemView.findViewById(R.id.review_description);
+            //h
         }
     }
 
