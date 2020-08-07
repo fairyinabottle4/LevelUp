@@ -47,13 +47,14 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
     private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseReference mDatabaseRef;
     private MktplaceCreatedAdapter.OnItemClickListener mListener = this;
+    TextView nothingView;
 
     public static boolean refresh;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.mktplace_plain, container, false);
-        TextView nothingView = rootView.findViewById(R.id.nothing);
+         nothingView = rootView.findViewById(R.id.nothing);
 
         createMktplaceList();
 
@@ -62,12 +63,6 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
         loadDataMktplace();
-
-        if (!mktplaceItemList.isEmpty()) {
-            nothingView.setVisibility(View.VISIBLE);
-        } else {
-            nothingView.setVisibility(View.GONE);
-        }
 
         return rootView;
     }
@@ -115,7 +110,9 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
                         mktplaceItemList.add(upload);
                     }
                 }
-
+                if (mktplaceItemList.isEmpty()) {
+                    nothingView.setVisibility(View.VISIBLE);
+                }
                 mAdapter = new MktplaceCreatedAdapter(getActivity(), mktplaceItemList, mListener);
                 mRecyclerView.setAdapter(mAdapter);
             }

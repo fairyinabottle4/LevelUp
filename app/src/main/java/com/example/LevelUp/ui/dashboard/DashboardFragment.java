@@ -259,6 +259,10 @@ public class DashboardFragment extends Fragment {
                 for (int i = 0; i < 5; i++) {
                     topFive.add(mOccasionAll.get(i));
                 }
+                if (topFive.size() == 0) {
+                    TextView t = rootView.findViewById(R.id.today_textView);
+                    t.setText("\n" + "There is nothing here at the moment :(" + "\n");
+                }
 
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
                 mAdapterTrending = dashboardAdapter;
@@ -474,6 +478,12 @@ public class DashboardFragment extends Fragment {
                 mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
                 mOccasionNewlyCreated.addAll(mNewlyCreatedJios);
                 MainActivity.sort(mOccasionNewlyCreated);
+
+                if (mOccasionNewlyCreated.size() == 0) {
+                    TextView t = rootView.findViewById(R.id.today_textView);
+                    t.setText("\n" + "There is nothing here at the moment :(" + "\n");
+                }
+
 
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionNewlyCreated);
                 mAdapterNewlyCreated = dashboardAdapter;

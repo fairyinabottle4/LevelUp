@@ -89,11 +89,6 @@ public class MktplaceFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        if (!mktplaceItemList.isEmpty()) {
-            nothingView.setVisibility(View.VISIBLE);
-        } else {
-            nothingView.setVisibility(View.GONE);
-        }
         return rootView;
     }
 
@@ -198,6 +193,9 @@ public class MktplaceFragment extends Fragment {
                     mktplaceItemList.add(upload);
                 }
 
+                if (mktplaceItemList.isEmpty()) {
+                    nothingView.setVisibility(View.VISIBLE);
+                }
                 mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
                 mRecyclerView.setAdapter(mAdapter);
             }
