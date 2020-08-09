@@ -22,10 +22,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.Events.LevelUp.ui.events.EventsLikedFragment;
 import com.MainActivity;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
+import com.Mktplace.LevelUp.ui.mktplace.MktplaceLikedFragment;
 import com.Mktplace.LevelUp.ui.mktplace.MktplacePage;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -148,6 +150,15 @@ public class MktplaceFragment extends Fragment {
                     }
                 });
 
+                break;
+
+            case R.id.action_fav: // the heart
+                MktplaceLikedFragment nextFrag2 = new MktplaceLikedFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, nextFrag2)
+                        .addToBackStack(null)
+                        .commit();
+                Toast.makeText(getActivity(), "asd", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
