@@ -158,7 +158,6 @@ public class MktplaceFragment extends Fragment {
                         .replace(R.id.nav_host_fragment, nextFrag2)
                         .addToBackStack(null)
                         .commit();
-                Toast.makeText(getActivity(), "asd", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +36,7 @@ import java.util.Date;
 public class MktplaceLikedFragment extends Fragment {
   private RecyclerView mRecyclerView;
   private RecyclerView.LayoutManager mLayoutManager;
-  private MktplaceAdapter mAdapter;
+  private MktplaceLikedAdapter mAdapter;
   private View rootView;
 
   public static ArrayList<String> mMktplaceIDs = new ArrayList<>();
@@ -62,8 +64,8 @@ public class MktplaceLikedFragment extends Fragment {
 
   public void buildRecyclerView() {
     mRecyclerView = rootView.findViewById(R.id.recyclerview);
-    mLayoutManager = new LinearLayoutManager(getContext());
-    mAdapter = new MktplaceAdapter(getActivity(), mMktplaceItems);
+    mLayoutManager = new GridLayoutManager(getActivity(), 2);
+    mAdapter = new MktplaceLikedAdapter(getActivity(), mMktplaceItems);
     mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.setAdapter(mAdapter);
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -82,7 +84,6 @@ public class MktplaceLikedFragment extends Fragment {
           String selectedUserID = selected.getUserID();
           if (selectedUserID.equals(fbUIDFinal)) {
             mMktplaceIDs.add(selected.getOccasionID());
-            // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
           }
         }
       }
@@ -92,7 +93,7 @@ public class MktplaceLikedFragment extends Fragment {
 
       }
     });
-    DatabaseReference mDatabaseReferenceMktplace = mFirebaseDatabase.getReference().child("mkplace uploads");
+    DatabaseReference mDatabaseReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
     mDatabaseReferenceMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -104,7 +105,7 @@ public class MktplaceLikedFragment extends Fragment {
             mMktplaceItems.add(selected);
           }
         }
-        MktplaceAdapter mktplaceAdapter = new MktplaceAdapter(getActivity(), mMktplaceItems);
+        MktplaceLikedAdapter mktplaceAdapter = new MktplaceLikedAdapter(getActivity(), mMktplaceItems);
         mAdapter = mktplaceAdapter;
         mRecyclerView.setAdapter(mAdapter);
 
