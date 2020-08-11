@@ -260,15 +260,21 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         telegramHandle = telegramBox.getText().toString().trim();
 
         if (telegramHandle.isEmpty()) {
-            editTextName.setError("Please enter your name");
-            editTextName.requestFocus();
+            telegramBox.setError("Please enter your telegram handle");
+            telegramBox.requestFocus();
             allowed = false;
         }
     }
 
     private void registerPhone() {
         String phoneString = phoneBox.getText().toString().trim();
-        phoneNumber = Long.parseLong(phoneString);
+        if (phoneString.isEmpty()) {
+            phoneBox.setError("Please enter your phone number");
+            phoneBox.requestFocus();
+            allowed = false;
+        } else {
+            phoneNumber = Long.parseLong(phoneString);
+        }
     }
 
     private void sendToDatabase() {

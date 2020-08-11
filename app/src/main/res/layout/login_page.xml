@@ -59,7 +59,7 @@
             android:id="@+id/enter_telegram_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Telegram Handle"
+            android:hint="Edit Telegram Handle"
             app:layout_constraintTop_toBottomOf="@id/residential_spinner"
             app:layout_constraintStart_toStartOf="@id/residential_spinner" />
 
@@ -68,7 +68,7 @@
             android:id="@+id/enter_phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Phone Number"
+            android:hint="Edit Phone Number"
             app:layout_constraintTop_toBottomOf="@+id/enter_telegram_handle"
             app:layout_constraintStart_toStartOf="@id/enter_telegram_handle" />
 
