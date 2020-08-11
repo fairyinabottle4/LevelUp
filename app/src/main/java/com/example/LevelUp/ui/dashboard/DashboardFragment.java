@@ -256,8 +256,12 @@ public class DashboardFragment extends Fragment {
                     }});
 
                 ArrayList<Occasion> topFive = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
-                    topFive.add(mOccasionAll.get(i));
+                if (mOccasionAll.size() > 4) {
+                    for (int i = 0; i < 5; i++) {
+                        topFive.add(mOccasionAll.get(i));
+                    }
+                } else {
+                    topFive.addAll(mOccasionAll);
                 }
                 if (topFive.size() == 0) {
                     TextView t = rootView.findViewById(R.id.today_textView);
@@ -430,9 +434,14 @@ public class DashboardFragment extends Fragment {
                 }
 
                 //add into mNewlyCreatedEvents
-                for (int i = mOccasionEvents.size() - 1; i > mOccasionEvents.size() - 4; i--) {
-                    mNewlyCreatedEvents.add(mOccasionEvents.get(i));
+                if (mOccasionEvents.size() > 3) {
+                    for (int i = mOccasionEvents.size() - 1; i > mOccasionEvents.size() - 4; i--) {
+                        mNewlyCreatedEvents.add(mOccasionEvents.get(i));
+                    }
+                } else {
+                    mNewlyCreatedEvents.addAll(mOccasionJios);
                 }
+
             }
 
             @Override
@@ -470,8 +479,12 @@ public class DashboardFragment extends Fragment {
                 }
 
                 //add into mNewlyCreatedJios
-                for (int i = mOccasionJios.size() - 1; i > mOccasionJios.size() - 4; i--) {
-                    mNewlyCreatedJios.add(mOccasionJios.get(i));
+                if (mOccasionJios.size() > 3) {
+                    for (int i = mOccasionJios.size() - 1; i > mOccasionJios.size() - 4; i--) {
+                        mNewlyCreatedJios.add(mOccasionJios.get(i));
+                    }
+                } else {
+                    mNewlyCreatedJios.addAll(mOccasionJios);
                 }
 
                 //logic for creating Newly Added
