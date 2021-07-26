@@ -138,12 +138,15 @@ public class MylistFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        // it is my event so I add EventID into arraylist
-                        mEventIDs.add(selected.getOccasionID());
-
+                    try {
+                        ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            // it is my event so I add EventID into arraylist
+                            mEventIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -159,10 +162,14 @@ public class MylistFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mJioIDs.add(selected.getOccasionID());
+                    try {
+                        ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            mJioIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -182,28 +189,32 @@ public class MylistFragment extends Fragment {
                 mOccasionEvents.clear();
                 mOccasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(EventsItem.class);
-                    String eventID = selected.getOccasionID();
-                    if (mEventIDs.contains(eventID)) {
-                        if (selected.getTimeInfo().length() > 4) {
-                            continue;
+                    try {
+                        Occasion selected = snapshot.getValue(EventsItem.class);
+                        String eventID = selected.getOccasionID();
+                        if (mEventIDs.contains(eventID)) {
+                            if (selected.getTimeInfo().length() > 4) {
+                                continue;
+                            }
+
+                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                            int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                            Date eventDateZero = selected.getDateInfo();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(eventDateZero);
+                            cal.set(Calendar.HOUR_OF_DAY, hour);
+                            cal.set(Calendar.MINUTE, min);
+                            Date eventDate = cal.getTime();
+
+
+                            Date currentDate = new Date();
+                            if (eventDate.compareTo(currentDate) >= 0) {
+                                mOccasionEvents.add(selected);
+                            }
                         }
-
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
-
-                        Date eventDateZero = selected.getDateInfo();
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(eventDateZero);
-                        cal.set(Calendar.HOUR_OF_DAY, hour);
-                        cal.set(Calendar.MINUTE, min);
-                        Date eventDate = cal.getTime();
-
-
-                        Date currentDate = new Date();
-                        if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionEvents.add(selected);
-                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -230,28 +241,32 @@ public class MylistFragment extends Fragment {
                 mOccasionJios.clear();
                 mOccasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
-                    if (mJioIDs.contains(jioID)) {
-                        if (selected.getTimeInfo().length() > 4) {
-                            continue;
+                    try {
+                        Occasion selected = snapshot.getValue(JiosItem.class);
+                        String jioID = selected.getOccasionID();
+                        if (mJioIDs.contains(jioID)) {
+                            if (selected.getTimeInfo().length() > 4) {
+                                continue;
+                            }
+
+                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                            int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                            Date eventDateZero = selected.getDateInfo();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(eventDateZero);
+                            cal.set(Calendar.HOUR_OF_DAY, hour);
+                            cal.set(Calendar.MINUTE, min);
+                            Date eventDate = cal.getTime();
+
+
+                            Date currentDate = new Date();
+                            if (eventDate.compareTo(currentDate) >= 0) {
+                                mOccasionJios.add(selected);
+                            }
                         }
-
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
-
-                        Date eventDateZero = selected.getDateInfo();
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(eventDateZero);
-                        cal.set(Calendar.HOUR_OF_DAY, hour);
-                        cal.set(Calendar.MINUTE, min);
-                        Date eventDate = cal.getTime();
-
-
-                        Date currentDate = new Date();
-                        if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionJios.add(selected);
-                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
@@ -301,21 +316,25 @@ public class MylistFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserItem selected = snapshot.getValue(UserItem.class);
-                    String id = selected.getId();
+                    try {
+                        UserItem selected = snapshot.getValue(UserItem.class);
+                        String id = selected.getId();
 
-                    if (fbUIDFinal.equals(id)) {
-                        user = selected;
-                        String disp_name = user.getName();
-                        MainActivity.display_name = disp_name;
-                        nameFinal.setText(disp_name);
+                        if (fbUIDFinal.equals(id)) {
+                            user = selected;
+                            String disp_name = user.getName();
+                            MainActivity.display_name = disp_name;
+                            nameFinal.setText(disp_name);
 
-                        intToRes(user.getResidential());
-                        resiFinal.setText(residence_name);
-                        MainActivity.display_residential = residence_name;
+                            intToRes(user.getResidential());
+                            resiFinal.setText(residence_name);
+                            MainActivity.display_residential = residence_name;
 
-                        MainActivity.display_phone = user.getPhone();
-                        MainActivity.display_telegram = user.getTelegram();
+                            MainActivity.display_phone = user.getPhone();
+                            MainActivity.display_telegram = user.getTelegram();
+                        }
+                    } catch (Exception e) {
+                        System.out.print(e);
                     }
                 }
             }
