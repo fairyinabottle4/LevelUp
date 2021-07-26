@@ -439,9 +439,9 @@ public class DashboardFragment extends Fragment {
                         mNewlyCreatedEvents.add(mOccasionEvents.get(i));
                     }
                 } else {
-                    mNewlyCreatedEvents.addAll(mOccasionJios);
+                    mNewlyCreatedEvents.addAll(mOccasionEvents);
                 }
-
+                mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
             }
 
             @Override
@@ -449,7 +449,6 @@ public class DashboardFragment extends Fragment {
 
             }
         });
-
         mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -463,7 +462,6 @@ public class DashboardFragment extends Fragment {
                     if (selected.getTimeInfo().length() > 4) {
                         continue;
                     }
-
                     int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
                     int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
@@ -488,15 +486,12 @@ public class DashboardFragment extends Fragment {
                     mNewlyCreatedJios.addAll(mOccasionJios);
                 }
                 //logic for creating Newly Added
-                mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
                 mOccasionNewlyCreated.addAll(mNewlyCreatedJios);
                 MainActivity.sort(mOccasionNewlyCreated);
                 if (mOccasionNewlyCreated.size() == 0) {
                     TextView t = rootView.findViewById(R.id.today_textView);
                     t.setText("\n" + "There is nothing here at the moment :(" + "\n");
                 }
-
-
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionNewlyCreated);
                 mAdapterNewlyCreated = dashboardAdapter;
                 mRecyclerViewNewlyCreated.setAdapter(mAdapterNewlyCreated);
