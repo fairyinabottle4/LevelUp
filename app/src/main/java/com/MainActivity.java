@@ -111,11 +111,15 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mEventIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        // it is my event so I add EventID into arraylist
-                        mEventIDs.add(selected.getOccasionID());
+                    try {
+                        ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            // it is my event so I add EventID into arraylist
+                            mEventIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -131,10 +135,14 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mJioIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mJioIDs.add(selected.getOccasionID());
+                    try {
+                        ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            mJioIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -158,11 +166,15 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mLikeEventIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        // it is my LikeEvent so I add EventID into arraylist
-                        mLikeEventIDs.add(selected.getOccasionID());
+                    try {
+                        LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            // it is my LikeEvent so I add EventID into arraylist
+                            mLikeEventIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -178,10 +190,14 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mLikeJioIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mLikeJioIDs.add(selected.getOccasionID());
+                    try {
+                        LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            mLikeJioIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -197,10 +213,14 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mLikeMktplaceIDs.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mLikeMktplaceIDs.add(selected.getOccasionID());
+                    try {
+                        LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(fbUIDFinal)) {
+                            mLikeMktplaceIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -219,14 +239,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserItem selected = snapshot.getValue(UserItem.class);
-                    String id = selected.getId();
-                    if (fbUIDfinal.equals(id)) {
-                        currUser = selected;
-                        currUser.setProfilePictureUri(currUserProfilePicture);
-                        initializeMyList();
-                        initializeMyLikes();
-                        break;
+                    try {
+                        UserItem selected = snapshot.getValue(UserItem.class);
+                        String id = selected.getId();
+                        if (fbUIDfinal.equals(id)) {
+                            currUser = selected;
+                            currUser.setProfilePictureUri(currUserProfilePicture);
+                            initializeMyList();
+                            initializeMyLikes();
+                            break;
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 if (!existInFirebase()){
