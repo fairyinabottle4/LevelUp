@@ -455,6 +455,8 @@ public class DashboardFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionJios.clear();
                 mOccasionAll.clear();
+                mNewlyCreatedJios.clear();
+                mNewlyCreatedEvents.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
@@ -477,7 +479,6 @@ public class DashboardFragment extends Fragment {
                         mOccasionJios.add(selected);
                     }
                 }
-
                 //add into mNewlyCreatedJios
                 if (mOccasionJios.size() > 3) {
                     for (int i = mOccasionJios.size() - 1; i > mOccasionJios.size() - 4; i--) {
@@ -486,12 +487,10 @@ public class DashboardFragment extends Fragment {
                 } else {
                     mNewlyCreatedJios.addAll(mOccasionJios);
                 }
-
                 //logic for creating Newly Added
                 mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
                 mOccasionNewlyCreated.addAll(mNewlyCreatedJios);
                 MainActivity.sort(mOccasionNewlyCreated);
-
                 if (mOccasionNewlyCreated.size() == 0) {
                     TextView t = rootView.findViewById(R.id.today_textView);
                     t.setText("\n" + "There is nothing here at the moment :(" + "\n");
