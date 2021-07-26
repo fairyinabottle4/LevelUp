@@ -45,38 +45,39 @@ public class DashboardFragment extends Fragment {
 
     public static boolean refresh;
 
-    private RecyclerView mRecyclerViewTrending;
-    private LinearLayoutManager mLayoutManagerTrending;
-    private DashboardAdapter mAdapterTrending;
+    private RecyclerView recyclerViewTrending;
+    private LinearLayoutManager layoutManagerTrending;
+    private DashboardAdapter adapterTrending;
 
-    private RecyclerView mRecyclerViewToday;
-    private LinearLayoutManager mLayoutManagerToday;
-    private DashboardAdapter mAdapterToday;
+    private RecyclerView recyclerViewToday;
+    private LinearLayoutManager layoutManagerToday;
+    private DashboardAdapter adapterToday;
 
-    private RecyclerView mRecyclerViewNewlyCreated;
-    private LinearLayoutManager mLayoutManagerNewlyCreated;
-    private DashboardAdapter mAdapterNewlyCreated;
+    private RecyclerView recyclerViewNewlyCreated;
+    private LinearLayoutManager layoutManagerNewlyCreated;
+    private DashboardAdapter adapterNewlyCreated;
 
-    ArrayList<Occasion> mOccasionAll = new ArrayList<>();
-    ArrayList<Occasion> mOccasionTrending = new ArrayList<>();
-    ArrayList<Occasion> mOccasionToday = new ArrayList<>();
-    ArrayList<Occasion> mNewlyCreatedJios = new ArrayList<>();
-    ArrayList<Occasion> mNewlyCreatedEvents = new ArrayList<>();
-    ArrayList<Occasion> mOccasionNewlyCreated = new ArrayList<>();
+    ArrayList<Occasion> occasionAll = new ArrayList<>();
+    ArrayList<Occasion> occastionTrending = new ArrayList<>();
+    ArrayList<Occasion> occasionToday = new ArrayList<>();
+    ArrayList<Occasion> newlyCreatedJios = new ArrayList<>();
+    ArrayList<Occasion> newlyCreatedEvents = new ArrayList<>();
+    ArrayList<Occasion> occasionNewlyCreated = new ArrayList<>();
 
-    ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
-    ArrayList<Occasion> mOccasionJios = new ArrayList<>();
+    ArrayList<Occasion> occasionEvents = new ArrayList<>();
+    ArrayList<Occasion> occasionJios = new ArrayList<>();
     ArrayList<String> mEventIDs = new ArrayList<>();
     ArrayList<String> mJioIDs = new ArrayList<>();
 
-    private DatabaseReference mDatabaseReferenceEvents;
-    private DatabaseReference mDatabaseReferenceJios;
-    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference databaseReferenceEvents;
+    private DatabaseReference databaseReferenceJios;
+    private FirebaseDatabase firebaseDatabase;
 
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         // setting up toolbar
@@ -90,7 +91,7 @@ public class DashboardFragment extends Fragment {
         buildTodayRecyclerView();
         buildNewlyCreatedRecyclerView();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
         initializeListTrending();
         initializeListToday();
@@ -100,45 +101,45 @@ public class DashboardFragment extends Fragment {
     }
 
     public void buildTrendingRecyclerView() {
-        mRecyclerViewTrending = rootView.findViewById(R.id.trending);
-        mLayoutManagerTrending = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewTrending = rootView.findViewById(R.id.trending);
+        layoutManagerTrending = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
 //        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapterTrending = new DashboardAdapter(getActivity(), mOccasionTrending);
-        mRecyclerViewTrending.setLayoutManager(mLayoutManagerTrending);
-        mRecyclerViewTrending.setAdapter(mAdapterTrending);
-        mRecyclerViewTrending.setItemAnimator(new DefaultItemAnimator());
+        adapterTrending = new DashboardAdapter(getActivity(), occastionTrending);
+        recyclerViewTrending.setLayoutManager(layoutManagerTrending);
+        recyclerViewTrending.setAdapter(adapterTrending);
+        recyclerViewTrending.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void buildTodayRecyclerView() {
-        mRecyclerViewToday = rootView.findViewById(R.id.today);
-        mLayoutManagerToday = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewToday = rootView.findViewById(R.id.today);
+        layoutManagerToday = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
 //        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapterToday = new DashboardAdapter(getActivity(), mOccasionToday);
-        mRecyclerViewToday.setLayoutManager(mLayoutManagerToday);
-        mRecyclerViewToday.setAdapter(mAdapterToday);
-        mRecyclerViewToday.setItemAnimator(new DefaultItemAnimator());
+        adapterToday = new DashboardAdapter(getActivity(), occasionToday);
+        recyclerViewToday.setLayoutManager(layoutManagerToday);
+        recyclerViewToday.setAdapter(adapterToday);
+        recyclerViewToday.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void buildNewlyCreatedRecyclerView() {
-        mRecyclerViewNewlyCreated = rootView.findViewById(R.id.newOccasions);
-        mLayoutManagerNewlyCreated = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewNewlyCreated = rootView.findViewById(R.id.newOccasions);
+        layoutManagerNewlyCreated = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
 //        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
 //                mLayoutManager.getOrientation());
 //        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mAdapterNewlyCreated = new DashboardAdapter(getActivity(), mOccasionNewlyCreated);
-        mRecyclerViewNewlyCreated.setLayoutManager(mLayoutManagerNewlyCreated);
-        mRecyclerViewNewlyCreated.setAdapter(mAdapterNewlyCreated);
-        mRecyclerViewNewlyCreated.setItemAnimator(new DefaultItemAnimator());
+        adapterNewlyCreated = new DashboardAdapter(getActivity(), occasionNewlyCreated);
+        recyclerViewNewlyCreated.setLayoutManager(layoutManagerNewlyCreated);
+        recyclerViewNewlyCreated.setAdapter(adapterNewlyCreated);
+        recyclerViewNewlyCreated.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -166,14 +167,14 @@ public class DashboardFragment extends Fragment {
     }
 
     public void initializeListTrending() {
-        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
+        databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
 
-        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+        databaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionEvents.clear();
-                mOccasionAll.clear();
+                occasionEvents.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     if (selected.getTimeInfo().length() > 4) {
@@ -193,14 +194,14 @@ public class DashboardFragment extends Fragment {
 
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasionEvents.add(selected);
+                        occasionEvents.add(selected);
                     }
                 }
 
-                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
-                copyOfFullEvents.addAll(mOccasionJios);
-                mOccasionAll = copyOfFullEvents;
-                MainActivity.sort(mOccasionAll);
+                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(occasionEvents);
+                copyOfFullEvents.addAll(occasionJios);
+                occasionAll = copyOfFullEvents;
+                MainActivity.sort(occasionAll);
             }
 
             @Override
@@ -209,11 +210,11 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        databaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
-                mOccasionAll.clear();
+                occasionJios.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
@@ -234,34 +235,34 @@ public class DashboardFragment extends Fragment {
 
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasionJios.add(selected);
+                        occasionJios.add(selected);
                     }
                 }
 
-                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
-                copyOfFullJios.addAll(mOccasionEvents);
+                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(occasionJios);
+                copyOfFullJios.addAll(occasionEvents);
 
-                mOccasionAll = copyOfFullJios;
+                occasionAll = copyOfFullJios;
 
-                MainActivity.sort(mOccasionAll);
+                MainActivity.sort(occasionAll);
 
-                // At this point, mOccasionAll will have full list of Occasions
+                // At this point, occasionAll will have full list of Occasions
                 // Sort by likes then take 1st 5
 
                 // LOGIC GOES FROM HERE
 
-                Collections.sort(mOccasionAll, new Comparator<Occasion>(){
+                Collections.sort(occasionAll, new Comparator<Occasion>(){
                     public int compare(Occasion s1,Occasion s2) {
                         return s2.getNumLikes() - s1.getNumLikes();
                     }});
 
                 ArrayList<Occasion> topFive = new ArrayList<>();
-                if (mOccasionAll.size() > 4) {
+                if (occasionAll.size() > 4) {
                     for (int i = 0; i < 5; i++) {
-                        topFive.add(mOccasionAll.get(i));
+                        topFive.add(occasionAll.get(i));
                     }
                 } else {
-                    topFive.addAll(mOccasionAll);
+                    topFive.addAll(occasionAll);
                 }
                 if (topFive.size() == 0) {
                     TextView t = rootView.findViewById(R.id.today_textView);
@@ -269,8 +270,8 @@ public class DashboardFragment extends Fragment {
                 }
 
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), topFive);
-                mAdapterTrending = dashboardAdapter;
-                mRecyclerViewTrending.setAdapter(mAdapterTrending);
+                adapterTrending = dashboardAdapter;
+                recyclerViewTrending.setAdapter(adapterTrending);
             }
 
             @Override
@@ -282,14 +283,14 @@ public class DashboardFragment extends Fragment {
 
     public void initializeListToday() {
 
-        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
+        databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
 
-        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+        databaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionEvents.clear();
-                mOccasionAll.clear();
+                occasionEvents.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     if (selected.getTimeInfo().length() > 4) {
@@ -309,13 +310,13 @@ public class DashboardFragment extends Fragment {
 
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasionEvents.add(selected);
+                        occasionEvents.add(selected);
                     }
                 }
 
-                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
-                copyOfFullEvents.addAll(mOccasionJios);
-                mOccasionAll = copyOfFullEvents;
+                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(occasionEvents);
+                copyOfFullEvents.addAll(occasionJios);
+                occasionAll = copyOfFullEvents;
             }
 
             @Override
@@ -324,11 +325,11 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        databaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
-                mOccasionAll.clear();
+                occasionJios.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
@@ -349,16 +350,16 @@ public class DashboardFragment extends Fragment {
 
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasionJios.add(selected);
+                        occasionJios.add(selected);
                     }
                 }
 
-                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
-                copyOfFullJios.addAll(mOccasionEvents);
+                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(occasionJios);
+                copyOfFullJios.addAll(occasionEvents);
 
-                mOccasionAll = copyOfFullJios;
+                occasionAll = copyOfFullJios;
 
-                // At this point, mOccasionAll will have full list of Occasions
+                // At this point, occasionAll will have full list of Occasions
                 // LOGIC GOES FROM HERE
                 // get Today's date but set time to 0
                 // get all Occasions that are compareTo returns 0
@@ -371,7 +372,7 @@ public class DashboardFragment extends Fragment {
 
                 ArrayList<Occasion> todayOcc = new ArrayList<>();
 
-                for (Occasion occ : mOccasionAll) {
+                for (Occasion occ : occasionAll) {
                     if (occ.getDateInfo().compareTo(currentDate) == 0) {
                         todayOcc.add(occ);
                     }
@@ -384,8 +385,8 @@ public class DashboardFragment extends Fragment {
                 }
 
                 DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), todayOcc);
-                mAdapterToday = dashboardAdapter;
-                mRecyclerViewToday.setAdapter(mAdapterToday);
+                adapterToday = dashboardAdapter;
+                recyclerViewToday.setAdapter(adapterToday);
             }
 
             @Override
@@ -399,17 +400,17 @@ public class DashboardFragment extends Fragment {
 
     public void initializeListNewlyCreated() {
 
-        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
+        databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
 
-        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+        databaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionEvents.clear();
-                mOccasionAll.clear();
-                mNewlyCreatedJios.clear();
-                mNewlyCreatedEvents.clear();
-                mOccasionNewlyCreated.clear();
+                occasionEvents.clear();
+                occasionAll.clear();
+                newlyCreatedJios.clear();
+                newlyCreatedEvents.clear();
+                occasionNewlyCreated.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     if (selected.getTimeInfo().length() > 4) {
@@ -429,19 +430,19 @@ public class DashboardFragment extends Fragment {
 
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasionEvents.add(selected);
+                        occasionEvents.add(selected);
                     }
                 }
 
-                //add into mNewlyCreatedEvents
-                if (mOccasionEvents.size() > 3) {
-                    for (int i = mOccasionEvents.size() - 1; i > mOccasionEvents.size() - 4; i--) {
-                        mNewlyCreatedEvents.add(mOccasionEvents.get(i));
+                //add into newlyCreatedEvents
+                if (occasionEvents.size() > 3) {
+                    for (int i = occasionEvents.size() - 1; i > occasionEvents.size() - 4; i--) {
+                        newlyCreatedEvents.add(occasionEvents.get(i));
                     }
                 } else {
-                    mNewlyCreatedEvents.addAll(mOccasionJios);
+                    newlyCreatedEvents.addAll(occasionEvents);
                 }
-
+                occasionNewlyCreated.addAll(newlyCreatedEvents);
             }
 
             @Override
@@ -449,19 +450,19 @@ public class DashboardFragment extends Fragment {
 
             }
         });
-
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        databaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
-                mOccasionAll.clear();
+                occasionJios.clear();
+                occasionAll.clear();
+                newlyCreatedJios.clear();
+                newlyCreatedEvents.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
                     if (selected.getTimeInfo().length() > 4) {
                         continue;
                     }
-
                     int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
                     int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
@@ -474,33 +475,27 @@ public class DashboardFragment extends Fragment {
 
                     Date currentDate = new Date();
                     if (eventDate.compareTo(currentDate) >= 0) {
-                        mOccasionJios.add(selected);
+                        occasionJios.add(selected);
                     }
                 }
-
-                //add into mNewlyCreatedJios
-                if (mOccasionJios.size() > 3) {
-                    for (int i = mOccasionJios.size() - 1; i > mOccasionJios.size() - 4; i--) {
-                        mNewlyCreatedJios.add(mOccasionJios.get(i));
+                //add into newlyCreatedJios
+                if (occasionJios.size() > 3) {
+                    for (int i = occasionJios.size() - 1; i > occasionJios.size() - 4; i--) {
+                        newlyCreatedJios.add(occasionJios.get(i));
                     }
                 } else {
-                    mNewlyCreatedJios.addAll(mOccasionJios);
+                    newlyCreatedJios.addAll(occasionJios);
                 }
-
                 //logic for creating Newly Added
-                mOccasionNewlyCreated.addAll(mNewlyCreatedEvents);
-                mOccasionNewlyCreated.addAll(mNewlyCreatedJios);
-                MainActivity.sort(mOccasionNewlyCreated);
-
-                if (mOccasionNewlyCreated.size() == 0) {
+                occasionNewlyCreated.addAll(newlyCreatedJios);
+                MainActivity.sort(occasionNewlyCreated);
+                if (occasionNewlyCreated.size() == 0) {
                     TextView t = rootView.findViewById(R.id.today_textView);
                     t.setText("\n" + "There is nothing here at the moment :(" + "\n");
                 }
-
-
-                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), mOccasionNewlyCreated);
-                mAdapterNewlyCreated = dashboardAdapter;
-                mRecyclerViewNewlyCreated.setAdapter(mAdapterNewlyCreated);
+                DashboardAdapter dashboardAdapter = new DashboardAdapter(getActivity(), occasionNewlyCreated);
+                adapterNewlyCreated = dashboardAdapter;
+                recyclerViewNewlyCreated.setAdapter(adapterNewlyCreated);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
