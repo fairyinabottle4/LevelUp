@@ -266,32 +266,36 @@ public class EventsFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 EventsItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventsItem selected = snapshot.getValue(EventsItem.class);
-                    // EventsItemList.add(selected);
+                    try {
+                        EventsItem selected = snapshot.getValue(EventsItem.class);
+                        // EventsItemList.add(selected);
 
-                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
+                        // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
 
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
-                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
 
-                    Date currentDate = new Date();
-                    // eventDate.compareTo(currentDate) >= 0
-                    //eventDate.after(currentDate)
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        EventsItemList.add(selected);
+                        Date currentDate = new Date();
+                        // eventDate.compareTo(currentDate) >= 0
+                        //eventDate.after(currentDate)
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            EventsItemList.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 copy = new ArrayList<>(EventsItemList);

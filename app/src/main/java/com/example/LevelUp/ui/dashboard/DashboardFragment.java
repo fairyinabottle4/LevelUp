@@ -176,25 +176,29 @@ public class DashboardFragment extends Fragment {
                 occasionEvents.clear();
                 occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(EventsItem.class);
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                    try {
+                        Occasion selected = snapshot.getValue(EventsItem.class);
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
 
-                    Date currentDate = new Date();
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        occasionEvents.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            occasionEvents.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -216,26 +220,30 @@ public class DashboardFragment extends Fragment {
                 occasionJios.clear();
                 occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                    try {
+                        Occasion selected = snapshot.getValue(JiosItem.class);
+                        String jioID = selected.getOccasionID();
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
 
-                    Date currentDate = new Date();
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        occasionJios.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            occasionJios.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -292,25 +300,29 @@ public class DashboardFragment extends Fragment {
                 occasionEvents.clear();
                 occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(EventsItem.class);
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                    try {
+                        Occasion selected = snapshot.getValue(EventsItem.class);
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
 
-                    Date currentDate = new Date();
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        occasionEvents.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            occasionEvents.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -331,26 +343,30 @@ public class DashboardFragment extends Fragment {
                 occasionJios.clear();
                 occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                    try {
+                        Occasion selected = snapshot.getValue(JiosItem.class);
+                        String jioID = selected.getOccasionID();
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
 
-                    Date currentDate = new Date();
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        occasionJios.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            occasionJios.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -412,25 +428,29 @@ public class DashboardFragment extends Fragment {
                 newlyCreatedEvents.clear();
                 occasionNewlyCreated.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(EventsItem.class);
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                    try  {
+                        Occasion selected = snapshot.getValue(EventsItem.class);
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
 
-                    Date currentDate = new Date();
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        occasionEvents.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            occasionEvents.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
@@ -458,24 +478,28 @@ public class DashboardFragment extends Fragment {
                 newlyCreatedJios.clear();
                 newlyCreatedEvents.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                    try {
+                        Occasion selected = snapshot.getValue(JiosItem.class);
+                        String jioID = selected.getOccasionID();
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
-                    Date currentDate = new Date();
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        occasionJios.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            occasionJios.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 //add into newlyCreatedJios

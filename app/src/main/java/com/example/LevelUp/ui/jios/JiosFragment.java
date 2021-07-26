@@ -266,29 +266,33 @@ public class JiosFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 JiosItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    JiosItem selected = snapshot.getValue(JiosItem.class);
-                    // JiosItemList.add(selected);
+                    try {
+                        JiosItem selected = snapshot.getValue(JiosItem.class);
+                        // JiosItemList.add(selected);
 
-                    // To show ALL Jios created comment out lines 224 to 242 and uncomment out line 220
+                        // To show ALL Jios created comment out lines 224 to 242 and uncomment out line 220
 
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
-                    Date currentDate = new Date();
+                        Date currentDate = new Date();
 
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        JiosItemList.add(selected);
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            JiosItemList.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 copy = new ArrayList<>(JiosItemList);
