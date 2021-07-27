@@ -61,7 +61,8 @@ public class JiosFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_jios, container, false);
 
         database = FirebaseDatabase.getInstance();
@@ -71,17 +72,12 @@ public class JiosFragment extends Fragment {
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
         floatingActionButton.setAlpha(0.50f); // setting transparency
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), JiosAdder.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), JiosAdder.class);
+            startActivity(intent);
         });
 
         loadDataJios();
-
-
         // setting up Toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.jios_toolbar);
@@ -89,14 +85,11 @@ public class JiosFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutjios);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                JiosItemList.clear();
-                loadDataJios();
-                adapter.notifyDataSetChanged();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            JiosItemList.clear();
+            loadDataJios();
+            adapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         return rootView;
@@ -123,8 +116,6 @@ public class JiosFragment extends Fragment {
 
                 MenuItem searchItem = item;
                 SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
                 searchItem.setActionView(searchView);
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -201,9 +192,6 @@ public class JiosFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-//                JiosItemList.clear();
-//                loadDataJios();
-//                adapter.notifyDataSetChanged();
                 adapter.resetAdapter();
                 recyclerView.setAdapter(adapter);
                 closeKeyboard();
@@ -211,28 +199,17 @@ public class JiosFragment extends Fragment {
             }
         });
 
-        // ???
-        // searchItem.setOnMenuItemClickListener()
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void closeKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         }
-    }
-
-
-    public static void setJiosItemList(ArrayList<JiosItem> jioslist) {
-        JiosItemList = jioslist;
-    }
-
-    public static ArrayList<JiosItem> getJiosItemListCopy() {
-        return copy;
     }
 
     public static ArrayList<JiosItem> getJiosItemList() {
@@ -243,9 +220,6 @@ public class JiosFragment extends Fragment {
         //This arraylist will contain only those in the certain categories
         ArrayList<JiosItem> list = new ArrayList<>();
         JiosAdapter jiosAdapter;
-//        if (categoryID == 0) {
-//            jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-//        } else {
             //filter by id
             for (JiosItem jiosItem : JiosItemList) {
                 if (jiosItem.getCategory() == categoryID) {
@@ -253,7 +227,6 @@ public class JiosFragment extends Fragment {
                 }
             }
             jiosAdapter = new JiosAdapter(getActivity(), list);
-        // }
         recyclerView.setAdapter(jiosAdapter);
         adapter = jiosAdapter;
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -268,9 +241,6 @@ public class JiosFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
                         JiosItem selected = snapshot.getValue(JiosItem.class);
-                        // JiosItemList.add(selected);
-
-                        // To show ALL Jios created comment out lines 224 to 242 and uncomment out line 220
 
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
@@ -298,7 +268,7 @@ public class JiosFragment extends Fragment {
                 copy = new ArrayList<>(JiosItemList);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
                 recyclerView.setAdapter(jiosAdapter);
-                adapter = jiosAdapter; // YI EN ADDED THIS LINE
+                adapter = jiosAdapter;
                 MainActivity.sort(JiosItemList);
             }
 
