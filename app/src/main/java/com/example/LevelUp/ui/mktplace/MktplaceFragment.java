@@ -42,14 +42,14 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class MktplaceFragment extends Fragment {
-    private static ArrayList<MktplaceItem> mktplaceItemList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MktplaceAdapter mAdapter;
+    private static ArrayList<MktplaceItem> MktplaceItemList;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MktplaceAdapter adapter;
     private View rootView;
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private DatabaseReference mDatabaseRef;
+    private DatabaseReference databaseRef;
     TextView nothingView;
     public static boolean refresh;
 
@@ -71,7 +71,7 @@ public class MktplaceFragment extends Fragment {
             }
         });
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
+        databaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
         loadDataMktplace();
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutmktplace);
@@ -86,7 +86,7 @@ public class MktplaceFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mktplaceItemList.clear();
+                MktplaceItemList.clear();
                 loadDataMktplace();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -113,16 +113,16 @@ public class MktplaceFragment extends Fragment {
      */
 
     public void createMktplaceList() {
-        mktplaceItemList = new ArrayList<>();
+        MktplaceItemList = new ArrayList<>();
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        adapter = new MktplaceAdapter(getActivity(), MktplaceItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -145,7 +145,7 @@ public class MktplaceFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
+                        adapter.getFilter().filter(newText);
                         return false;
                     }
                 });
@@ -181,8 +181,8 @@ public class MktplaceFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+                adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 return true;
             }
         });
@@ -194,20 +194,20 @@ public class MktplaceFragment extends Fragment {
     }
 
     public void loadDataMktplace() {
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mktplaceItemList.clear();
+                MktplaceItemList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-                    mktplaceItemList.add(upload);
+                    MktplaceItemList.add(upload);
                 }
 
-                if (mktplaceItemList.isEmpty()) {
+                if (MktplaceItemList.isEmpty()) {
                     nothingView.setVisibility(View.VISIBLE);
                 }
-                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
-                mRecyclerView.setAdapter(mAdapter);
+                adapter = new MktplaceAdapter(getActivity(), MktplaceItemList);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -215,7 +215,7 @@ public class MktplaceFragment extends Fragment {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public static void setRefresh(boolean toSet) {
