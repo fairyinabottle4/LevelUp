@@ -62,9 +62,9 @@ public class EventsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
-
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference().child("Events");
@@ -74,12 +74,9 @@ public class EventsFragment extends Fragment {
         floatingActionButton = rootView.findViewById(R.id.fab);
         if (MainActivity.getCurrentUser() != null && MainActivity.getCurrentUser().getIsStaff()) {
             floatingActionButton.setAlpha(0.50f); // setting transparency
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), EventsAdder.class);
-                    startActivity(intent);
-                }
+            floatingActionButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), EventsAdder.class);
+                startActivity(intent);
             });
         } else {
             floatingActionButton.setVisibility(View.INVISIBLE);
@@ -93,14 +90,11 @@ public class EventsFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
 
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutevents);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                EventsItemList.clear();
-                loadDataEvents();
-                // adapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            EventsItemList.clear();
+            loadDataEvents();
+            // adapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         return rootView;
@@ -235,8 +229,6 @@ public class EventsFragment extends Fragment {
                     try {
                         EventsItem selected = snapshot.getValue(EventsItem.class);
 
-                        // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
-
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
@@ -262,7 +254,7 @@ public class EventsFragment extends Fragment {
                 copy = new ArrayList<>(EventsItemList);
                 EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
                 recyclerView.setAdapter(eventsAdapter);
-                adapter = eventsAdapter; // YI EN ADDED THIS LINE
+                adapter = eventsAdapter;
                 MainActivity.sort(EventsItemList);
             }
 
