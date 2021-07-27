@@ -22,13 +22,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.Events.LevelUp.ui.events.EventsLikedFragment;
-import com.MainActivity;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdapter;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceAdder;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceItem;
 import com.Mktplace.LevelUp.ui.mktplace.MktplaceLikedFragment;
-import com.Mktplace.LevelUp.ui.mktplace.MktplacePage;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -36,8 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -55,7 +50,8 @@ public class MktplaceFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mktplace, container, false);
         nothingView = rootView.findViewById(R.id.nothing2);
         createMktplaceList();
@@ -63,12 +59,9 @@ public class MktplaceFragment extends Fragment {
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab_mktplace);
         floatingActionButton.setAlpha(0.50f); // setting transparency
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MktplaceAdder.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MktplaceAdder.class);
+            startActivity(intent);
         });
 
         databaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
@@ -83,34 +76,13 @@ public class MktplaceFragment extends Fragment {
         assert activity != null;
         activity.setSupportActionBar(toolbar);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                MktplaceItemList.clear();
-                loadDataMktplace();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            MktplaceItemList.clear();
+            loadDataMktplace();
+            swipeRefreshLayout.setRefreshing(false);
         });
         return rootView;
     }
-
-    /*
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        mktplaceViewModel =
-                ViewModelProviders.of(this).get(MktplaceViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_mktplace, container, false);
-        final TextView textView = root.findViewById(R.id.text_mktplace);
-        mktplaceViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
-    }
-
-     */
 
     public void createMktplaceList() {
         MktplaceItemList = new ArrayList<>();
@@ -186,10 +158,6 @@ public class MktplaceFragment extends Fragment {
                 return true;
             }
         });
-
-        // ???
-        // searchItem.setOnMenuItemClickListener()
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
