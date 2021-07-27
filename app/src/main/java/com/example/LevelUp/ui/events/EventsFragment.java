@@ -1,26 +1,8 @@
 package com.example.LevelUp.ui.events;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.Events.LevelUp.ui.events.EventsAdapter;
 import com.Events.LevelUp.ui.events.EventsAdder;
@@ -36,16 +18,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class EventsFragment extends Fragment {
     private static ArrayList<EventsItem> EventsItemList;
     private static ArrayList<EventsItem> copy;
-    FirebaseDatabase database;
-    DatabaseReference databaseReference;
-    ValueEventListener valueEventListener;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private ValueEventListener valueEventListener;
     private static final String[] categories = {"All",
             "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private RecyclerView recyclerView;
@@ -117,61 +116,61 @@ public class EventsFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_search:
-                MenuItem searchItem = item;
-                SearchView searchView = (SearchView) searchItem.getActionView();
-                searchItem.setActionView(searchView);
+        case R.id.action_search:
+            MenuItem searchItem = item;
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchItem.setActionView(searchView);
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
-                break;
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
+            break;
 
-            case R.id.action_filter:
-                break;
-            case R.id.subitem1:
-                loadDataEvents();
-            case R.id.subitem2:
-                getSelectedCategoryData(0);
-                break;
-            case R.id.subitem3:
-                getSelectedCategoryData(1);
-                break;
-            case R.id.subitem4:
-                getSelectedCategoryData(2);
-                break;
-            case R.id.subitem5:
-                getSelectedCategoryData(3);
-                break;
-            case R.id.subitem6:
-                getSelectedCategoryData(4);
-                break;
-            case R.id.subitem7:
-                getSelectedCategoryData(5);
-                break;
-            case R.id.action_cfmed_events: // the tick
-                EventsMyListFragment nextFrag = new EventsMyListFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case R.id.action_fav: // the heart
-                EventsLikedFragment nextFrag2 = new EventsLikedFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag2)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        case R.id.action_filter:
+            break;
+        case R.id.subitem1:
+            loadDataEvents();
+        case R.id.subitem2:
+            getSelectedCategoryData(0);
+            break;
+        case R.id.subitem3:
+            getSelectedCategoryData(1);
+            break;
+        case R.id.subitem4:
+            getSelectedCategoryData(2);
+            break;
+        case R.id.subitem5:
+            getSelectedCategoryData(3);
+            break;
+        case R.id.subitem6:
+            getSelectedCategoryData(4);
+            break;
+        case R.id.subitem7:
+            getSelectedCategoryData(5);
+            break;
+        case R.id.action_cfmed_events: // the tick
+            EventsMyListFragment nextFrag = new EventsMyListFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
+            break;
+        case R.id.action_fav: // the heart
+            EventsLikedFragment nextFrag2 = new EventsLikedFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag2)
+                    .addToBackStack(null)
+                    .commit();
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -217,7 +216,9 @@ public class EventsFragment extends Fragment {
         EventsItemList = eventsList;
     }
 
-    public static ArrayList<EventsItem> getEventsItemList() { return EventsItemList; }
+    public static ArrayList<EventsItem> getEventsItemList() {
+        return EventsItemList;
+    }
 
     public void loadDataEvents() {
         valueEventListener = new ValueEventListener() {
@@ -233,7 +234,7 @@ public class EventsFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -271,13 +272,13 @@ public class EventsFragment extends Fragment {
         //This arraylist will contain only those in the certain categories
         ArrayList<EventsItem> list = new ArrayList<>();
         EventsAdapter eventsAdapter;
-            //filter by id
-            for (EventsItem eventsItem : EventsItemList) {
-                if (eventsItem.getCategory() == categoryID) {
-                    list.add(eventsItem);
-                }
+        //filter by id
+        for (EventsItem eventsItem : EventsItemList) {
+            if (eventsItem.getCategory() == categoryID) {
+                list.add(eventsItem);
             }
-            eventsAdapter = new EventsAdapter(getActivity(), list);
+        }
+        eventsAdapter = new EventsAdapter(getActivity(), list);
         recyclerView.setAdapter(eventsAdapter);
         adapter = eventsAdapter;
         recyclerView.setItemAnimator(new DefaultItemAnimator());
