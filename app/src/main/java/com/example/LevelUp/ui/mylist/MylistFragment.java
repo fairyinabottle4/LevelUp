@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +29,6 @@ import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.CreatedFragment;
 import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
-import com.Mylist.LevelUp.ui.mylist.HistoryEventsFragment;
 import com.Mylist.LevelUp.ui.mylist.HistoryFragment;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
@@ -47,44 +45,36 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class MylistFragment extends Fragment {
-//    ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
-//    ArrayList<Occasion> mOccasionListJiosInitial = new ArrayList<>();
-    // ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
+    ArrayList<Occasion> occasionAll = new ArrayList<>();
+    ArrayList<Occasion> occasionEvents = new ArrayList<>();
+    ArrayList<Occasion> occasionJios = new ArrayList<>();
+    ArrayList<String> eventIDs = new ArrayList<>();
+    ArrayList<String> jioIDs = new ArrayList<>();
 
-    ArrayList<Occasion> mOccasionAll = new ArrayList<>();
-    ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
-    ArrayList<Occasion> mOccasionJios = new ArrayList<>();
-    ArrayList<String> mEventIDs = new ArrayList<>();
-    ArrayList<String> mJioIDs = new ArrayList<>();
-
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MylistAdapter adapter;
     private View rootView;
 
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReferenceEvents;
-    private DatabaseReference mDatabaseReferenceJios;
-    private DatabaseReference mDatabaseReferenceActivityEvent;
-    private DatabaseReference mDatabaseReferenceActivityJio;
-    private DatabaseReference mDatabaseReferenceUser;
-
-    ValueEventListener mValueEventListenerEvents;
-    ValueEventListener mValueEventListenerJios;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReferenceEvents;
+    private DatabaseReference databaseReferenceJios;
+    private DatabaseReference databaseReferenceActivityEvent;
+    private DatabaseReference databaseReferenceActivityJio;
+    private DatabaseReference databaseReferenceUser;
 
     private ImageButton editUserInfoBtn;
 
-    private StorageReference mProfileStorageRef;
+    private StorageReference profileStorageRef;
 
     private UserItem user;
-    private String residence_name;
+    private String residenceName;
 
     private TextView name;
     private TextView resi;
@@ -96,7 +86,8 @@ public class MylistFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
         name = rootView.findViewById(R.id.user_display_name);
         resi = rootView.findViewById(R.id.user_display_resi);
@@ -111,7 +102,7 @@ public class MylistFragment extends Fragment {
             resi.setText(MainActivity.display_residential);
         }
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
         buildRecyclerView();
 
@@ -130,11 +121,11 @@ public class MylistFragment extends Fragment {
     }
 
     public void initializeList() {
-        mEventIDs.clear();
-        mJioIDs.clear();
+        eventIDs.clear();
+        jioIDs.clear();
         final String fbUIDFinal = fbUID;
-        mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
-        mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
+        databaseReferenceActivityEvent = firebaseDatabase.getReference().child("ActivityEvent");
+        databaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -143,7 +134,7 @@ public class MylistFragment extends Fragment {
                         String selectedUserID = selected.getUserID();
                         if (selectedUserID.equals(fbUIDFinal)) {
                             // it is my event so I add EventID into arraylist
-                            mEventIDs.add(selected.getOccasionID());
+                            eventIDs.add(selected.getOccasionID());
                         }
                     } catch (Exception e) {
                         System.out.println(e);
@@ -157,8 +148,8 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
-        mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
+        databaseReferenceActivityJio = firebaseDatabase.getReference().child("ActivityJio");
+        databaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -166,7 +157,7 @@ public class MylistFragment extends Fragment {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         String selectedUserID = selected.getUserID();
                         if (selectedUserID.equals(fbUIDFinal)) {
-                            mJioIDs.add(selected.getOccasionID());
+                            jioIDs.add(selected.getOccasionID());
                         }
                     } catch (Exception e) {
                         System.out.println(e);
@@ -180,19 +171,19 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
+        databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
 
-        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+        databaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionEvents.clear();
-                mOccasionAll.clear();
+                occasionEvents.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
                         Occasion selected = snapshot.getValue(EventsItem.class);
                         String eventID = selected.getOccasionID();
-                        if (mEventIDs.contains(eventID)) {
+                        if (eventIDs.contains(eventID)) {
                             if (selected.getTimeInfo().length() > 4) {
                                 continue;
                             }
@@ -210,7 +201,7 @@ public class MylistFragment extends Fragment {
 
                             Date currentDate = new Date();
                             if (eventDate.compareTo(currentDate) >= 0) {
-                                mOccasionEvents.add(selected);
+                                occasionEvents.add(selected);
                             }
                         }
                     } catch (Exception e) {
@@ -218,15 +209,15 @@ public class MylistFragment extends Fragment {
                     }
                 }
 
-                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
-                copyOfFullEvents.addAll(mOccasionJios);
-                mOccasionAll = copyOfFullEvents;
+                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(occasionEvents);
+                copyOfFullEvents.addAll(occasionJios);
+                occasionAll = copyOfFullEvents;
 
-                MainActivity.sort(mOccasionAll);
+                MainActivity.sort(occasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
-                mAdapter = myListAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), occasionAll);
+                adapter = myListAdapter;
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -235,16 +226,16 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        databaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
-                mOccasionAll.clear();
+                occasionJios.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
                         Occasion selected = snapshot.getValue(JiosItem.class);
                         String jioID = selected.getOccasionID();
-                        if (mJioIDs.contains(jioID)) {
+                        if (jioIDs.contains(jioID)) {
                             if (selected.getTimeInfo().length() > 4) {
                                 continue;
                             }
@@ -262,23 +253,23 @@ public class MylistFragment extends Fragment {
 
                             Date currentDate = new Date();
                             if (eventDate.compareTo(currentDate) >= 0) {
-                                mOccasionJios.add(selected);
+                                occasionJios.add(selected);
                             }
                         }
                     } catch (Exception e) {
                         System.out.println(e);
                     }
                 }
-                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
-                copyOfFullJios.addAll(mOccasionEvents);
+                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(occasionJios);
+                copyOfFullJios.addAll(occasionEvents);
 
-                mOccasionAll = copyOfFullJios;
+                occasionAll = copyOfFullJios;
 
-                MainActivity.sort(mOccasionAll);
+                MainActivity.sort(occasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
-                mAdapter = myListAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), occasionAll);
+                adapter = myListAdapter;
+                recyclerView.setAdapter(adapter);
 
             }
 
@@ -287,7 +278,7 @@ public class MylistFragment extends Fragment {
 
             }
         });
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public void initializeUserDetails() {
@@ -295,10 +286,10 @@ public class MylistFragment extends Fragment {
         final TextView nameFinal = name;
         final TextView resiFinal = resi;
 
-        mProfileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
-        mProfileStorageRef = mProfileStorageRef.child(fbUID);
+        profileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
+        profileStorageRef = profileStorageRef.child(fbUID);
 
-        mProfileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        profileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Glide.with(getContext()).load(uri).into(profilePic);
@@ -311,8 +302,8 @@ public class MylistFragment extends Fragment {
         });
 
         // Pulling user from Firebase
-        mDatabaseReferenceUser = mFirebaseDatabase.getReference().child("Users");
-        mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceUser = firebaseDatabase.getReference().child("Users");
+        databaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -327,8 +318,8 @@ public class MylistFragment extends Fragment {
                             nameFinal.setText(disp_name);
 
                             intToRes(user.getResidential());
-                            resiFinal.setText(residence_name);
-                            MainActivity.display_residential = residence_name;
+                            resiFinal.setText(residenceName);
+                            MainActivity.display_residential = residenceName;
 
                             MainActivity.display_phone = user.getPhone();
                             MainActivity.display_telegram = user.getTelegram();
@@ -351,12 +342,9 @@ public class MylistFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         editUserInfoBtn = (ImageButton) getView().findViewById(R.id.edit_user_info_btn);
 
-        editUserInfoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), EditUserInfoActivity.class);
-                startActivity(intent);
-            }
+        editUserInfoBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditUserInfoActivity.class);
+            startActivity(intent);
         });
 
         super.onViewCreated(view, savedInstanceState);
@@ -364,73 +352,61 @@ public class MylistFragment extends Fragment {
 
     public void intToRes(int x) {
         if (x == 0) {
-            residence_name = "Off Campus";
+            residenceName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residenceName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residenceName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residenceName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residenceName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residenceName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residenceName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residenceName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residenceName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residenceName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residenceName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residenceName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residenceName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residenceName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residenceName = "UTown Residence";
         }
 
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionAll);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new MylistAdapter(getActivity(), occasionAll);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
-//    @Override
-//    public void onResume() {
-//        if (refresh) {
-//            refresh = false;
-//            getActivity().getSupportFragmentManager().beginTransaction()
-//                    .detach(MylistFragment.this)
-//                    .attach(MylistFragment.this)
-//                    .commit();
-//        }
-//        super.onResume();
-//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -440,8 +416,6 @@ public class MylistFragment extends Fragment {
 
                 MenuItem searchItem = item;
                 SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
                 searchItem.setActionView(searchView);
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -452,7 +426,7 @@ public class MylistFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
+                        adapter.getFilter().filter(newText);
                         return false;
                     }
                 });
@@ -498,14 +472,11 @@ public class MylistFragment extends Fragment {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // reset list
-                mAdapter = mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+                adapter = adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 return true;
             }
         });
-
-        // ???
-        // searchItem.setOnMenuItemClickListener()
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -526,7 +497,6 @@ public class MylistFragment extends Fragment {
         }
         if (refreshList) {
             initializeList();
-            // Toast.makeText(getActivity(), "asdasd", Toast.LENGTH_SHORT).show();
             refreshList = false;
         }
         super.onResume();
