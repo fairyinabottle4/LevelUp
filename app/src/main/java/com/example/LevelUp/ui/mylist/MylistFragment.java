@@ -1,27 +1,8 @@
 package com.example.LevelUp.ui.mylist;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventsItem;
@@ -46,16 +27,34 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistFragment extends Fragment {
-    ArrayList<Occasion> occasionAll = new ArrayList<>();
-    ArrayList<Occasion> occasionEvents = new ArrayList<>();
-    ArrayList<Occasion> occasionJios = new ArrayList<>();
-    ArrayList<String> eventIDs = new ArrayList<>();
-    ArrayList<String> jioIDs = new ArrayList<>();
+    private ArrayList<Occasion> occasionAll = new ArrayList<>();
+    private ArrayList<Occasion> occasionEvents = new ArrayList<>();
+    private ArrayList<Occasion> occasionJios = new ArrayList<>();
+    private ArrayList<String> eventIDs = new ArrayList<>();
+    private ArrayList<String> jioIDs = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -81,8 +80,8 @@ public class MylistFragment extends Fragment {
     private ImageView profilePic;
     private String firebaseUserId;
 
-    private static boolean refreshUserDetails;
     private static boolean refreshList;
+    private static boolean refreshUserDetails;
 
     @Nullable
     @Override
@@ -313,9 +312,9 @@ public class MylistFragment extends Fragment {
 
                         if (firebaseUserIdFinal.equals(id)) {
                             user = selected;
-                            String disp_name = user.getName();
-                            MainActivity.display_name = disp_name;
-                            nameFinal.setText(disp_name);
+                            String displayName = user.getName();
+                            MainActivity.display_name = displayName;
+                            nameFinal.setText(displayName);
 
                             intToRes(user.getResidential());
                             resiFinal.setText(residenceName);
