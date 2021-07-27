@@ -3,7 +3,6 @@ package com.example.LevelUp.ui.dashboard;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 import com.Dashboard.LevelUp.ui.dashboard.DashboardAdapter;
@@ -101,10 +100,6 @@ public class DashboardFragment extends Fragment {
         recyclerViewTrending = rootView.findViewById(R.id.trending);
         layoutManagerTrending = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLayoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
         adapterTrending = new DashboardAdapter(getActivity(), occastionTrending);
         recyclerViewTrending.setLayoutManager(layoutManagerTrending);
         recyclerViewTrending.setAdapter(adapterTrending);
@@ -114,11 +109,6 @@ public class DashboardFragment extends Fragment {
     public void buildTodayRecyclerView() {
         recyclerViewToday = rootView.findViewById(R.id.today);
         layoutManagerToday = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLayoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
         adapterToday = new DashboardAdapter(getActivity(), occasionToday);
         recyclerViewToday.setLayoutManager(layoutManagerToday);
         recyclerViewToday.setAdapter(adapterToday);
@@ -128,11 +118,6 @@ public class DashboardFragment extends Fragment {
     public void buildNewlyCreatedRecyclerView() {
         recyclerViewNewlyCreated = rootView.findViewById(R.id.newOccasions);
         layoutManagerNewlyCreated = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-//                mLayoutManager.getOrientation());
-//        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
         adapterNewlyCreated = new DashboardAdapter(getActivity(), occasionNewlyCreated);
         recyclerViewNewlyCreated.setLayoutManager(layoutManagerNewlyCreated);
         recyclerViewNewlyCreated.setAdapter(adapterNewlyCreated);
@@ -256,11 +241,7 @@ public class DashboardFragment extends Fragment {
 
                 // LOGIC GOES FROM HERE
 
-                Collections.sort(occasionAll, new Comparator<Occasion>() {
-                    public int compare(Occasion s1, Occasion s2) {
-                        return s2.getNumLikes() - s1.getNumLikes();
-                    }
-                });
+                Collections.sort(occasionAll, (s1, s2) -> s2.getNumLikes() - s1.getNumLikes());
 
                 ArrayList<Occasion> topFive = new ArrayList<>();
                 if (occasionAll.size() > 4) {
