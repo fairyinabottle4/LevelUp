@@ -1,32 +1,21 @@
 package com.example.LevelUp.ui.events;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,12 +27,7 @@ import com.Events.LevelUp.ui.events.EventsAdder;
 import com.Events.LevelUp.ui.events.EventsItem;
 import com.Events.LevelUp.ui.events.EventsLikedFragment;
 import com.Events.LevelUp.ui.events.EventsMyListFragment;
-import com.Jios.LevelUp.ui.jios.JiosAdapter;
-import com.Jios.LevelUp.ui.jios.JiosAdder;
-import com.Jios.LevelUp.ui.jios.JiosItem;
-import com.Jios.LevelUp.ui.jios.JiosMyListFragment;
 import com.MainActivity;
-import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -54,8 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 public class EventsFragment extends Fragment {
@@ -144,8 +126,6 @@ public class EventsFragment extends Fragment {
             case R.id.action_search:
                 MenuItem searchItem = item;
                 SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
                 searchItem.setActionView(searchView);
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -220,22 +200,12 @@ public class EventsFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-//                EventsItemList.clear();
-//                loadDataEvents();
-//                adapter.notifyDataSetChanged();
                 adapter.resetAdapter();
                 recyclerView.setAdapter(adapter);
                 closeKeyboard();
                 return true;
             }
         });
-
-//        MenuItem filterItem = menu.findItem(R.id.action_filter);
-//        Spinner spinnerMenu = (Spinner) filterItem.getActionView();
-//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(),
-//                android.R.layout.simple_spinner_item, categories);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerMenu.setAdapter(spinnerAdapter);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -253,10 +223,6 @@ public class EventsFragment extends Fragment {
         EventsItemList = eventsList;
     }
 
-    public static ArrayList<EventsItem> getEventsItemListCopy() {
-        return copy;
-    }
-
     public static ArrayList<EventsItem> getEventsItemList() { return EventsItemList; }
 
     public void loadDataEvents() {
@@ -268,7 +234,6 @@ public class EventsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
                         EventsItem selected = snapshot.getValue(EventsItem.class);
-                        // EventsItemList.add(selected);
 
                         // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
 
@@ -286,11 +251,7 @@ public class EventsFragment extends Fragment {
                         cal.set(Calendar.MINUTE, min);
                         Date eventDate = cal.getTime();
 
-                        // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
-
                         Date currentDate = new Date();
-                        // eventDate.compareTo(currentDate) >= 0
-                        //eventDate.after(currentDate)
                         if (eventDate.compareTo(currentDate) >= 0) {
                             EventsItemList.add(selected);
                         }
@@ -318,9 +279,6 @@ public class EventsFragment extends Fragment {
         //This arraylist will contain only those in the certain categories
         ArrayList<EventsItem> list = new ArrayList<>();
         EventsAdapter eventsAdapter;
-//        if (categoryID == 0) {
-//            eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-//        } else {
             //filter by id
             for (EventsItem eventsItem : EventsItemList) {
                 if (eventsItem.getCategory() == categoryID) {
@@ -328,7 +286,6 @@ public class EventsFragment extends Fragment {
                 }
             }
             eventsAdapter = new EventsAdapter(getActivity(), list);
-        // }
         recyclerView.setAdapter(eventsAdapter);
         adapter = eventsAdapter;
         recyclerView.setItemAnimator(new DefaultItemAnimator());
