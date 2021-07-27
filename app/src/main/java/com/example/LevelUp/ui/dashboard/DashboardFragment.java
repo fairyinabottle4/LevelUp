@@ -1,5 +1,24 @@
 package com.example.LevelUp.ui.dashboard;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+
+import com.Dashboard.LevelUp.ui.dashboard.DashboardAdapter;
+import com.Dashboard.LevelUp.ui.dashboard.DashboardSettingsActivity;
+import com.Events.LevelUp.ui.events.EventsItem;
+import com.Jios.LevelUp.ui.jios.JiosItem;
+import com.MainActivity;
+import com.example.LevelUp.ui.Occasion;
+import com.example.tryone.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,8 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,26 +36,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.Dashboard.LevelUp.ui.dashboard.DashboardAdapter;
-import com.Dashboard.LevelUp.ui.dashboard.DashboardSettingsActivity;
-import com.Events.LevelUp.ui.events.EventsItem;
-import com.Jios.LevelUp.ui.jios.JiosItem;
-import com.MainActivity;
-import com.example.LevelUp.ui.Occasion;
-import com.example.tryone.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 public class DashboardFragment extends Fragment {
     private View rootView;
@@ -57,17 +54,17 @@ public class DashboardFragment extends Fragment {
     private LinearLayoutManager layoutManagerNewlyCreated;
     private DashboardAdapter adapterNewlyCreated;
 
-    ArrayList<Occasion> occasionAll = new ArrayList<>();
-    ArrayList<Occasion> occastionTrending = new ArrayList<>();
-    ArrayList<Occasion> occasionToday = new ArrayList<>();
-    ArrayList<Occasion> newlyCreatedJios = new ArrayList<>();
-    ArrayList<Occasion> newlyCreatedEvents = new ArrayList<>();
-    ArrayList<Occasion> occasionNewlyCreated = new ArrayList<>();
+    private ArrayList<Occasion> occasionAll = new ArrayList<>();
+    private ArrayList<Occasion> occastionTrending = new ArrayList<>();
+    private ArrayList<Occasion> occasionToday = new ArrayList<>();
+    private ArrayList<Occasion> newlyCreatedJios = new ArrayList<>();
+    private ArrayList<Occasion> newlyCreatedEvents = new ArrayList<>();
+    private ArrayList<Occasion> occasionNewlyCreated = new ArrayList<>();
 
-    ArrayList<Occasion> occasionEvents = new ArrayList<>();
-    ArrayList<Occasion> occasionJios = new ArrayList<>();
-    ArrayList<String> mEventIDs = new ArrayList<>();
-    ArrayList<String> mJioIDs = new ArrayList<>();
+    private ArrayList<Occasion> occasionEvents = new ArrayList<>();
+    private ArrayList<Occasion> occasionJios = new ArrayList<>();
+    private ArrayList<String> mEventIDs = new ArrayList<>();
+    private ArrayList<String> mJioIDs = new ArrayList<>();
 
     private DatabaseReference databaseReferenceEvents;
     private DatabaseReference databaseReferenceJios;
@@ -146,11 +143,11 @@ public class DashboardFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_dashboard_settings:
-                Intent intent = new Intent(getActivity(), DashboardSettingsActivity.class);
-                startActivity(intent);
+        case R.id.action_dashboard_settings:
+            Intent intent = new Intent(getActivity(), DashboardSettingsActivity.class);
+            startActivity(intent);
 
-                break;
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -182,7 +179,7 @@ public class DashboardFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -227,7 +224,7 @@ public class DashboardFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -259,10 +256,11 @@ public class DashboardFragment extends Fragment {
 
                 // LOGIC GOES FROM HERE
 
-                Collections.sort(occasionAll, new Comparator<Occasion>(){
-                    public int compare(Occasion s1,Occasion s2) {
+                Collections.sort(occasionAll, new Comparator<Occasion>() {
+                    public int compare(Occasion s1, Occasion s2) {
                         return s2.getNumLikes() - s1.getNumLikes();
-                    }});
+                    }
+                });
 
                 ArrayList<Occasion> topFive = new ArrayList<>();
                 if (occasionAll.size() > 4) {
@@ -306,7 +304,7 @@ public class DashboardFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -350,7 +348,7 @@ public class DashboardFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -434,7 +432,7 @@ public class DashboardFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -484,7 +482,7 @@ public class DashboardFragment extends Fragment {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
