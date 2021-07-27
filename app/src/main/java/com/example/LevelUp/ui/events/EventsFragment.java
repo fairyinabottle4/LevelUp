@@ -61,14 +61,14 @@ import java.util.Date;
 public class EventsFragment extends Fragment {
     private static ArrayList<EventsItem> EventsItemList;
     private static ArrayList<EventsItem> copy;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
-    ValueEventListener mValueEventListener;
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
+    ValueEventListener valueEventListener;
     private static final String[] categories = {"All",
             "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private EventsAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private EventsAdapter adapter;
     private View rootView;
 
     public FloatingActionButton floatingActionButton;
@@ -84,8 +84,8 @@ public class EventsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
 
 
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Events");
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference().child("Events");
         createEventsList();
 
         buildRecyclerView();
@@ -116,7 +116,7 @@ public class EventsFragment extends Fragment {
             public void onRefresh() {
                 EventsItemList.clear();
                 loadDataEvents();
-                // mAdapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
+                // adapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -129,12 +129,12 @@ public class EventsFragment extends Fragment {
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new EventsAdapter(getActivity(), EventsItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new EventsAdapter(getActivity(), EventsItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class EventsFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
+                        adapter.getFilter().filter(newText);
                         return false;
                     }
                 });
@@ -222,9 +222,9 @@ public class EventsFragment extends Fragment {
             public boolean onMenuItemActionCollapse(MenuItem item) {
 //                EventsItemList.clear();
 //                loadDataEvents();
-//                mAdapter.notifyDataSetChanged();
-                mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+//                adapter.notifyDataSetChanged();
+                adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 closeKeyboard();
                 return true;
             }
@@ -260,7 +260,7 @@ public class EventsFragment extends Fragment {
     public static ArrayList<EventsItem> getEventsItemList() { return EventsItemList; }
 
     public void loadDataEvents() {
-        mValueEventListener = new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -300,8 +300,8 @@ public class EventsFragment extends Fragment {
                 }
                 copy = new ArrayList<>(EventsItemList);
                 EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-                mRecyclerView.setAdapter(eventsAdapter);
-                mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
+                recyclerView.setAdapter(eventsAdapter);
+                adapter = eventsAdapter; // YI EN ADDED THIS LINE
                 MainActivity.sort(EventsItemList);
             }
 
@@ -310,8 +310,8 @@ public class EventsFragment extends Fragment {
 
             }
         };
-        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
-        mAdapter.notifyDataSetChanged();
+        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        adapter.notifyDataSetChanged();
     }
 
     private void getSelectedCategoryData(int categoryID) {
@@ -329,9 +329,9 @@ public class EventsFragment extends Fragment {
             }
             eventsAdapter = new EventsAdapter(getActivity(), list);
         // }
-        mRecyclerView.setAdapter(eventsAdapter);
-        mAdapter = eventsAdapter;
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(eventsAdapter);
+        adapter = eventsAdapter;
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public static void setRefresh(boolean toSet) {
