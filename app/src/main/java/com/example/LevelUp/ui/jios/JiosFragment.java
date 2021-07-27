@@ -43,12 +43,12 @@ import java.util.Date;
 public class JiosFragment extends Fragment {
     private static ArrayList<JiosItem> JiosItemList;
     private static ArrayList<JiosItem> copy;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
-    ValueEventListener mValueEventListener;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private JiosAdapter mAdapter;
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
+    ValueEventListener valueEventListener;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private JiosAdapter adapter;
     private View rootView;
     public FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -64,8 +64,8 @@ public class JiosFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_jios, container, false);
 
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Jios");
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference().child("Jios");
         createJiosList();
 
         buildRecyclerView();
@@ -94,7 +94,7 @@ public class JiosFragment extends Fragment {
             public void onRefresh() {
                 JiosItemList.clear();
                 loadDataJios();
-                mAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -107,12 +107,12 @@ public class JiosFragment extends Fragment {
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new JiosAdapter(getActivity(), JiosItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new JiosAdapter(getActivity(), JiosItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -135,7 +135,7 @@ public class JiosFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
+                        adapter.getFilter().filter(newText);
                         return false;
                     }
                 });
@@ -203,9 +203,9 @@ public class JiosFragment extends Fragment {
             public boolean onMenuItemActionCollapse(MenuItem item) {
 //                JiosItemList.clear();
 //                loadDataJios();
-//                mAdapter.notifyDataSetChanged();
-                mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+//                adapter.notifyDataSetChanged();
+                adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 closeKeyboard();
                 return true;
             }
@@ -254,13 +254,13 @@ public class JiosFragment extends Fragment {
             }
             jiosAdapter = new JiosAdapter(getActivity(), list);
         // }
-        mRecyclerView.setAdapter(jiosAdapter);
-        mAdapter = jiosAdapter;
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(jiosAdapter);
+        adapter = jiosAdapter;
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void loadDataJios() {
-        mValueEventListener = new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -297,8 +297,8 @@ public class JiosFragment extends Fragment {
                 }
                 copy = new ArrayList<>(JiosItemList);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-                mRecyclerView.setAdapter(jiosAdapter);
-                mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
+                recyclerView.setAdapter(jiosAdapter);
+                adapter = jiosAdapter; // YI EN ADDED THIS LINE
                 MainActivity.sort(JiosItemList);
             }
 
@@ -307,7 +307,7 @@ public class JiosFragment extends Fragment {
 
             }
         };
-        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
+        databaseReference.addListenerForSingleValueEvent(valueEventListener);
     }
 
     public static void setRefresh(boolean toSet) {
