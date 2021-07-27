@@ -77,9 +77,9 @@ public class MylistFragment extends Fragment {
     private String residenceName;
 
     private TextView name;
-    private TextView resi;
+    private TextView residence;
     private ImageView profilePic;
-    private String fbUID;
+    private String firebaseUserId;
 
     private static boolean refreshUserDetails;
     private static boolean refreshList;
@@ -90,16 +90,16 @@ public class MylistFragment extends Fragment {
                              @Nullable final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
         name = rootView.findViewById(R.id.user_display_name);
-        resi = rootView.findViewById(R.id.user_display_resi);
+        residence = rootView.findViewById(R.id.user_display_resi);
         profilePic = rootView.findViewById(R.id.user_display_picture);
 
-        fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         if (MainActivity.display_name != null) {
             name.setText(MainActivity.display_name);
         }
         if (MainActivity.display_residential != null) {
-            resi.setText(MainActivity.display_residential);
+            residence.setText(MainActivity.display_residential);
         }
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -123,7 +123,7 @@ public class MylistFragment extends Fragment {
     public void initializeList() {
         eventIDs.clear();
         jioIDs.clear();
-        final String fbUIDFinal = fbUID;
+        final String firebaseUserIdFinal = firebaseUserId;
         databaseReferenceActivityEvent = firebaseDatabase.getReference().child("ActivityEvent");
         databaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
@@ -132,7 +132,7 @@ public class MylistFragment extends Fragment {
                     try {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(firebaseUserIdFinal)) {
                             // it is my event so I add EventID into arraylist
                             eventIDs.add(selected.getOccasionID());
                         }
@@ -156,7 +156,7 @@ public class MylistFragment extends Fragment {
                     try {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(firebaseUserIdFinal)) {
                             jioIDs.add(selected.getOccasionID());
                         }
                     } catch (Exception e) {
@@ -188,7 +188,7 @@ public class MylistFragment extends Fragment {
                                 continue;
                             }
 
-                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                             int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                             Date eventDateZero = selected.getDateInfo();
@@ -240,7 +240,7 @@ public class MylistFragment extends Fragment {
                                 continue;
                             }
 
-                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                             int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                             Date eventDateZero = selected.getDateInfo();
@@ -282,12 +282,12 @@ public class MylistFragment extends Fragment {
     }
 
     public void initializeUserDetails() {
-        final String fbUIDFinal = fbUID;
+        final String firebaseUserIdFinal = firebaseUserId;
         final TextView nameFinal = name;
-        final TextView resiFinal = resi;
+        final TextView resiFinal = residence;
 
         profileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
-        profileStorageRef = profileStorageRef.child(fbUID);
+        profileStorageRef = profileStorageRef.child(firebaseUserId);
 
         profileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -311,7 +311,7 @@ public class MylistFragment extends Fragment {
                         UserItem selected = snapshot.getValue(UserItem.class);
                         String id = selected.getId();
 
-                        if (fbUIDFinal.equals(id)) {
+                        if (firebaseUserIdFinal.equals(id)) {
                             user = selected;
                             String disp_name = user.getName();
                             MainActivity.display_name = disp_name;
@@ -412,41 +412,41 @@ public class MylistFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_search:
+        case R.id.action_search:
 
-                MenuItem searchItem = item;
-                SearchView searchView = (SearchView) searchItem.getActionView();
-                searchItem.setActionView(searchView);
+            MenuItem searchItem = item;
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchItem.setActionView(searchView);
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        adapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
 
-                break;
-            case R.id.action_createdoccasions:
-                CreatedFragment nextFrag= new CreatedFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+            break;
+        case R.id.action_createdoccasions:
+            CreatedFragment nextFrag = new CreatedFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
+            break;
 
-            case R.id.action_history:
-                HistoryFragment nextFrag2= new HistoryFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag2)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        case R.id.action_history:
+            HistoryFragment nextFrag2 = new HistoryFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag2)
+                    .addToBackStack(null)
+                    .commit();
+            break;
 
         }
         return super.onOptionsItemSelected(item);
