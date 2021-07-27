@@ -1,28 +1,8 @@
 package com.example.LevelUp.ui.mylist;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventsItem;
@@ -30,7 +10,6 @@ import com.Jios.LevelUp.ui.jios.JiosItem;
 import com.MainActivity;
 import com.Mylist.LevelUp.ui.mylist.CreatedFragment;
 import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
-import com.Mylist.LevelUp.ui.mylist.HistoryEventsFragment;
 import com.Mylist.LevelUp.ui.mylist.HistoryFragment;
 import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
 import com.UserItem;
@@ -47,71 +26,82 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistFragment extends Fragment {
-//    ArrayList<Occasion> mOccasionListEventsInitial = new ArrayList<>();
-//    ArrayList<Occasion> mOccasionListJiosInitial = new ArrayList<>();
-    // ArrayList<Occasion> mOccasionListReal = new ArrayList<>();
+    private ArrayList<Occasion> occasionAll = new ArrayList<>();
+    private ArrayList<Occasion> occasionEvents = new ArrayList<>();
+    private ArrayList<Occasion> occasionJios = new ArrayList<>();
+    private ArrayList<String> eventIDs = new ArrayList<>();
+    private ArrayList<String> jioIDs = new ArrayList<>();
 
-    ArrayList<Occasion> mOccasionAll = new ArrayList<>();
-    ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
-    ArrayList<Occasion> mOccasionJios = new ArrayList<>();
-    ArrayList<String> mEventIDs = new ArrayList<>();
-    ArrayList<String> mJioIDs = new ArrayList<>();
-
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MylistAdapter adapter;
     private View rootView;
 
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReferenceEvents;
-    private DatabaseReference mDatabaseReferenceJios;
-    private DatabaseReference mDatabaseReferenceActivityEvent;
-    private DatabaseReference mDatabaseReferenceActivityJio;
-    private DatabaseReference mDatabaseReferenceUser;
-
-    ValueEventListener mValueEventListenerEvents;
-    ValueEventListener mValueEventListenerJios;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReferenceEvents;
+    private DatabaseReference databaseReferenceJios;
+    private DatabaseReference databaseReferenceActivityEvent;
+    private DatabaseReference databaseReferenceActivityJio;
+    private DatabaseReference databaseReferenceUser;
 
     private ImageButton editUserInfoBtn;
 
-    private StorageReference mProfileStorageRef;
+    private StorageReference profileStorageRef;
 
     private UserItem user;
-    private String residence_name;
+    private String residenceName;
 
     private TextView name;
-    private TextView resi;
+    private TextView residence;
     private ImageView profilePic;
-    private String fbUID;
+    private String firebaseUserId;
 
-    private static boolean refreshUserDetails;
     private static boolean refreshList;
+    private static boolean refreshUserDetails;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mylist, container, false);
         name = rootView.findViewById(R.id.user_display_name);
-        resi = rootView.findViewById(R.id.user_display_resi);
+        residence = rootView.findViewById(R.id.user_display_resi);
         profilePic = rootView.findViewById(R.id.user_display_picture);
 
-        fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         if (MainActivity.display_name != null) {
             name.setText(MainActivity.display_name);
         }
         if (MainActivity.display_residential != null) {
-            resi.setText(MainActivity.display_residential);
+            residence.setText(MainActivity.display_residential);
         }
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
         buildRecyclerView();
 
@@ -130,20 +120,23 @@ public class MylistFragment extends Fragment {
     }
 
     public void initializeList() {
-        mEventIDs.clear();
-        mJioIDs.clear();
-        final String fbUIDFinal = fbUID;
-        mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
-        mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
+        eventIDs.clear();
+        jioIDs.clear();
+        final String firebaseUserIdFinal = firebaseUserId;
+        databaseReferenceActivityEvent = firebaseDatabase.getReference().child("ActivityEvent");
+        databaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        // it is my event so I add EventID into arraylist
-                        mEventIDs.add(selected.getOccasionID());
-
+                    try {
+                        ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(firebaseUserIdFinal)) {
+                            // it is my event so I add EventID into arraylist
+                            eventIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -154,15 +147,19 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
-        mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
+        databaseReferenceActivityJio = firebaseDatabase.getReference().child("ActivityJio");
+        databaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                    String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mJioIDs.add(selected.getOccasionID());
+                    try {
+                        ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
+                        String selectedUserID = selected.getUserID();
+                        if (selectedUserID.equals(firebaseUserIdFinal)) {
+                            jioIDs.add(selected.getOccasionID());
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
             }
@@ -173,49 +170,53 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
+        databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
 
-        mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
+        databaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionEvents.clear();
-                mOccasionAll.clear();
+                occasionEvents.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(EventsItem.class);
-                    String eventID = selected.getOccasionID();
-                    if (mEventIDs.contains(eventID)) {
-                        if (selected.getTimeInfo().length() > 4) {
-                            continue;
+                    try {
+                        Occasion selected = snapshot.getValue(EventsItem.class);
+                        String eventID = selected.getOccasionID();
+                        if (eventIDs.contains(eventID)) {
+                            if (selected.getTimeInfo().length() > 4) {
+                                continue;
+                            }
+
+                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
+                            int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                            Date eventDateZero = selected.getDateInfo();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(eventDateZero);
+                            cal.set(Calendar.HOUR_OF_DAY, hour);
+                            cal.set(Calendar.MINUTE, min);
+                            Date eventDate = cal.getTime();
+
+
+                            Date currentDate = new Date();
+                            if (eventDate.compareTo(currentDate) >= 0) {
+                                occasionEvents.add(selected);
+                            }
                         }
-
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
-
-                        Date eventDateZero = selected.getDateInfo();
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(eventDateZero);
-                        cal.set(Calendar.HOUR_OF_DAY, hour);
-                        cal.set(Calendar.MINUTE, min);
-                        Date eventDate = cal.getTime();
-
-
-                        Date currentDate = new Date();
-                        if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionEvents.add(selected);
-                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
 
-                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(mOccasionEvents);
-                copyOfFullEvents.addAll(mOccasionJios);
-                mOccasionAll = copyOfFullEvents;
+                ArrayList<Occasion> copyOfFullEvents = new ArrayList<>(occasionEvents);
+                copyOfFullEvents.addAll(occasionJios);
+                occasionAll = copyOfFullEvents;
 
-                MainActivity.sort(mOccasionAll);
+                MainActivity.sort(occasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
-                mAdapter = myListAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), occasionAll);
+                adapter = myListAdapter;
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -224,46 +225,50 @@ public class MylistFragment extends Fragment {
             }
         });
 
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        databaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
-                mOccasionAll.clear();
+                occasionJios.clear();
+                occasionAll.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Occasion selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
-                    if (mJioIDs.contains(jioID)) {
-                        if (selected.getTimeInfo().length() > 4) {
-                            continue;
+                    try {
+                        Occasion selected = snapshot.getValue(JiosItem.class);
+                        String jioID = selected.getOccasionID();
+                        if (jioIDs.contains(jioID)) {
+                            if (selected.getTimeInfo().length() > 4) {
+                                continue;
+                            }
+
+                            int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
+                            int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+
+                            Date eventDateZero = selected.getDateInfo();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(eventDateZero);
+                            cal.set(Calendar.HOUR_OF_DAY, hour);
+                            cal.set(Calendar.MINUTE, min);
+                            Date eventDate = cal.getTime();
+
+
+                            Date currentDate = new Date();
+                            if (eventDate.compareTo(currentDate) >= 0) {
+                                occasionJios.add(selected);
+                            }
                         }
-
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
-
-                        Date eventDateZero = selected.getDateInfo();
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(eventDateZero);
-                        cal.set(Calendar.HOUR_OF_DAY, hour);
-                        cal.set(Calendar.MINUTE, min);
-                        Date eventDate = cal.getTime();
-
-
-                        Date currentDate = new Date();
-                        if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionJios.add(selected);
-                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
-                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(mOccasionJios);
-                copyOfFullJios.addAll(mOccasionEvents);
+                ArrayList<Occasion> copyOfFullJios = new ArrayList<>(occasionJios);
+                copyOfFullJios.addAll(occasionEvents);
 
-                mOccasionAll = copyOfFullJios;
+                occasionAll = copyOfFullJios;
 
-                MainActivity.sort(mOccasionAll);
+                MainActivity.sort(occasionAll);
 
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mOccasionAll);
-                mAdapter = myListAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), occasionAll);
+                adapter = myListAdapter;
+                recyclerView.setAdapter(adapter);
 
             }
 
@@ -272,18 +277,18 @@ public class MylistFragment extends Fragment {
 
             }
         });
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public void initializeUserDetails() {
-        final String fbUIDFinal = fbUID;
+        final String firebaseUserIdFinal = firebaseUserId;
         final TextView nameFinal = name;
-        final TextView resiFinal = resi;
+        final TextView resiFinal = residence;
 
-        mProfileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
-        mProfileStorageRef = mProfileStorageRef.child(fbUID);
+        profileStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads");
+        profileStorageRef = profileStorageRef.child(firebaseUserId);
 
-        mProfileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        profileStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Glide.with(getContext()).load(uri).into(profilePic);
@@ -296,26 +301,30 @@ public class MylistFragment extends Fragment {
         });
 
         // Pulling user from Firebase
-        mDatabaseReferenceUser = mFirebaseDatabase.getReference().child("Users");
-        mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceUser = firebaseDatabase.getReference().child("Users");
+        databaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserItem selected = snapshot.getValue(UserItem.class);
-                    String id = selected.getId();
+                    try {
+                        UserItem selected = snapshot.getValue(UserItem.class);
+                        String id = selected.getId();
 
-                    if (fbUIDFinal.equals(id)) {
-                        user = selected;
-                        String disp_name = user.getName();
-                        MainActivity.display_name = disp_name;
-                        nameFinal.setText(disp_name);
+                        if (firebaseUserIdFinal.equals(id)) {
+                            user = selected;
+                            String displayName = user.getName();
+                            MainActivity.display_name = displayName;
+                            nameFinal.setText(displayName);
 
-                        intToRes(user.getResidential());
-                        resiFinal.setText(residence_name);
-                        MainActivity.display_residential = residence_name;
+                            intToRes(user.getResidential());
+                            resiFinal.setText(residenceName);
+                            MainActivity.display_residential = residenceName;
 
-                        MainActivity.display_phone = user.getPhone();
-                        MainActivity.display_telegram = user.getTelegram();
+                            MainActivity.display_phone = user.getPhone();
+                            MainActivity.display_telegram = user.getTelegram();
+                        }
+                    } catch (Exception e) {
+                        System.out.print(e);
                     }
                 }
             }
@@ -332,12 +341,9 @@ public class MylistFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         editUserInfoBtn = (ImageButton) getView().findViewById(R.id.edit_user_info_btn);
 
-        editUserInfoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), EditUserInfoActivity.class);
-                startActivity(intent);
-            }
+        editUserInfoBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditUserInfoActivity.class);
+            startActivity(intent);
         });
 
         super.onViewCreated(view, savedInstanceState);
@@ -345,115 +351,101 @@ public class MylistFragment extends Fragment {
 
     public void intToRes(int x) {
         if (x == 0) {
-            residence_name = "Off Campus";
+            residenceName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residenceName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residenceName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residenceName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residenceName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residenceName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residenceName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residenceName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residenceName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residenceName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residenceName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residenceName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residenceName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residenceName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residenceName = "UTown Residence";
         }
 
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionAll);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new MylistAdapter(getActivity(), occasionAll);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
-//    @Override
-//    public void onResume() {
-//        if (refresh) {
-//            refresh = false;
-//            getActivity().getSupportFragmentManager().beginTransaction()
-//                    .detach(MylistFragment.this)
-//                    .attach(MylistFragment.this)
-//                    .commit();
-//        }
-//        super.onResume();
-//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_search:
+        case R.id.action_search:
 
-                MenuItem searchItem = item;
-                SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-                searchItem.setActionView(searchView);
+            MenuItem searchItem = item;
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchItem.setActionView(searchView);
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
 
-                break;
-            case R.id.action_createdoccasions:
-                CreatedFragment nextFrag= new CreatedFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+            break;
+        case R.id.action_createdoccasions:
+            CreatedFragment nextFrag = new CreatedFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
+            break;
 
-            case R.id.action_history:
-                HistoryFragment nextFrag2= new HistoryFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag2)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        case R.id.action_history:
+            HistoryFragment nextFrag2 = new HistoryFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag2)
+                    .addToBackStack(null)
+                    .commit();
+            break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -479,14 +471,11 @@ public class MylistFragment extends Fragment {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // reset list
-                mAdapter = mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+                adapter = adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 return true;
             }
         });
-
-        // ???
-        // searchItem.setOnMenuItemClickListener()
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -507,7 +496,6 @@ public class MylistFragment extends Fragment {
         }
         if (refreshList) {
             initializeList();
-            // Toast.makeText(getActivity(), "asdasd", Toast.LENGTH_SHORT).show();
             refreshList = false;
         }
         super.onResume();
