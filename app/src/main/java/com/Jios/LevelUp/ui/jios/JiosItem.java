@@ -1,9 +1,8 @@
 package com.Jios.LevelUp.ui.jios;
 
-import com.example.LevelUp.ui.Occasion;
-
-import java.lang.reflect.Type;
 import java.util.Date;
+
+import com.example.LevelUp.ui.Occasion;
 
 public class JiosItem implements Occasion {
     private String timeInfo;
@@ -48,7 +47,6 @@ public class JiosItem implements Occasion {
 
     }
 
-
     public String getTitle() {
         return title;
     }
@@ -89,8 +87,6 @@ public class JiosItem implements Occasion {
         return jioID;
     }
 
-    public void setOccasionID(String newID) { this.jioID = newID; }
-
     public int getNumLikes() {
         return numLikes;
     }
@@ -108,9 +104,4 @@ public class JiosItem implements Occasion {
         return true;
     }
 
-    public void setjio(boolean newboolean) {
-
-    }
-
-    // set
 }
