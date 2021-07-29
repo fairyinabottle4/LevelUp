@@ -58,7 +58,7 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     private Spinner jioSpinner;
 
     private static final String[] categories = {
-            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
