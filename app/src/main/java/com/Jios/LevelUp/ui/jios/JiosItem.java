@@ -1,9 +1,8 @@
 package com.Jios.LevelUp.ui.jios;
 
-import com.example.LevelUp.ui.Occasion;
-
-import java.lang.reflect.Type;
 import java.util.Date;
+
+import com.example.LevelUp.ui.Occasion;
 
 public class JiosItem implements Occasion {
     private String timeInfo;
@@ -19,7 +18,8 @@ public class JiosItem implements Occasion {
     private String creatorID;
     private int numLikes;
 
-    public JiosItem(Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public JiosItem(Date dateInfo, String timeInfo, int hourOfDay, int minute,
+                    String locationInfo, String title, String description) {
         this.hourOfDay = hourOfDay;
         this.timeInfo = timeInfo;
         this.minute = minute;
@@ -30,7 +30,9 @@ public class JiosItem implements Occasion {
     }
 
     // Overloaded Constructor to push Jio ID and Creator ID to Firebase
-    public JiosItem(int numLikes, String jioID, String creatorID, Date dateInfo,  String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description, int category) {
+    public JiosItem(int numLikes, String jioID, String creatorID, Date dateInfo, String timeInfo,
+                    int hourOfDay, int minute, String locationInfo, String title,
+                    String description, int category) {
         this.numLikes = numLikes;
         this.jioID = jioID;
         this.creatorID = creatorID;
@@ -47,7 +49,6 @@ public class JiosItem implements Occasion {
     public JiosItem() {
 
     }
-
 
     public String getTitle() {
         return title;
@@ -89,8 +90,6 @@ public class JiosItem implements Occasion {
         return jioID;
     }
 
-    public void setOccasionID(String newID) { this.jioID = newID; }
-
     public int getNumLikes() {
         return numLikes;
     }
@@ -108,9 +107,4 @@ public class JiosItem implements Occasion {
         return true;
     }
 
-    public void setjio(boolean newboolean) {
-
-    }
-
-    // set
 }
