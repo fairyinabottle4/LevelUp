@@ -42,13 +42,13 @@ import java.util.Locale;
 
 public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder> implements Filterable {
     //ArrayList is passed in from JiosItem.java
-    private ArrayList<JiosItem> mJiosList;
-    private ArrayList<JiosItem> mJiosListFull;
-    private StorageReference mProfileStorageRef;
-    private DatabaseReference mUserRef;
-    private FirebaseDatabase mFirebaseDatabase;
+    private ArrayList<JiosItem> jiosList;
+    private ArrayList<JiosItem> jiosListFull;
+    private StorageReference profileStorageRef;
+    private DatabaseReference userRef;
+    private FirebaseDatabase firebaseDatabase;
 
-    private Context mContext;
+    private Context classContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
     //the ViewHolder holds the content of the card
@@ -61,27 +61,27 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         public long phone;
         public String telegram;
 
-        public String jioID;
+        public String jioId;
         public boolean isChecked;
         public boolean isLiked;
         public int numLikes;
 
-        public ToggleButton mAddButton;
-        public ToggleButton mLikeButton;
-        public ImageView mImageView;
-        public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextView3;
-        public TextView mTextView4;
-        public TextView mTextView5;
-        public TextView mTextView6;
-        public TextView mNumLikes;
+        public ToggleButton addButton;
+        public ToggleButton likeButton;
+        public ImageView imageView;
+        public TextView titleView;
+        public TextView descView;
+        public TextView dateView;
+        public TextView locationView;
+        public TextView timeView;
+        public TextView creatorView;
+        public TextView numLikesView;
 
         public JiosViewHolder(final Context context, View itemView) {
             super(itemView);
             final Context context1 = context;
-            mImageView = itemView.findViewById(R.id.imageView);
-            mImageView.setOnClickListener(new View.OnClickListener() {
+            imageView = itemView.findViewById(R.id.imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -95,15 +95,15 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     context.startActivity(intent);
                 }
             });
-            mAddButton = itemView.findViewById(R.id.image_add);
-            mLikeButton = itemView.findViewById(R.id.image_like);
-            mTextView1 = itemView.findViewById(R.id.title);
-            mTextView2 = itemView.findViewById(R.id.event_description);
-            mTextView3 = itemView.findViewById(R.id.date);
-            mTextView4 = itemView.findViewById(R.id.location);
-            mTextView5 = itemView.findViewById(R.id.time);
-            mTextView6 = itemView.findViewById(R.id.eventCreator);
-            mTextView6.setOnClickListener(new View.OnClickListener() {
+            addButton = itemView.findViewById(R.id.image_add);
+            likeButton = itemView.findViewById(R.id.image_like);
+            titleView = itemView.findViewById(R.id.title);
+            descView = itemView.findViewById(R.id.event_description);
+            dateView = itemView.findViewById(R.id.date);
+            locationView = itemView.findViewById(R.id.location);
+            timeView = itemView.findViewById(R.id.time);
+            creatorView = itemView.findViewById(R.id.eventCreator);
+            creatorView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -117,7 +117,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     context.startActivity(intent);
                 }
             });
-            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
+            numLikesView = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,16 +125,16 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     Intent intent = new Intent(context, JiosPage.class);
                     intent.putExtra("uid", creatorUid);
                     intent.putExtra("creatorName", creatorName);
-                    intent.putExtra("title", mTextView1.getText().toString());
-                    intent.putExtra("description", mTextView2.getText().toString());
-                    intent.putExtra("date", mTextView3.getText().toString());
-                    intent.putExtra("location", mTextView4.getText().toString());
-                    intent.putExtra("time", mTextView5.getText().toString());
+                    intent.putExtra("title", titleView.getText().toString());
+                    intent.putExtra("description", descView.getText().toString());
+                    intent.putExtra("date", dateView.getText().toString());
+                    intent.putExtra("location", locationView.getText().toString());
+                    intent.putExtra("time", timeView.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("stateChecked", isChecked);
                     intent.putExtra("stateLiked", isLiked);
                     intent.putExtra("numLikes", numLikes);
-                    intent.putExtra("jioID", jioID);
+                    intent.putExtra("jioId", jioId);
                     intent.putExtra("residence", creatorResidence);
                     intent.putExtra("dpUri", profilePictureUri);
                     intent.putExtra("telegram", telegram);
@@ -165,8 +165,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
         public void setChecked(boolean toSet) {this.isChecked = toSet; }
 
-        public void setJioID(String jioID) {
-            this.jioID = jioID;
+        public void setJioID(String jioId) {
+            this.jioId = jioId;
         }
 
         public void setLiked(boolean liked) {
@@ -181,13 +181,13 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     //Constructor for JiosAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
     public JiosAdapter(Context context, ArrayList<JiosItem> JiosList) {
-        mContext = context;
-        mJiosList = JiosList;
-        mJiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
-        mProfileStorageRef = FirebaseStorage.getInstance()
+        classContext = context;
+        jiosList = JiosList;
+        jiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
+        profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("Users");
     }
 
     //inflate the items in a JiosViewHolder
@@ -195,38 +195,38 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     @Override
     public JiosAdapter.JiosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
-        JiosAdapter.JiosViewHolder evh = new JiosAdapter.JiosViewHolder(mContext, v);
+        JiosAdapter.JiosViewHolder evh = new JiosAdapter.JiosViewHolder(classContext, v);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull JiosAdapter.JiosViewHolder holder, final int position) {
-        JiosItem currentItem = mJiosList.get(position);
-//        holder.mImageView.setImageResource(currentItem.getProfilePicture());
-        final JiosViewHolder holder1 = holder;
+        JiosItem currentItem = jiosList.get(position);
+//        holder.imageView.setImageResource(currentItem.getProfilePicture());
+        final JiosViewHolder jiosViewHolder = holder;
         final String creatorUID = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUID);
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
+        jiosViewHolder.setCreatorUid(creatorUID);
+        StorageReference mProfileStorageRefIndiv = profileStorageRef.child(creatorUID);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(holder1.mImageView);
+                Picasso.get().load(uri).into(jiosViewHolder.imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
+                jiosViewHolder.imageView.setImageResource(R.drawable.fake_user_dp);
             }
         });
 
-        holder1.mTextView1.setText(currentItem.getTitle());
-        holder1.mTextView2.setText(currentItem.getDescription());
-        holder1.mTextView3.setText(df.format(currentItem.getDateInfo()));
-        holder1.mTextView4.setText(currentItem.getLocationInfo());
-        holder1.mTextView5.setText(currentItem.getTimeInfo());
-        holder1.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
+        jiosViewHolder.titleView.setText(currentItem.getTitle());
+        jiosViewHolder.descView.setText(currentItem.getDescription());
+        jiosViewHolder.dateView.setText(df.format(currentItem.getDateInfo()));
+        jiosViewHolder.locationView.setText(currentItem.getLocationInfo());
+        jiosViewHolder.timeView.setText(currentItem.getTimeInfo());
+        jiosViewHolder.numLikesView.setText(Integer.toString(currentItem.getNumLikes()));
 
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -235,19 +235,19 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                     if (creatorUID.equals(id)) {
                         String name = selected.getName();
-                        holder1.mTextView6.setText(name);
-                        holder1.setCreatorName(name);
+                        jiosViewHolder.creatorView.setText(name);
+                        jiosViewHolder.setCreatorName(name);
                         int res = selected.getResidential();
                         String telegram = selected.getTelegram();
                         String email = selected.getEmail();
                         String dpUri = selected.getProfilePictureUri();
                         long phone = selected.getPhone();
-                        holder1.setCreatorName(name);
-                        holder1.setCreatorResidence(res);
-                        holder1.setTelegram(telegram);
-                        holder1.setEmail(email);
-                        holder1.setProfilePictureUri(dpUri);
-                        holder1.setPhone(phone);
+                        jiosViewHolder.setCreatorName(name);
+                        jiosViewHolder.setCreatorResidence(res);
+                        jiosViewHolder.setTelegram(telegram);
+                        jiosViewHolder.setEmail(email);
+                        jiosViewHolder.setProfilePictureUri(dpUri);
+                        jiosViewHolder.setPhone(phone);
                     }
                 }
             }
@@ -258,60 +258,60 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             }
         });
 
-        final String jioID = currentItem.getJioID();
-        holder1.setJioID(jioID);
-        if (MainActivity.mJioIDs.contains(jioID)) {
-            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-            holder1.setChecked(true);
-            holder1.mAddButton.setChecked(true);
+        final String jioId = currentItem.getJioID();
+        jiosViewHolder.setJioID(jioId);
+        if (MainActivity.mJioIDs.contains(jioId)) {
+            jiosViewHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            jiosViewHolder.setChecked(true);
+            jiosViewHolder.addButton.setChecked(true);
         } else {
-            holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-            holder1.setChecked(false);
-            holder1.mAddButton.setChecked(false);
+            jiosViewHolder.addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+            jiosViewHolder.setChecked(false);
+            jiosViewHolder.addButton.setChecked(false);
         }
 
-        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        jiosViewHolder.addButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // change to tick
-                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-                    holder1.setChecked(true);
+                    jiosViewHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    jiosViewHolder.setChecked(true);
 
-                    JiosItem ji = mJiosList.get(position);
+                    JiosItem jiosItem = jiosList.get(position);
 
 //                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
 //                MylistFragment.setNumberEvents(index);
 
                     // add to ActivityEvent firebase
                     UserItem user = MainActivity.currUser;
-                    String eventID = ji.getJioID();
-                    String userID = user.getId();
-                    DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
-                    ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
+                    String eventId = jiosItem.getJioID();
+                    String userId = user.getId();
+                    DatabaseReference mActivityJioRef = firebaseDatabase.getReference("ActivityJio");
+                    ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventId, userId);
                     mActivityJioRef.push().setValue(activityOccasionItem);
 
-                    Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(classContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
                 } else {
                     // change back to plus
-                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-                    holder1.setChecked(false);
+                    jiosViewHolder.addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    jiosViewHolder.setChecked(false);
 
                     // delete the entry from activity DB
-                    JiosItem ji = mJiosList.get(position);
+                    JiosItem jiosItem = jiosList.get(position);
                     UserItem user = MainActivity.currUser;
-                    final String jioID = ji.getJioID();
-                    final String userID = user.getId();
-                    final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                    final String jioId = jiosItem.getJioID();
+                    final String userId = user.getId();
+                    final DatabaseReference mActivityJioRef = firebaseDatabase.getReference("ActivityJio");
                     mActivityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-                                if (jioID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                if (jioId.equals(selected.getOccasionID()) && userId.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
                                     mActivityJioRef.child(key).removeValue();
-                                    Toast.makeText(mContext, "Jio removed from your list", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(classContext, "Jio removed from your list", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -321,67 +321,67 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                         }
                     });
-                    MainActivity.mJioIDs.remove(jioID);
+                    MainActivity.mJioIDs.remove(jioId);
                 }
             }
         });
 
-        if (MainActivity.mLikeJioIDs.contains(jioID)) {
-            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-            holder1.setLiked(true);
-            holder1.mLikeButton.setChecked(true);
+        if (MainActivity.mLikeJioIDs.contains(jioId)) {
+            jiosViewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            jiosViewHolder.setLiked(true);
+            jiosViewHolder.likeButton.setChecked(true);
         } else {
-            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-            holder1.setLiked(false);
-            holder1.mLikeButton.setChecked(false);
+            jiosViewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            jiosViewHolder.setLiked(false);
+            jiosViewHolder.likeButton.setChecked(false);
         }
 
-        holder1.setNumLikes(currentItem.getNumLikes());
+        jiosViewHolder.setNumLikes(currentItem.getNumLikes());
 
-        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        jiosViewHolder.likeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    holder1.setLiked(true);
+                    jiosViewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    jiosViewHolder.setLiked(true);
 
                     // send to LikeDatabase
-                    JiosItem ji = mJiosList.get(position);
+                    JiosItem jiosItem = jiosList.get(position);
                     UserItem user = MainActivity.currUser;
-                    final String eventID = ji.getJioID();
-                    final String userID = user.getId();
-                    DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
-                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
+                    final String eventId = jiosItem.getJioID();
+                    final String userId = user.getId();
+                    DatabaseReference mLikeJioRef = firebaseDatabase.getReference("LikeJio");
+                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventId, userId);
                     mLikeJioRef.push().setValue(likeOccasionItem);
 
                     // +1 to the Likes on the eventItem
-                    int currLikes = ji.getNumLikes();
-                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
-                    mJioRef.child(eventID).child("numLikes").setValue(currLikes + 1);
-                    ji.setNumLikes(currLikes + 1);
-                    holder1.setNumLikes(currLikes + 1);
+                    int currLikes = jiosItem.getNumLikes();
+                    DatabaseReference jioRef = firebaseDatabase.getReference("Jios");
+                    jioRef.child(eventId).child("numLikes").setValue(currLikes + 1);
+                    jiosItem.setNumLikes(currLikes + 1);
+                    jiosViewHolder.setNumLikes(currLikes + 1);
 
                     // for display only
-                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1));
+                    jiosViewHolder.numLikesView.setText(Integer.toString(currLikes + 1));
                 } else {
-                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    holder1.setLiked(false);
+                    jiosViewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    jiosViewHolder.setLiked(false);
 
                     // Delete the entry from LikeDatabse
-                    JiosItem ji = mJiosList.get(position);
+                    JiosItem jiosItem = jiosList.get(position);
                     UserItem user = MainActivity.currUser;
-                    final String eventID = ji.getJioID();
-                    final String userID = user.getId();
-                    final DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                    final String eventId = jiosItem.getJioID();
+                    final String userId = user.getId();
+                    final DatabaseReference mLikeJioRef = firebaseDatabase.getReference("LikeJio");
                     mLikeJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                if (eventId.equals(selected.getOccasionID()) && userId.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
                                     mLikeJioRef.child(key).removeValue();
-                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(classContext, "Unliked", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -393,16 +393,16 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     });
 
                     // -1 to the Likes on the eventItem
-                    int currLikes = ji.getNumLikes();
-                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
-                    mJioRef.child(eventID).child("numLikes").setValue(currLikes - 1);
-                    ji.setNumLikes(currLikes - 1);
-                    holder1.setNumLikes(currLikes - 1);
+                    int currLikes = jiosItem.getNumLikes();
+                    DatabaseReference jioRef = firebaseDatabase.getReference("Jios");
+                    jioRef.child(eventId).child("numLikes").setValue(currLikes - 1);
+                    jiosItem.setNumLikes(currLikes - 1);
+                    jiosViewHolder.setNumLikes(currLikes - 1);
 
                     // for display only
-                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1));
+                    jiosViewHolder.numLikesView.setText(Integer.toString(currLikes - 1));
 
-                    MainActivity.mLikeJioIDs.remove(jioID);
+                    MainActivity.mLikeJioIDs.remove(jioId);
                 }
             }
         });
@@ -411,7 +411,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
     @Override
     public int getItemCount() {
-        return mJiosList.size();
+        return jiosList.size();
     }
 
     @Override
@@ -425,11 +425,11 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             List<JiosItem> filteredList = new ArrayList<>(); // initially empty list
 
             if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(mJiosListFull); // to show everything
+                filteredList.addAll(jiosListFull); // to show everything
             } else {
                 String userSearchInput = constraint.toString().toLowerCase().trim();
 
-                for (JiosItem item : mJiosListFull) {
+                for (JiosItem item : jiosListFull) {
                     // contains can be changed to StartsWith
                     if (item.getTitle().toLowerCase().contains(userSearchInput)) {
                         filteredList.add(item);
@@ -444,14 +444,14 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mJiosList.clear();
-            mJiosList.addAll((List) results.values); // data list contains filtered items
+            jiosList.clear();
+            jiosList.addAll((List) results.values); // data list contains filtered items
             notifyDataSetChanged(); // tell adapter list has changed
 
         }
     };
 
     public void resetAdapter() {
-        this.mJiosList = mJiosListFull;
+        this.jiosList = jiosListFull;
     }
 }
