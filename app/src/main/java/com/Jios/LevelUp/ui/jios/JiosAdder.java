@@ -1,5 +1,17 @@
 package com.Jios.LevelUp.ui.jios;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import com.MainActivity;
+import com.example.LevelUp.ui.jios.JiosFragment;
+import com.example.tryone.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.net.Uri;
@@ -19,17 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.MainActivity;
-import com.example.LevelUp.ui.jios.JiosFragment;
-import com.example.tryone.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
@@ -38,22 +40,22 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     private DatabaseReference databaseReference;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private int selection;
-    TextView dateSelected;
-    TextView timeSelected;
-    EditText eventTitle;
-    Button dateSelector;
-    Button timeSelector;
-    Button saveJio;
-    EditText eventDescription;
-    EditText eventLocation;
-    Uri currentUri;
+    private TextView dateSelected;
+    private TextView timeSelected;
+    private EditText eventTitle;
+    private Button dateSelector;
+    private Button timeSelector;
+    private Button saveJio;
+    private EditText eventDescription;
+    private EditText eventLocation;
+    private Uri currentUri;
     private int hourOfDay;
     private int minute;
-    boolean validDate;
-    boolean validTime = false;
-    boolean dateIsSame;
+    private boolean validDate;
+    private boolean validTime = false;
+    private boolean dateIsSame;
 
-    Spinner jioSpinner;
+    private Spinner jioSpinner;
 
     private static final String[] categories = {
             "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
@@ -112,9 +114,11 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
                 String str = sdf.format(Calendar.getInstance().getTime());
                 int intCurrentTime = Integer.parseInt(str);
                 try {
-                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
+                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK)
+                        .format(Calendar.getInstance().getTime()))
                             .compareTo(df.parse(dateSelected.getText().toString())) > 0;
-                    dateIsSame = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
+                    dateIsSame = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK)
+                        .format(Calendar.getInstance().getTime()))
                             .compareTo(df.parse(dateSelected.getText().toString())) == 0;
                     if (!timeSelected.getText().toString().equals("No Time Selected") && dateIsSame) {
                         validTime = intCurrentTime > Integer.parseInt(timeSelected.getText().toString());
