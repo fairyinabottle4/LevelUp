@@ -1,24 +1,11 @@
 package com.Jios.LevelUp.ui.jios;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import com.ActivityOccasionItem;
-import com.Events.LevelUp.ui.events.EventsItem;
 import com.LikeOccasionItem;
 import com.MainActivity;
 import com.UserItem;
@@ -35,10 +22,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder> implements Filterable {
     //ArrayList is passed in from JiosItem.java
@@ -53,29 +51,29 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
     //the ViewHolder holds the content of the card
     public static class JiosViewHolder extends RecyclerView.ViewHolder {
-        public String creatorUid;
-        public String creatorName;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
+        private String creatorUid;
+        private String creatorName;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
 
-        public String jioId;
-        public boolean isChecked;
-        public boolean isLiked;
-        public int numLikes;
+        private String jioId;
+        private boolean isChecked;
+        private boolean isLiked;
+        private int numLikes;
 
-        public ToggleButton addButton;
-        public ToggleButton likeButton;
-        public ImageView imageView;
-        public TextView titleView;
-        public TextView descView;
-        public TextView dateView;
-        public TextView locationView;
-        public TextView timeView;
-        public TextView creatorView;
-        public TextView numLikesView;
+        private ToggleButton addButton;
+        private ToggleButton likeButton;
+        private ImageView imageView;
+        private TextView titleView;
+        private TextView descView;
+        private TextView dateView;
+        private TextView locationView;
+        private TextView timeView;
+        private TextView creatorView;
+        private TextView numLikesView;
 
         public JiosViewHolder(final Context context, View itemView) {
             super(itemView);
@@ -145,25 +143,37 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             });
         }
 
-        public void setCreatorUid(String newUID) {
-            this.creatorUid = newUID;
+        public void setCreatorUid(String newUid) {
+            this.creatorUid = newUid;
         }
 
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
-        public void setChecked(boolean toSet) {this.isChecked = toSet; }
+        public void setChecked(boolean toSet) {
+            this.isChecked = toSet;
+        }
 
         public void setJioID(String jioId) {
             this.jioId = jioId;
@@ -202,11 +212,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     @Override
     public void onBindViewHolder(@NonNull JiosAdapter.JiosViewHolder holder, final int position) {
         JiosItem currentItem = jiosList.get(position);
-//        holder.imageView.setImageResource(currentItem.getProfilePicture());
         final JiosViewHolder jiosViewHolder = holder;
-        final String creatorUID = currentItem.getCreatorID();
-        jiosViewHolder.setCreatorUid(creatorUID);
-        StorageReference mProfileStorageRefIndiv = profileStorageRef.child(creatorUID);
+        final String creatorUid = currentItem.getCreatorID();
+        jiosViewHolder.setCreatorUid(creatorUid);
+        StorageReference mProfileStorageRefIndiv = profileStorageRef.child(creatorUid);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -233,7 +242,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
                         jiosViewHolder.creatorView.setText(name);
                         jiosViewHolder.setCreatorName(name);
@@ -280,9 +289,6 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                     JiosItem jiosItem = jiosList.get(position);
 
-//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-//                MylistFragment.setNumberEvents(index);
-
                     // add to ActivityEvent firebase
                     UserItem user = MainActivity.currUser;
                     String eventId = jiosItem.getJioID();
@@ -311,7 +317,8 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                                 if (jioId.equals(selected.getOccasionID()) && userId.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
                                     mActivityJioRef.child(key).removeValue();
-                                    Toast.makeText(classContext, "Jio removed from your list", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(classContext, "Jio removed from your list",
+                                        Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
