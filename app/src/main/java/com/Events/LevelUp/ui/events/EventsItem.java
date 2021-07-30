@@ -1,8 +1,8 @@
 package com.Events.LevelUp.ui.events;
 
-import com.example.LevelUp.ui.Occasion;
-
 import java.util.Date;
+
+import com.example.LevelUp.ui.Occasion;
 
 public class EventsItem implements Occasion {
     private String timeInfo;
@@ -19,7 +19,8 @@ public class EventsItem implements Occasion {
     private int numLikes;
 
 
-    public EventsItem(Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description) {
+    public EventsItem(Date dateInfo, String timeInfo, int hourOfDay, int minute,
+                      String locationInfo, String title, String description) {
         this.dateInfo = dateInfo;
         this.timeInfo = timeInfo;
         this.hourOfDay = hourOfDay;
@@ -30,7 +31,9 @@ public class EventsItem implements Occasion {
     }
 
     // Overloaded Constructor to push Event ID and Creator ID to Firebase
-    public EventsItem(int numLikes, String eventID, String creatorID, Date dateInfo, String timeInfo, int hourOfDay, int minute, String locationInfo, String title, String description, int category) {
+    public EventsItem(int numLikes, String eventID, String creatorID, Date dateInfo,
+                      String timeInfo, int hourOfDay, int minute, String locationInfo, String title,
+                      String description, int category) {
         this.numLikes = numLikes;
         this.eventID = eventID;
         this.creatorID = creatorID;
@@ -76,11 +79,13 @@ public class EventsItem implements Occasion {
         return minute;
     }
 
-    public String getEventID() { return eventID; }
+    public String getEventID() {
+        return eventID;
+    }
 
-    public String getOccasionID() {return eventID; }
-
-    public void setOccasionID(String newID) { this.eventID = newID; }
+    public String getOccasionID() {
+        return eventID;
+    }
 
     public String getCreatorID() {
         return creatorID;
