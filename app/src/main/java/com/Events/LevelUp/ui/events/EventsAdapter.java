@@ -1,22 +1,9 @@
 package com.Events.LevelUp.ui.events;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import com.ActivityOccasionItem;
 import com.LikeOccasionItem;
@@ -35,56 +22,68 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> implements Filterable {
-    private ArrayList<EventsItem> mEventsList;
-    private ArrayList<EventsItem> mEventsListFull;
-    private StorageReference mProfileStorageRef;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUserRef;
+    private ArrayList<EventsItem> eventsList;
+    private ArrayList<EventsItem> eventsListFull;
+    private StorageReference profileStorageRef;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference userRef;
 
 
-    private FragmentActivity mContext;
+    private FragmentActivity eventsContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
 
     // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
-        public String creatorUid;
-        public String creatorName;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
+        private String creatorUid;
+        private String creatorName;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
 
-        public String eventID;
-        public boolean isChecked;
-        public boolean isLiked;
-        public int numLikes;
+        private String eventID;
+        private boolean isChecked;
+        private boolean isLiked;
+        private int numLikes;
 
-        public ImageView mImageView;
-        public ToggleButton mAddButton;
-        public ToggleButton mLikeButton;
-        public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextView3;
-        public TextView mTextView4;
-        public TextView mTextView5;
-        public TextView mTextView6;
-        public TextView mNumLikes;
+        private ImageView imageView;
+        private ToggleButton addButton;
+        private ToggleButton likeButton;
+        private TextView titleView;
+        private TextView eventDesc;
+        private TextView dateView;
+        private TextView locationView;
+        private TextView timeView;
+        private TextView creatorView;
+        private TextView numLikesView;
 
-        public View itemView;
+        private View itemView;
 
         public EventsViewHolder(final Context context, View itemView) {
             super(itemView);
             this.itemView = itemView;
-            mImageView = itemView.findViewById(R.id.imageView);
-            mImageView.setOnClickListener(new View.OnClickListener() {
+            imageView = itemView.findViewById(R.id.imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -98,15 +97,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     context.startActivity(intent);
                 }
             });
-            mAddButton = itemView.findViewById(R.id.image_add);
-            mLikeButton = itemView.findViewById(R.id.image_like);
-            mTextView1 = itemView.findViewById(R.id.title);
-            mTextView2 = itemView.findViewById(R.id.event_description);
-            mTextView3 = itemView.findViewById(R.id.date);
-            mTextView4 = itemView.findViewById(R.id.location);
-            mTextView5 = itemView.findViewById(R.id.time);
-            mTextView6 = itemView.findViewById(R.id.eventCreator);
-            mTextView6.setOnClickListener(new View.OnClickListener() {
+            addButton = itemView.findViewById(R.id.image_add);
+            likeButton = itemView.findViewById(R.id.image_like);
+            titleView = itemView.findViewById(R.id.title);
+            eventDesc = itemView.findViewById(R.id.event_description);
+            dateView = itemView.findViewById(R.id.date);
+            locationView = itemView.findViewById(R.id.location);
+            timeView = itemView.findViewById(R.id.time);
+            creatorView = itemView.findViewById(R.id.eventCreator);
+            creatorView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -120,54 +119,66 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     context.startActivity(intent);
                 }
             });
-            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
+            numLikesView = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                     // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
-                     Intent intent = new Intent(context, EventPage.class);
-                     intent.putExtra("uid", creatorUid);
-                     intent.putExtra("creatorName", creatorName);
-                     intent.putExtra("title", mTextView1.getText().toString());
-                     intent.putExtra("description", mTextView2.getText().toString());
-                     intent.putExtra("date", mTextView3.getText().toString());
-                     intent.putExtra("location", mTextView4.getText().toString());
-                     intent.putExtra("time", mTextView5.getText().toString());
-                     intent.putExtra("position", getAdapterPosition());
-                     intent.putExtra("stateChecked", isChecked);
-                     intent.putExtra("stateLiked", isLiked);
-                     intent.putExtra("numLikes", numLikes);
-                     intent.putExtra("eventID", eventID);
-                     intent.putExtra("residence", creatorResidence);
-                     intent.putExtra("dpUri", profilePictureUri);
-                     intent.putExtra("telegram", telegram);
-                     intent.putExtra("email", email);
-                     intent.putExtra("phone", phone);
+                    // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, EventPage.class);
+                    intent.putExtra("uid", creatorUid);
+                    intent.putExtra("creatorName", creatorName);
+                    intent.putExtra("title", titleView.getText().toString());
+                    intent.putExtra("description", eventDesc.getText().toString());
+                    intent.putExtra("date", dateView.getText().toString());
+                    intent.putExtra("location", locationView.getText().toString());
+                    intent.putExtra("time", timeView.getText().toString());
+                    intent.putExtra("position", getAdapterPosition());
+                    intent.putExtra("stateChecked", isChecked);
+                    intent.putExtra("stateLiked", isLiked);
+                    intent.putExtra("numLikes", numLikes);
+                    intent.putExtra("eventID", eventID);
+                    intent.putExtra("residence", creatorResidence);
+                    intent.putExtra("dpUri", profilePictureUri);
+                    intent.putExtra("telegram", telegram);
+                    intent.putExtra("email", email);
+                    intent.putExtra("phone", phone);
                     context.startActivity(intent);
                 }
             });
 
         }
 
-        public void setCreatorUid(String newUID) {
-            this.creatorUid = newUID;
+        public void setCreatorUid(String newUid) {
+            this.creatorUid = newUid;
         }
 
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
-        public void setChecked(boolean toSet) {this.isChecked = toSet; }
+        public void setChecked(boolean toSet) {
+            this.isChecked = toSet;
+        }
 
         public void setEventID(String eventID) {
             this.eventID = eventID;
@@ -185,13 +196,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     //Constructor for EventsAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
     public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> EventsList) {
-        mEventsList = EventsList;
-        mContext = context;
-        mEventsListFull = new ArrayList<>(EventsList);
-        mProfileStorageRef = FirebaseStorage.getInstance()
+        eventsList = EventsList;
+        eventsContext = context;
+        eventsListFull = new ArrayList<>(EventsList);
+        profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("Users");
     }
 
     //inflate the items in a EventsViewHolder
@@ -199,63 +210,62 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     @Override
     public EventsAdapter.EventsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
-        EventsAdapter.EventsViewHolder evh = new EventsAdapter.EventsViewHolder(mContext, v);
+        EventsAdapter.EventsViewHolder evh = new EventsAdapter.EventsViewHolder(eventsContext, v);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventsAdapter.EventsViewHolder holder, final int position) {
-        final EventsItem currentItem = mEventsList.get(position);
-//        holder.mImageView.setImageResource(currentItem.getProfilePicture());
-        final EventsViewHolder holder1 = holder;
-        final String creatorUID = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUID);
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
-        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        final EventsItem currentItem = eventsList.get(position);
+        final EventsViewHolder eventsHolder = holder;
+        final String creatorUid = currentItem.getCreatorID();
+        eventsHolder.setCreatorUid(creatorUid);
+        StorageReference profileStorageRefIndiv = profileStorageRef.child(creatorUid);
+        profileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(holder1.mImageView);
+                Picasso.get().load(uri).into(eventsHolder.imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
+                eventsHolder.imageView.setImageResource(R.drawable.fake_user_dp);
             }
         });
 
-        holder1.mTextView1.setText(currentItem.getTitle());
-        holder1.mTextView2.setText(currentItem.getDescription());
-        holder1.mTextView4.setText(currentItem.getLocationInfo());
+        eventsHolder.titleView.setText(currentItem.getTitle());
+        eventsHolder.eventDesc.setText(currentItem.getDescription());
+        eventsHolder.locationView.setText(currentItem.getLocationInfo());
 
         String date = df.format(currentItem.getDateInfo());
-        holder1.mTextView3.setText(date);
+        eventsHolder.dateView.setText(date);
 
         String time = currentItem.getTimeInfo();
-        holder1.mTextView5.setText(time);
+        eventsHolder.timeView.setText(time);
 
-        holder1.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
+        eventsHolder.numLikesView.setText(Integer.toString(currentItem.getNumLikes()));
 
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
                         int res = selected.getResidential();
                         String telegram = selected.getTelegram();
                         String email = selected.getEmail();
                         String dpUri = selected.getProfilePictureUri();
                         long phone = selected.getPhone();
-                        holder1.mTextView6.setText(name);
-                        holder1.setCreatorName(name);
-                        holder1.setCreatorResidence(res);
-                        holder1.setTelegram(telegram);
-                        holder1.setEmail(email);
-                        holder1.setProfilePictureUri(dpUri);
-                        holder1.setPhone(phone);
+                        eventsHolder.creatorView.setText(name);
+                        eventsHolder.setCreatorName(name);
+                        eventsHolder.setCreatorResidence(res);
+                        eventsHolder.setTelegram(telegram);
+                        eventsHolder.setEmail(email);
+                        eventsHolder.setProfilePictureUri(dpUri);
+                        eventsHolder.setPhone(phone);
                     }
                 }
             }
@@ -266,84 +276,63 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             }
         });
 
-
-//        holder1.mAddButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                EventsItem ei = mEventsList.get(position);
-//
-////                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-////                MylistFragment.setNumberEvents(index);
-//
-//                // add to ActivityEvent firebase
-//                UserItem user = MainActivity.currUser;
-//                String eventID = ei.getEventID();
-//                String userID = user.getId();
-//                DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
-//                ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
-//                mActivityEventRef.push().setValue(activityOccasionItem);
-//
-//
-//                Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        // if currentItem is contained in Main's Event List, then mAddButton set state
+        // if currentItem is contained in Main's Event List, then addButton set state
         final String eventID = currentItem.getEventID();
-        holder1.setEventID(eventID);
+        eventsHolder.setEventID(eventID);
         if (MainActivity.mEventIDs.contains(eventID)) {
-            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-            holder1.setChecked(true);
-            holder1.mAddButton.setChecked(true);
+            eventsHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            eventsHolder.setChecked(true);
+            eventsHolder.addButton.setChecked(true);
         } else {
-            holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-            holder1.setChecked(false);
-            holder1.mAddButton.setChecked(false);
+            eventsHolder.addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+            eventsHolder.setChecked(false);
+            eventsHolder.addButton.setChecked(false);
         }
 
-        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        eventsHolder.addButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // change to tick
-                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-                    holder1.setChecked(true);
+                    eventsHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    eventsHolder.setChecked(true);
 
-                    EventsItem ei = mEventsList.get(position);
+                    EventsItem ei = eventsList.get(position);
 
-//                int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
-//                MylistFragment.setNumberEvents(index);
+                    //int index = EventsFragment.getEventsItemListCopy().indexOf(ei);
+                    //MylistFragment.setNumberEvents(index);
 
                     // add to ActivityEvent firebase
                     UserItem user = MainActivity.currUser;
                     String eventID = ei.getEventID();
                     String userID = user.getId();
-                    DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+                    DatabaseReference activityEventRef = firebaseDatabase.getReference("ActivityEvent");
                     ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
-                    mActivityEventRef.push().setValue(activityOccasionItem);
+                    activityEventRef.push().setValue(activityOccasionItem);
 
 
-                    Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(eventsContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
                 } else {
                     // change back to plus
-                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-                    holder1.setChecked(false);
+                    eventsHolder.addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    eventsHolder.setChecked(false);
 
                     // delete the entry from activity DB
-                    EventsItem ei = mEventsList.get(position);
+                    EventsItem ei = eventsList.get(position);
                     UserItem user = MainActivity.currUser;
                     final String eventID = ei.getEventID();
                     final String userID = user.getId();
-                    final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
-                    mActivityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final DatabaseReference activityEventRef = firebaseDatabase.getReference("ActivityEvent");
+                    activityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                                 if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
-                                    mActivityEventRef.child(key).removeValue();
-                                    Toast.makeText(mContext, "Event removed from your list", Toast.LENGTH_SHORT).show();
+                                    activityEventRef.child(key).removeValue();
+                                    Toast.makeText(eventsContext, "Event removed from your list",
+                                        Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -360,62 +349,62 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         });
 
         if (MainActivity.mLikeEventIDs.contains(eventID)) {
-            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-            holder1.setLiked(true);
-            holder1.mLikeButton.setChecked(true);
+            eventsHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            eventsHolder.setLiked(true);
+            eventsHolder.likeButton.setChecked(true);
         } else {
-            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-            holder1.setLiked(false);
-            holder1.mLikeButton.setChecked(false);
+            eventsHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            eventsHolder.setLiked(false);
+            eventsHolder.likeButton.setChecked(false);
         }
 
-        holder1.setNumLikes(currentItem.getNumLikes());
+        eventsHolder.setNumLikes(currentItem.getNumLikes());
 
-        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        eventsHolder.likeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    holder1.setLiked(true);
+                    eventsHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    eventsHolder.setLiked(true);
 
                     // send to LikeDatabase
-                    EventsItem ei = mEventsList.get(position);
+                    EventsItem ei = eventsList.get(position);
                     UserItem user = MainActivity.currUser;
                     final String eventID = ei.getEventID();
                     final String userID = user.getId();
-                    DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                    DatabaseReference likeEventRef = firebaseDatabase.getReference("LikeEvent");
                     LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
-                    mLikeEventRef.push().setValue(likeOccasionItem);
+                    likeEventRef.push().setValue(likeOccasionItem);
 
                     // +1 to the Likes on the eventItem
                     int currLikes = ei.getNumLikes();
-                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                    DatabaseReference mEventRef = firebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes + 1);
                     ei.setNumLikes(currLikes + 1);
-                    holder1.setNumLikes(currLikes + 1);
+                    eventsHolder.setNumLikes(currLikes + 1);
 
                     // for display only
-                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1));
+                    eventsHolder.numLikesView.setText(Integer.toString(currLikes + 1));
 
                 } else {
-                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    holder1.setLiked(false);
+                    eventsHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    eventsHolder.setLiked(false);
 
                     // Delete the entry from LikeDatabse
-                    EventsItem ei = mEventsList.get(position);
+                    EventsItem ei = eventsList.get(position);
                     UserItem user = MainActivity.currUser;
                     final String eventID = ei.getEventID();
                     final String userID = user.getId();
-                    final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
-                    mLikeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final DatabaseReference likeEventRef = firebaseDatabase.getReference("LikeEvent");
+                    likeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                                 if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
-                                    mLikeEventRef.child(key).removeValue();
-                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                    likeEventRef.child(key).removeValue();
+                                    Toast.makeText(eventsContext, "Unliked", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -428,13 +417,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
                     // -1 to the Likes on the eventItem
                     int currLikes = ei.getNumLikes();
-                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
+                    DatabaseReference mEventRef = firebaseDatabase.getReference("Events");
                     mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
                     ei.setNumLikes(currLikes - 1);
-                    holder1.setNumLikes(currLikes -1);
+                    eventsHolder.setNumLikes(currLikes - 1);
 
                     // for display only
-                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1));
+                    eventsHolder.numLikesView.setText(Integer.toString(currLikes - 1));
 
                     MainActivity.mLikeEventIDs.remove(eventID);
                 }
@@ -447,7 +436,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     //imageView.setImageResource(R.drawable.ic_favorite_red_24dp);
     @Override
     public int getItemCount() {
-        return mEventsList.size();
+        return eventsList.size();
     }
 
     @Override
@@ -461,11 +450,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             List<EventsItem> filteredList = new ArrayList<>(); // initially empty list
 
             if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(mEventsListFull); // to show everything
+                filteredList.addAll(eventsListFull); // to show everything
             } else {
                 String userSearchInput = constraint.toString().toLowerCase().trim();
 
-                for (EventsItem item : mEventsListFull) {
+                for (EventsItem item : eventsListFull) {
                     // contains can be changed to StartsWith
                     if (item.getTitle().toLowerCase().contains(userSearchInput)) {
                         filteredList.add(item);
@@ -481,14 +470,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mEventsList.clear();
-            mEventsList.addAll((List) results.values); // data list contains filtered items
+            eventsList.clear();
+            eventsList.addAll((List) results.values); // data list contains filtered items
             notifyDataSetChanged(); // tell adapter list has changed
         }
     };
 
     public void resetAdapter() {
-        this.mEventsList = mEventsListFull;
+        this.eventsList = eventsListFull;
     }
 
 
