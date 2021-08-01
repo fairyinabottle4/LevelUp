@@ -40,23 +40,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class EventsFragment extends Fragment {
+    public static boolean refresh;
+    private static final String[] categories = {"All",
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private static ArrayList<EventsItem> EventsItemList;
     private static ArrayList<EventsItem> copy;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
-    private static final String[] categories = {"All",
-            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private EventsAdapter adapter;
     private View rootView;
 
-    public FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButton;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static boolean refresh;
 
 
     @Nullable
@@ -103,6 +103,9 @@ public class EventsFragment extends Fragment {
         EventsItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds a recycler view of a scrolling list of all the Eventitems
+     */
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new LinearLayoutManager(getContext());
@@ -220,6 +223,9 @@ public class EventsFragment extends Fragment {
         return EventsItemList;
     }
 
+    /**
+     * Load data from the database into an ArrayList that will display the Events
+     */
     public void loadDataEvents() {
         valueEventListener = new ValueEventListener() {
 

@@ -71,6 +71,9 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
         mktplaceItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds the recycler view which contains the list of MktplaceItems
+     */
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.recyclerview);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -98,6 +101,9 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
         mktplaceItemList = list;
     }
 
+    /**
+     * Loads data from the database into an ArrayList which will be displayed in the Fragment
+     */
     public void loadDataMktplace() {
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {

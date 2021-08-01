@@ -18,7 +18,17 @@ public class EventsItem implements Occasion {
     private String creatorID;
     private int numLikes;
 
-
+    /**
+     * Constructor for the EventsItem class
+     *
+     * @param dateInfo date the Event is taking place on
+     * @param timeInfo Time when the Event starts
+     * @param hourOfDay Hour of the day related to time
+     * @param minute Minute information related to time
+     * @param locationInfo Location where the Event will take place
+     * @param title Title of the Event
+     * @param description Description of the Event
+     */
     public EventsItem(Date dateInfo, String timeInfo, int hourOfDay, int minute,
                       String locationInfo, String title, String description) {
         this.dateInfo = dateInfo;
@@ -30,7 +40,21 @@ public class EventsItem implements Occasion {
         this.description = description;
     }
 
-    // Overloaded Constructor to push Event ID and Creator ID to Firebase
+    /**
+     * Overloaded constructor for the EventsItem class to push JioId and CreatorID to Firebase
+     *
+     * @param numLikes Number of likes for this Event
+     * @param eventID Identifying string for this Event
+     * @param creatorID Identifying string for the user who created the Event
+     * @param dateInfo Date on which the Event will take place
+     * @param timeInfo Time on which the Event will start
+     * @param hourOfDay Hour information related to time
+     * @param minute Minute information related to time
+     * @param locationInfo Location where the Event will take place
+     * @param title Title of the Event
+     * @param description Description of the Event
+     * @param category Category to which the Event belongs
+     */
     public EventsItem(int numLikes, String eventID, String creatorID, Date dateInfo,
                       String timeInfo, int hourOfDay, int minute, String locationInfo, String title,
                       String description, int category) {

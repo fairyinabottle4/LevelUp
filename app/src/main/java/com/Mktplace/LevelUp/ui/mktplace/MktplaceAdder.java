@@ -1,21 +1,5 @@
 package com.Mktplace.LevelUp.ui.mktplace;
 
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.MainActivity;
 import com.bumptech.glide.Glide;
 import com.example.LevelUp.ui.mktplace.MktplaceFragment;
@@ -31,25 +15,39 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MktplaceAdder extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    EditText listingTitle;
-    EditText meetupLocation;
-    EditText listingDescription;
-    Button photoSelector;
-    Button createListing;
-    ProgressBar progressBar;
-    ImageView listingPhoto;
+    private EditText listingTitle;
+    private EditText meetupLocation;
+    private EditText listingDescription;
+    private Button photoSelector;
+    private Button createListing;
+    private ProgressBar progressBar;
+    private ImageView listingPhoto;
 
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
-    //Using raw type here. Not sure what the type parameter should be though.
-    private StorageTask mUploadTask;
+    private StorageReference storageRef;
+    private DatabaseReference databaseRef;
+    private StorageTask uploadTask;
 
 
-    private Uri mImageUri;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +61,8 @@ public class MktplaceAdder extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         createListing = findViewById(R.id.create_listing);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("mktplace uploads");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
+        storageRef = FirebaseStorage.getInstance().getReference("mktplace uploads");
+        databaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
 
         photoSelector.setOnClickListener(new View.OnClickListener() {
@@ -76,8 +74,9 @@ public class MktplaceAdder extends AppCompatActivity {
         createListing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mUploadTask != null && mUploadTask.isInProgress()) {
-                    Toast.makeText(MktplaceAdder.this, "Upload in progress", Toast.LENGTH_SHORT).show();
+                if (uploadTask != null && uploadTask.isInProgress()) {
+                    Toast.makeText(MktplaceAdder.this, "Upload in progress",
+                        Toast.LENGTH_SHORT).show();
                 } else {
                     uploadFile();
                 }
@@ -97,8 +96,8 @@ public class MktplaceAdder extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
-            mImageUri = data.getData();
-            Glide.with(listingPhoto.getContext()).load(mImageUri).into(listingPhoto);
+            imageUri = data.getData();
+            Glide.with(listingPhoto.getContext()).load(imageUri).into(listingPhoto);
         }
     }
 
@@ -109,12 +108,12 @@ public class MktplaceAdder extends AppCompatActivity {
     }
 
     private void uploadFile() {
-        boolean factors = mImageUri != null && !meetupLocation.getText().toString().equals("")
-                && !listingTitle.getText().toString().equals(""); // && !listingDescription.getText().toString().equals("");
+        boolean factors = imageUri != null && !meetupLocation.getText().toString().equals("")
+                && !listingTitle.getText().toString().equals("");
         if (factors) {
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                    + "." + getFileExtension(mImageUri));
-            mUploadTask = fileReference.putFile(mImageUri)
+            StorageReference fileReference = storageRef.child(System.currentTimeMillis()
+                    + "." + getFileExtension(imageUri));
+            uploadTask = fileReference.putFile(imageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -125,21 +124,19 @@ public class MktplaceAdder extends AppCompatActivity {
                                     progressBar.setProgress(0);
                                 }
                             }, 5000);
-                            Toast.makeText(MktplaceAdder.this, "Listing successful", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MktplaceAdder.this, "Listing successful",
+                                Toast.LENGTH_LONG).show();
                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
-                            String key = mDatabaseRef.push().getKey();
-                            String creatorUID = MainActivity.currUser.getId();
-                            MktplaceItem title = new MktplaceItem(0, key, creatorUID, listingTitle.getText().toString().trim(),
+                            String key = databaseRef.push().getKey();
+                            String creatorUid = MainActivity.currUser.getId();
+                            MktplaceItem title = new MktplaceItem(0, key, creatorUid,
+                                listingTitle.getText().toString().trim(),
                                     downloadUrl.toString(),
                                     meetupLocation.getText().toString().trim(),
                                     listingDescription.getText().toString().trim());
-                            // String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(key).setValue(title);
-//                            Intent intent = new Intent(MktplaceAdder.this, MainActivity.class);
-//                            startActivity(intent);
-
+                            databaseRef.child(key).setValue(title);
                             MktplaceFragment.setRefresh(true);
                             onBackPressed();
 
@@ -148,18 +145,21 @@ public class MktplaceAdder extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MktplaceAdder.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MktplaceAdder.this, e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()
+                                / taskSnapshot.getTotalByteCount());
                             progressBar.setProgress((int) progress);
                         }
                     });
         } else {
-            Toast.makeText(this, "Please check all fields and try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please check all fields and try again",
+                Toast.LENGTH_SHORT).show();
         }
     }
 }

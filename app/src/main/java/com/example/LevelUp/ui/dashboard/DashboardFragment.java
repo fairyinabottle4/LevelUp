@@ -96,6 +96,10 @@ public class DashboardFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Build a list of items that have received the most likes, with a maximum of 6, 3 each from
+     * Jios and Events displayed with a horizontal scrolling list
+     */
     public void buildTrendingRecyclerView() {
         recyclerViewTrending = rootView.findViewById(R.id.trending);
         layoutManagerTrending = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -106,6 +110,10 @@ public class DashboardFragment extends Fragment {
         recyclerViewTrending.setItemAnimator(new DefaultItemAnimator());
     }
 
+    /**
+     * Build a list of items that are happening on the same date as the system time, with a maximum
+     * of 6, 3 each from Jios and Events displayed on a horizontal scrolling list.
+     */
     public void buildTodayRecyclerView() {
         recyclerViewToday = rootView.findViewById(R.id.today);
         layoutManagerToday = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -115,6 +123,10 @@ public class DashboardFragment extends Fragment {
         recyclerViewToday.setItemAnimator(new DefaultItemAnimator());
     }
 
+    /**
+     * Build a list of items that are most recently created, with a maximum
+     * of 6, 3 each from Jios and Events displayed on a horizontal scrolling list.
+     */
     public void buildNewlyCreatedRecyclerView() {
         recyclerViewNewlyCreated = rootView.findViewById(R.id.newOccasions);
         layoutManagerNewlyCreated = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -148,6 +160,10 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Pulls data from the database and search for those with the most likes and put them into
+     * the designated ArrayList
+     */
     public void initializeListTrending() {
         databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
         databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
@@ -268,6 +284,10 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    /**
+     * Pulls data from the database and search for Jios and Events that are happening on the same day
+     * as system time and put them into the designated ArrayList
+     */
     public void initializeListToday() {
 
         databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
@@ -393,6 +413,10 @@ public class DashboardFragment extends Fragment {
 
     }
 
+    /**
+     * Pulls data from the database and search for Jios and Events that are most recently created
+     * and put them into the designated ArrayList
+     */
     public void initializeListNewlyCreated() {
 
         databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
@@ -407,7 +431,7 @@ public class DashboardFragment extends Fragment {
                 newlyCreatedEvents.clear();
                 occasionNewlyCreated.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    try  {
+                    try {
                         Occasion selected = snapshot.getValue(EventsItem.class);
                         if (selected.getTimeInfo().length() > 4) {
                             continue;

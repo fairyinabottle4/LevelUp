@@ -56,6 +56,9 @@ public class EventsMyListFragment extends Fragment {
 
     }
 
+    /**
+     * Builds a recycler view to display a list of Events that the user created
+     */
     public void buildRecyclerView() {
         recylerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());

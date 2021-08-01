@@ -61,6 +61,9 @@ public class JiosLikedFragment extends Fragment {
 
     }
 
+    /**
+     * Builds the recycler view which contains the list of liked JioItems
+     */
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
