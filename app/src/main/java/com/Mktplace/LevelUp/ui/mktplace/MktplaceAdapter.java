@@ -64,6 +64,13 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         private boolean isLiked;
         private int numLikes;
 
+        /**
+         * Constructor for the view holder that will be used to display information of individual
+         * MktplaceItem listings
+         *
+         * @param context Context of the Fragment where the adapter is placed
+         * @param itemView View of the items that will be placed in the adapter
+         */
         public MktplaceViewHolder(final Context context, View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
@@ -151,6 +158,13 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
+
+    /**
+     * Constructor for the MktplaceAdapter class.
+     *
+     * @param context Context that belongs to the Fragment
+     * @param MktplaceList List of items that are added to the View
+     */
     public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> MktplaceList) {
         this.mktplaceContext = context;
         mktplaceList = MktplaceList;

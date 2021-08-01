@@ -36,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MktplaceFragment extends Fragment {
+    public static boolean refresh;
+
     private static ArrayList<MktplaceItem> MktplaceItemList;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -45,7 +47,6 @@ public class MktplaceFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseReference databaseRef;
     private TextView nothingView;
-    public static boolean refresh;
 
     @Nullable
     @Override
@@ -87,6 +88,9 @@ public class MktplaceFragment extends Fragment {
         MktplaceItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds the list of items that will be contained in the Fragment
+     */
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -158,6 +162,9 @@ public class MktplaceFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+     * Loads listing data from the database into the ArrayList which will be displayed
+     */
     public void loadDataMktplace() {
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

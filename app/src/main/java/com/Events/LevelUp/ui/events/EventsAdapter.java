@@ -79,6 +79,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         private View itemView;
 
+        /**
+         * Constructor of the view holder that will hold the information displayed for Events
+         *
+         * @param context Context of the fragment that will contain the view holder
+         * @param itemView Containers of information that will be displayed
+         */
         public EventsViewHolder(final Context context, View itemView) {
             super(itemView);
             this.itemView = itemView;
@@ -195,6 +201,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     //Constructor for EventsAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
+
+    /**
+     * Constructor for EventsAdapter class
+     *
+     * @param context Context of the Fragment which will contain the adapter
+     * @param EventsList Contains the complete list of items that are added to the view
+     */
     public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> EventsList) {
         eventsList = EventsList;
         eventsContext = context;

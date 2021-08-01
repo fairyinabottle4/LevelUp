@@ -40,11 +40,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class JiosFragment extends Fragment {
-
-    public FloatingActionButton floatingActionButton;
+    public static boolean refresh;
 
     private static ArrayList<JiosItem> JiosItemList;
     private static ArrayList<JiosItem> copy;
+
+    private FloatingActionButton floatingActionButton;
+
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
@@ -56,9 +58,6 @@ public class JiosFragment extends Fragment {
 
     private static final String[] categories = {"All",
             "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
-
-
-    public static boolean refresh;
 
     @Nullable
     @Override
@@ -100,6 +99,9 @@ public class JiosFragment extends Fragment {
         JiosItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds the list of items that will be contained in the Fragment
+     */
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new LinearLayoutManager(getContext());
@@ -233,6 +235,9 @@ public class JiosFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
+    /**
+     * Load data from database into ArrayList which contains the JiosItem
+     */
     public void loadDataJios() {
         valueEventListener = new ValueEventListener() {
 

@@ -18,6 +18,17 @@ public class JiosItem implements Occasion {
     private String creatorID;
     private int numLikes;
 
+    /**
+     * Constructor for the JiosItem class
+     *
+     * @param dateInfo date the Jio is taking place on
+     * @param timeInfo Time when the Jio starts
+     * @param hourOfDay Hour of the day related to time
+     * @param minute Minute information related to time
+     * @param locationInfo Location where the Jio will take place
+     * @param title Title of the Jio
+     * @param description Description of the Jio
+     */
     public JiosItem(Date dateInfo, String timeInfo, int hourOfDay, int minute,
                     String locationInfo, String title, String description) {
         this.hourOfDay = hourOfDay;
@@ -29,7 +40,21 @@ public class JiosItem implements Occasion {
         this.description = description;
     }
 
-    // Overloaded Constructor to push Jio ID and Creator ID to Firebase
+    /**
+     * Overloaded constructor for the JiosItem class to push JioId and CreatorID to Firebase
+     *
+     * @param numLikes Number of likes for this Jio
+     * @param jioID Identifying string for this Jio
+     * @param creatorID Identifying string for the user who created the Jio
+     * @param dateInfo Date on which the Jio will take place
+     * @param timeInfo Time on which the Jio will start
+     * @param hourOfDay Hour information related to time
+     * @param minute Minute information related to time
+     * @param locationInfo Location where the Jio will take place
+     * @param title Title of the Jio
+     * @param description Description of the Jio
+     * @param category Category to which the Jio belongs
+     */
     public JiosItem(int numLikes, String jioID, String creatorID, Date dateInfo, String timeInfo,
                     int hourOfDay, int minute, String locationInfo, String title,
                     String description, int category) {

@@ -55,6 +55,9 @@ public class EventsLikedFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Builds a recycler view that displays a list of Events liked by the user
+     */
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         layoutManager = new LinearLayoutManager(getContext());
