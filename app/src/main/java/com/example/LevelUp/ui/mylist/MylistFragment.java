@@ -50,6 +50,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistFragment extends Fragment {
+
+    private static boolean refreshList;
+    private static boolean refreshUserDetails;
+
     private ArrayList<Occasion> occasionAll = new ArrayList<>();
     private ArrayList<Occasion> occasionEvents = new ArrayList<>();
     private ArrayList<Occasion> occasionJios = new ArrayList<>();
@@ -79,9 +83,6 @@ public class MylistFragment extends Fragment {
     private TextView residence;
     private ImageView profilePic;
     private String firebaseUserId;
-
-    private static boolean refreshList;
-    private static boolean refreshUserDetails;
 
     @Nullable
     @Override
@@ -119,6 +120,10 @@ public class MylistFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Method to initialize the list that will be contained within the Fragment. It will pull data
+     * from the database for both Events and Jios.
+     */
     public void initializeList() {
         eventIDs.clear();
         jioIDs.clear();
@@ -280,6 +285,9 @@ public class MylistFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Initialize the details of the user logged in to the app. Data will be pulled from the database
+     */
     public void initializeUserDetails() {
         final String firebaseUserIdFinal = firebaseUserId;
         final TextView nameFinal = name;
@@ -349,6 +357,11 @@ public class MylistFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    /**
+     * Sets the residence name based on the pre-coded number
+     *
+     * @param x The number representing each residence
+     */
     public void intToRes(int x) {
         if (x == 0) {
             residenceName = "Off Campus";
@@ -398,6 +411,10 @@ public class MylistFragment extends Fragment {
 
     }
 
+    /**
+     * Builds the recycler view to display a scrolling list of all the Jios and Events that
+     * the user has registered for
+     */
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new LinearLayoutManager(getContext());
