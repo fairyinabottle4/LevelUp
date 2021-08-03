@@ -1,4 +1,4 @@
-package com.Mylist.LevelUp.ui.mylist;
+package com.levelup.ui.mylist;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -19,9 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.levelup.ui.mktplace.MktplaceItem;
 import com.bumptech.glide.Glide;
-import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +33,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.levelup.R;
+import com.levelup.ui.mktplace.MktplaceItem;
 
 public class EditMarketPlaceActivity extends AppCompatActivity {
     private Button saveBtn;

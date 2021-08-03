@@ -1,4 +1,4 @@
-package com.levelup;
+package com.levelup.user;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.levelup.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
 import com.squareup.picasso.Picasso;
 
 public class UserProfile extends AppCompatActivity {

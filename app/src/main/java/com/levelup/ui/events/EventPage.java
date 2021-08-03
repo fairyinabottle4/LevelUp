@@ -1,4 +1,4 @@
-package com.Events.LevelUp.ui.events;
+package com.levelup.ui.events;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.ActivityOccasionItem;
-import com.LikeOccasionItem;
-import com.MainActivity;
-import com.UserItem;
-import com.UserProfile;
-import com.example.LevelUp.ui.dashboard.DashboardFragment;
-import com.example.LevelUp.ui.events.EventsFragment;
-import com.example.LevelUp.ui.mylist.MylistFragment;
-import com.example.tryone.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,12 +24,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.fragment.dashboard.DashboardFragment;
+import com.levelup.fragment.events.EventsFragment;
+import com.levelup.fragment.mylist.MylistFragment;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.LikeOccasionItem;
+import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
-
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

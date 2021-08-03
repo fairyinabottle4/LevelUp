@@ -1,10 +1,5 @@
-package com.levelup;
+package com.levelup.occasion;
 
-import androidx.fragment.app.Fragment;
-
-import com.google.gson.InstanceCreator;
-
-import java.lang.reflect.Type;
 import java.util.Date;
 
 public interface Occasion {

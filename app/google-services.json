@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:361887413011:android:79065cc2b7ace0fbe4a0e6",
         "android_client_info": {
-          "package_name": "com.example.tryone"
+          "package_name": "com.levelup"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "361887413011-6sc7r26oijsbmua0tdc444760j41h0qp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.tryone",
+            "package_name": "com.levelup",
             "certificate_hash": "5b7716dc55afa4312bcb864e3aec86cd788e9e31"
           }
         },

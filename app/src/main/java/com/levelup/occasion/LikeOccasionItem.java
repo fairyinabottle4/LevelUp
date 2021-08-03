@@ -1,4 +1,4 @@
-package com.levelup;
+package com.levelup.occasion;
 
 public class LikeOccasionItem {
     private String occasionID;

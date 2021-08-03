@@ -1,12 +1,11 @@
-package com.Dashboard.LevelUp.ui.dashboard;
+package com.levelup.ui.dashboard;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceFragmentCompat;
 
-import com.example.tryone.R;
+import com.levelup.R;
+
 
 public class DashboardSettingsActivity extends AppCompatActivity {
 

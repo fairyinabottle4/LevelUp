@@ -1,4 +1,4 @@
-package com.example.LevelUp.ui.jios;
+package com.levelup.fragment.jios;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,19 +22,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.levelup.ui.jios.JiosAdder;
-import com.levelup.ui.jios.JiosAdapter;
-import com.levelup.ui.jios.JiosItem;
-import com.levelup.ui.jios.JiosLikedFragment;
-import com.levelup.ui.jios.JiosMyListFragment;
-import com.MainActivity;
-import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.ui.jios.JiosAdapter;
+import com.levelup.ui.jios.JiosAdder;
+import com.levelup.ui.jios.JiosItem;
+import com.levelup.ui.jios.JiosLikedFragment;
+import com.levelup.ui.jios.JiosMyListFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;

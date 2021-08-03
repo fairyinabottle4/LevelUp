@@ -1,4 +1,4 @@
-package com.Mktplace.LevelUp.ui.mktplace;
+package com.levelup.ui.mktplace;
 
 public class MktplaceItem {
     private String mktPlaceID;

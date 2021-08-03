@@ -1,4 +1,4 @@
-package com.Mylist.LevelUp.ui.mylist;
+package com.levelup.ui.mylist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +12,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.tryone.R;
 import com.google.android.material.tabs.TabLayout;
+import com.levelup.R;
 
 import java.util.ArrayList;
 import java.util.List;

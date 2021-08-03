@@ -1,4 +1,4 @@
-package com.Events.LevelUp.ui.events;
+package com.levelup.ui.events;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

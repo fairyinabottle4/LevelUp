@@ -1,4 +1,4 @@
-package com.example.LevelUp.ui.mylist;
+package com.levelup.fragment.mylist;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -23,18 +23,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ActivityOccasionItem;
-import com.levelup.ui.events.EventsItem;
-import com.levelup.ui.jios.JiosItem;
-import com.MainActivity;
-import com.Mylist.LevelUp.ui.mylist.CreatedFragment;
-import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
-import com.Mylist.LevelUp.ui.mylist.HistoryFragment;
-import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
-import com.UserItem;
 import com.bumptech.glide.Glide;
-import com.example.LevelUp.ui.Occasion;
-import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +34,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.events.EventsItem;
+import com.levelup.ui.jios.JiosItem;
+import com.levelup.ui.mylist.CreatedFragment;
+import com.levelup.ui.mylist.EditUserInfoActivity;
+import com.levelup.ui.mylist.HistoryFragment;
+import com.levelup.ui.mylist.MylistAdapter;
+import com.levelup.user.UserItem;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.Mylist.LevelUp.ui.mylist;
+package com.levelup.ui.mylist;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -23,16 +23,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.levelup.ui.events.DatePickerFragment;
-import com.levelup.ui.events.EventsItem;
-import com.levelup.ui.events.TimePickerFragment;
-import com.levelup.ui.jios.JiosItem;
-import com.example.tryone.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.ui.events.DatePickerFragment;
+import com.levelup.ui.events.EventsItem;
+import com.levelup.ui.events.TimePickerFragment;
+import com.levelup.ui.jios.JiosItem;
 
 import java.text.DateFormat;
 import java.text.ParseException;

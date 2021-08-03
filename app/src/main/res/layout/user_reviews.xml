@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/event_layout"
-    tools:context="com.UserReviews">
+    tools:context="com.levelup.user.UserReviews">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"

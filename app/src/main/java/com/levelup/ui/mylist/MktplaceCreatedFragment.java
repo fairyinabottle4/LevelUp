@@ -1,4 +1,4 @@
-package com.Mylist.LevelUp.ui.mylist;
+package com.levelup.ui.mylist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +16,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.levelup.ui.mktplace.MktplaceItem;
-import com.levelup.ui.mktplace.MktplacePage;
-import com.example.tryone.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +23,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.ui.mktplace.MktplaceItem;
+import com.levelup.ui.mktplace.MktplacePage;
 
 import java.util.ArrayList;
 

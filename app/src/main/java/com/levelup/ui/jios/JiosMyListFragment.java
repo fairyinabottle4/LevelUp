@@ -1,10 +1,9 @@
-package com.Jios.LevelUp.ui.jios;
+package com.levelup.ui.jios;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,17 +14,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ActivityOccasionItem;
-import com.MainActivity;
-import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
-import com.example.LevelUp.ui.Occasion;
-import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.mylist.MylistAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;

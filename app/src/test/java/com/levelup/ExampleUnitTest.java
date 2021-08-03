@@ -1,4 +1,4 @@
-package com.example.levelup;
+package com.levelup;
 
 import org.junit.Test;
 

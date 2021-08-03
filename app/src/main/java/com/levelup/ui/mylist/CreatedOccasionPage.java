@@ -1,4 +1,4 @@
-package com.Mylist.LevelUp.ui.mylist;
+package com.levelup.ui.mylist;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,11 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.levelup.ui.events.EventsItem;
-import com.levelup.ui.jios.JiosItem;
-import com.MainActivity;
-import com.UserProfile;
-import com.example.tryone.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.ui.events.EventsItem;
+import com.levelup.ui.jios.JiosItem;
+import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;

@@ -1,4 +1,4 @@
-package com.Events.LevelUp.ui.events;
+package com.levelup.ui.events;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,16 +14,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ActivityOccasionItem;
-import com.Mylist.LevelUp.ui.mylist.MylistAdapter;
-import com.example.LevelUp.ui.Occasion;
-import com.example.tryone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.mylist.MylistAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;

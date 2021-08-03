@@ -1,11 +1,9 @@
-package com.Events.LevelUp.ui.events;
+package com.levelup.ui.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,15 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
-import com.MainActivity;
-import com.Mylist.LevelUp.ui.mylist.EditUserInfoActivity;
-import com.example.LevelUp.ui.events.EventsFragment;
-import com.example.tryone.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.fragment.events.EventsFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;

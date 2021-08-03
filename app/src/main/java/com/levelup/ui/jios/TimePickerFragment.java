@@ -1,4 +1,4 @@
-package com.Jios.LevelUp.ui.jios;
+package com.levelup.ui.jios;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

@@ -1,4 +1,4 @@
-package com.levelup;
+package com.levelup.user;
 
 import android.os.Bundle;
 import android.view.View;
@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.levelup.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.review.ReviewAdapter;
+import com.levelup.review.ReviewItem;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

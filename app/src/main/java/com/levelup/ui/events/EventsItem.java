@@ -1,6 +1,6 @@
-package com.Events.LevelUp.ui.events;
+package com.levelup.ui.events;
 
-import com.example.LevelUp.ui.Occasion;
+import com.levelup.occasion.Occasion;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.levelup;
+package com.levelup.review;
 
 public class ReviewItem {
 

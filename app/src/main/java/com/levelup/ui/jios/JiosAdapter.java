@@ -1,4 +1,4 @@
-package com.Jios.LevelUp.ui.jios;
+package com.levelup.ui.jios;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +17,12 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ActivityOccasionItem;
-import com.LikeOccasionItem;
-import com.MainActivity;
-import com.UserItem;
-import com.UserProfile;
-import com.example.tryone.R;
+import com.levelup.R;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.LikeOccasionItem;
+import com.levelup.activity.MainActivity;
+import com.levelup.user.UserItem;
+import com.levelup.user.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;

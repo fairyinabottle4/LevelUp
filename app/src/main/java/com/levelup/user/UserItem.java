@@ -1,6 +1,4 @@
-package com.levelup;
-
-import com.google.firebase.auth.FirebaseUser;
+package com.levelup.user;
 
 public class UserItem {
     public String id;

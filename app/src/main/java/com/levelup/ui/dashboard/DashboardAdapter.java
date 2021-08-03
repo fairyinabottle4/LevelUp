@@ -1,30 +1,18 @@
-package com.Dashboard.LevelUp.ui.dashboard;
+package com.levelup.ui.dashboard;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ActivityOccasionItem;
-import com.Events.LevelUp.ui.events.EventPage;
-import com.LikeOccasionItem;
-import com.MainActivity;
-import com.UserItem;
-import com.example.LevelUp.ui.Occasion;
-import com.example.tryone.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +20,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.events.EventPage;
+import com.levelup.user.UserItem;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

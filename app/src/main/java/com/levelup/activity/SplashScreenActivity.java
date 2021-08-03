@@ -1,4 +1,4 @@
-package com.levelup;
+package com.levelup.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 //import androidx.annotation.Nullable;
 //import androidx.appcompat.app.AppCompatActivity;
 //
-//import com.example.tryone.R;
 //
 //import gr.net.maroulis.library.EasySplashScreen;
 //
