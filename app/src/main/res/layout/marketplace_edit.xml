@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/activity_horizontal_margin"
     android:paddingVertical="@dimen/activity_vertical_margin"
-    tools:context="com.Jios.LevelUp.ui.jios.JiosAdder">
+    tools:context="com.levelup.ui.jios.JiosAdder">
 
 
     <EditText

@@ -6,31 +6,31 @@
 
     <fragment
         android:id="@+id/nav_mktplace"
-        android:name="com.example.LevelUp.ui.mktplace.MktplaceFragment"
+        android:name="com.levelup.fragment.mktplace.MktplaceFragment"
         android:label="@string/title_mktplace"
         tools:layout="@layout/fragment_mktplace" />
 
     <fragment
         android:id="@+id/nav_dashboard"
-        android:name="com.example.LevelUp.ui.dashboard.DashboardFragment"
+        android:name="com.levelup.fragment.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/nav_jios"
-        android:name="com.example.LevelUp.ui.jios.JiosFragment"
+        android:name="com.levelup.fragment.jios.JiosFragment"
         android:label="@string/title_jios"
         tools:layout="@layout/fragment_jios" />
 
     <fragment
         android:id="@+id/nav_events"
-        android:name="com.example.LevelUp.ui.events.EventsFragment"
+        android:name="com.levelup.fragment.events.EventsFragment"
         android:label="@string/title_events"
         tools:layout="@layout/fragment_events" />
 
     <fragment
         android:id="@+id/nav_mylist"
-        android:name="com.example.LevelUp.ui.mylist.MylistFragment"
+        android:name="com.levelup.fragment.mylist.MylistFragment"
         android:label="@string/title_mylist"
         tools:layout="@layout/fragment_mylist" />
 
