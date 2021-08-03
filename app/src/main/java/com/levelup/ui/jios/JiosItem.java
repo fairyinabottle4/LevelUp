@@ -1,8 +1,8 @@
 package com.levelup.ui.jios;
 
-import com.levelup.occasion.Occasion;
-
 import java.util.Date;
+
+import com.levelup.occasion.Occasion;
 
 
 public class JiosItem implements Occasion {

@@ -10,6 +10,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.dashboard.DashboardAdapter;
+import com.levelup.ui.dashboard.DashboardSettingsActivity;
+import com.levelup.ui.events.EventsItem;
+import com.levelup.ui.jios.JiosItem;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,25 +35,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.occasion.Occasion;
-import com.levelup.ui.dashboard.DashboardAdapter;
-import com.levelup.ui.dashboard.DashboardSettingsActivity;
-import com.levelup.ui.events.EventsItem;
-import com.levelup.ui.jios.JiosItem;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 public class DashboardFragment extends Fragment {
     private View rootView;

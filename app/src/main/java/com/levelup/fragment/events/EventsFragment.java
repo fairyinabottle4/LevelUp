@@ -1,28 +1,9 @@
 package com.levelup.fragment.events;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -38,9 +19,26 @@ import com.levelup.ui.events.EventsItem;
 import com.levelup.ui.events.EventsLikedFragment;
 import com.levelup.ui.events.EventsMyListFragment;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class EventsFragment extends Fragment {

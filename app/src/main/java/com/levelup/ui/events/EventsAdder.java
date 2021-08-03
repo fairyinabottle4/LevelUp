@@ -8,6 +8,9 @@ import java.util.Locale;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.fragment.events.EventsFragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -26,11 +29,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
-
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.fragment.events.EventsFragment;
 
 
 

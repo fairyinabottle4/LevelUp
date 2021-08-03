@@ -1,20 +1,6 @@
 package com.levelup.ui.mylist;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import java.util.ArrayList;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +13,20 @@ import com.levelup.R;
 import com.levelup.ui.mktplace.MktplaceItem;
 import com.levelup.ui.mktplace.MktplacePage;
 
-import java.util.ArrayList;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MktplaceCreatedFragment extends Fragment implements MktplaceCreatedAdapter.OnItemClickListener {
     private static ArrayList<MktplaceItem> mktplaceItemList;

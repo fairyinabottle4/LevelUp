@@ -1,14 +1,6 @@
 package com.levelup.ui.mylist;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import java.util.ArrayList;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,7 +11,14 @@ import com.levelup.R;
 import com.levelup.occasion.ActivityOccasionItem;
 import com.levelup.user.UserItem;
 
-import java.util.ArrayList;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class CreatorViewNames extends AppCompatActivity {
     public ArrayList<String> userIDs = new ArrayList<>();
@@ -98,20 +97,26 @@ public class CreatorViewNames extends AppCompatActivity {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         if (occID.equals(selected.getOccasionID())) {
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                            mFirebaseDatabase.getReference("Users")
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         UserItem selectedUser = snapshot.getValue(UserItem.class);
                                         if (userID.equals(selectedUser.getId())) {
-                                            names.add("(" + intToRes(selectedUser.getResidential()) + ") " + selectedUser.getName());
+                                            names.add("(" + intToRes(selectedUser.getResidential())
+                                                + ") " + selectedUser.getName());
                                         }
                                     }
 
-                                    ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
+                                    ArrayAdapter adapter = new ArrayAdapter(
+                                        CreatorViewNames.this,
+                                            android.R.layout.simple_list_item_1, names);
                                     list.setAdapter(adapter);
 
-                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Signed Up");
+                                    getSupportActionBar().setTitle(names.size()
+                                        + (names.size() == 1 ? " Person " : " People ")
+                                        + "Signed Up");
 
                                 }
 

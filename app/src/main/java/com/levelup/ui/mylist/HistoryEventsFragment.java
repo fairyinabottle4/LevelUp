@@ -1,16 +1,8 @@
 package com.levelup.ui.mylist;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,9 +16,16 @@ import com.levelup.occasion.ActivityOccasionItem;
 import com.levelup.occasion.Occasion;
 import com.levelup.ui.events.EventsItem;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryEventsFragment extends Fragment {
     private View rootView;

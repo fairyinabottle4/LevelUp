@@ -10,6 +10,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.ui.jios.JiosAdapter;
+import com.levelup.ui.jios.JiosAdder;
+import com.levelup.ui.jios.JiosItem;
+import com.levelup.ui.jios.JiosLikedFragment;
+import com.levelup.ui.jios.JiosMyListFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,14 +38,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.ui.jios.JiosAdapter;
-import com.levelup.ui.jios.JiosAdder;
-import com.levelup.ui.jios.JiosItem;
-import com.levelup.ui.jios.JiosLikedFragment;
-import com.levelup.ui.jios.JiosMyListFragment;
 
 
 public class JiosFragment extends Fragment {

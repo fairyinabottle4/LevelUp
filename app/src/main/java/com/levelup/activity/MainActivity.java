@@ -1,14 +1,9 @@
 package com.levelup.activity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,26 +25,41 @@ import com.levelup.occasion.LikeOccasionItem;
 import com.levelup.occasion.Occasion;
 import com.levelup.user.UserItem;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity {
-    // For Login
-    public static FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private static final String TAG = "MainActivity";
 
     public static UserItem currUser;
-    private static String currUserProfilePicture;
-    private DatabaseReference mDatabaseReferenceUser;
 
     // For User Information on MyList Fragment
-    public static String display_name;
-    public static String display_residential;
-    public static String display_telegram = "default";
-    public static long display_phone = 0;
+    public static String displayName;
+    public static String displayResidential;
+    public static String displayTelegram = "default";
+    public static long displayPhone = 0;
+
+    public static final ArrayList<String> mEventIDs = new ArrayList<>();
+    public static final ArrayList<String> mJioIDs = new ArrayList<>();
+
+    public static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
+    public static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
+    public static final ArrayList<String > mLikeMktplaceIDs = new ArrayList<>();
+
+    private static final int RC_SIGN_IN = 1;
+
+    private static final String TAG = "MainActivity";
+    private static String currUserProfilePicture;
+
+    // For Login
+    private static FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private DatabaseReference mDatabaseReferenceUser;
 
     // For things in MyList
     private FirebaseDatabase mFirebaseDatabase;
@@ -59,15 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReferenceLikeJio;
     private DatabaseReference mDatabaseReferenceLikeMktplace;
 
-    public static final ArrayList<String> mEventIDs = new ArrayList<>();
-    public static final ArrayList<String> mJioIDs = new ArrayList<>();
 
-    public static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
-    public static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
-    public static final ArrayList<String > mLikeMktplaceIDs = new ArrayList<>();
-
-
-    private static final int RC_SIGN_IN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -307,28 +309,30 @@ public class MainActivity extends AppCompatActivity {
                     String fragTag = null;
 
                     switch (item.getItemId()) {
-                        case R.id.navigation_mktPlace:
-                            selected = new MktplaceFragment();
-                            fragTag = "MktplaceFragment";
-                            break;
-                        case R.id.navigation_jios:
-                            selected = new JiosFragment();
-                            fragTag = "JiosFragment";
-                            break;
-                        case R.id.navigation_dashboard:
-                            selected = new DashboardFragment();
-                            fragTag = "DashboardFragment";
-                            break;
-                        case R.id.navigation_events:
-                            // Toolbar eventsToolbar = (Toolbar) findViewById(R.id.events_toolbar);
-                            // setSupportActionBar(eventsToolbar);
-                            selected = new EventsFragment();
-                            fragTag = "EventsFragment";
-                            break;
-                        case R.id.navigation_myList:
-                            selected = new MylistFragment();
-                            fragTag = "MylistFragment";
-                            break;
+                    case R.id.navigation_mktPlace:
+                        selected = new MktplaceFragment();
+                        fragTag = "MktplaceFragment";
+                        break;
+                    case R.id.navigation_jios:
+                        selected = new JiosFragment();
+                        fragTag = "JiosFragment";
+                        break;
+                    case R.id.navigation_dashboard:
+                        selected = new DashboardFragment();
+                        fragTag = "DashboardFragment";
+                        break;
+                    case R.id.navigation_events:
+                        // Toolbar eventsToolbar = (Toolbar) findViewById(R.id.events_toolbar);
+                        // setSupportActionBar(eventsToolbar);
+                        selected = new EventsFragment();
+                        fragTag = "EventsFragment";
+                        break;
+                    case R.id.navigation_myList:
+                        selected = new MylistFragment();
+                        fragTag = "MylistFragment";
+                        break;
+                    default:
+                        break;
                     }
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.nav_host_fragment, selected, fragTag)

@@ -1,33 +1,8 @@
 package com.levelup.fragment.mylist;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -51,6 +26,28 @@ import com.levelup.ui.mylist.EditUserInfoActivity;
 import com.levelup.ui.mylist.HistoryFragment;
 import com.levelup.ui.mylist.MylistAdapter;
 import com.levelup.user.UserItem;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class MylistFragment extends Fragment {
@@ -99,11 +96,11 @@ public class MylistFragment extends Fragment {
 
         firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if (MainActivity.display_name != null) {
-            name.setText(MainActivity.display_name);
+        if (MainActivity.displayName != null) {
+            name.setText(MainActivity.displayName);
         }
-        if (MainActivity.display_residential != null) {
-            residence.setText(MainActivity.display_residential);
+        if (MainActivity.displayResidential != null) {
+            residence.setText(MainActivity.displayResidential);
         }
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -325,15 +322,15 @@ public class MylistFragment extends Fragment {
                         if (firebaseUserIdFinal.equals(id)) {
                             user = selected;
                             String displayName = user.getName();
-                            MainActivity.display_name = displayName;
+                            MainActivity.displayName = displayName;
                             nameFinal.setText(displayName);
 
                             intToRes(user.getResidential());
                             resiFinal.setText(residenceName);
-                            MainActivity.display_residential = residenceName;
+                            MainActivity.displayResidential = residenceName;
 
-                            MainActivity.display_phone = user.getPhone();
-                            MainActivity.display_telegram = user.getTelegram();
+                            MainActivity.displayPhone = user.getPhone();
+                            MainActivity.displayTelegram = user.getTelegram();
                         }
                     } catch (Exception e) {
                         System.out.print(e);

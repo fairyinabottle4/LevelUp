@@ -3,13 +3,17 @@ package com.levelup.ui.mktplace;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.LikeOccasionItem;
+import com.levelup.user.UserItem;
+import com.levelup.user.UserProfile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,12 +30,6 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.occasion.LikeOccasionItem;
-import com.levelup.user.UserItem;
-import com.levelup.user.UserProfile;
 
 
 

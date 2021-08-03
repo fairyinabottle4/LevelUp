@@ -3,10 +3,6 @@ package com.levelup.ui.events;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +32,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class EventPage extends AppCompatActivity {

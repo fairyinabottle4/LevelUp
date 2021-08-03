@@ -1,5 +1,18 @@
 package com.levelup.ui.mylist;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.fragment.mylist.MylistFragment;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,27 +30,19 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.fragment.mylist.MylistFragment;
-
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private FirebaseAuth firebaseAuth;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String[] residentials = {"I don't stay on campus",
+            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+            "Select Residence"};
+
+    private FirebaseAuth firebaseAuth;
 
     private String name;
     private int residence;
@@ -60,11 +65,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private DatabaseReference mDatabaseRef;
 
     private Spinner spinner;
-    private static final String[] residentials = {"I don't stay on campus",
-            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-            "Select Residence"};
 
     private boolean deleteProfilePicture = false;
     private boolean changes = false;
@@ -76,10 +76,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         super.onCreate(savedInstanceState);
 
-        name = MainActivity.display_name;
+        name = MainActivity.displayName;
         residence = MainActivity.currUser.getResidential();
-        telegram = MainActivity.display_telegram;
-        phone = MainActivity.display_phone;
+        telegram = MainActivity.displayTelegram;
+        phone = MainActivity.displayPhone;
 
 
         final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -87,8 +87,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
-        TextView display_name = findViewById(R.id.editTextDisplayName);
-        display_name.setText(name);
+        TextView displayName = findViewById(R.id.editTextDisplayName);
+        displayName.setText(name);
 
         initializeSpinner();
 
@@ -105,9 +105,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         //For updating Contact Information
         editTelegramHandle = findViewById(R.id.edit_telegram_handle);
-        editTelegramHandle.setText(MainActivity.display_telegram);
+        editTelegramHandle.setText(MainActivity.displayTelegram);
         editPhoneNumber = findViewById(R.id.edit_phone_number);
-        editPhoneNumber.setText(Long.toString(MainActivity.display_phone));
+        editPhoneNumber.setText(Long.toString(MainActivity.displayPhone));
 
 
 
@@ -266,55 +266,57 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
-            case 0:
-                finalResidence = 0;
-                break;
-            case 1:
-                // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
-                finalResidence = 1;
-                break;
-            case 2:
-                // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
-                finalResidence = 2;
-                break;
-            case 3:
-                // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
-                finalResidence = 3;
-                break;
-            case 4:
-                // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
-                finalResidence = 4;
-                break;
-            case 5:
-                finalResidence = 5;
-                break;
-            case 6:
-                finalResidence = 6;
-                break;
-            case 7:
-                finalResidence = 7;
-                break;
-            case 8:
-                finalResidence = 8;
-                break;
-            case 9:
-                finalResidence = 9;
-                break;
-            case 10:
-                finalResidence = 10;
-                break;
-            case 11:
-                finalResidence = 11;
-                break;
-            case 12:
-                finalResidence = 12;
-                break;
-            case 13:
-                finalResidence = 13;
-                break;
-            case 14:
-                finalResidence = 14;
-                break;
+        case 0:
+            finalResidence = 0;
+            break;
+        case 1:
+            // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
+            finalResidence = 1;
+            break;
+        case 2:
+            // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
+            finalResidence = 2;
+            break;
+        case 3:
+            // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
+            finalResidence = 3;
+            break;
+        case 4:
+            // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
+            finalResidence = 4;
+            break;
+        case 5:
+            finalResidence = 5;
+            break;
+        case 6:
+            finalResidence = 6;
+            break;
+        case 7:
+            finalResidence = 7;
+            break;
+        case 8:
+            finalResidence = 8;
+            break;
+        case 9:
+            finalResidence = 9;
+            break;
+        case 10:
+            finalResidence = 10;
+            break;
+        case 11:
+            finalResidence = 11;
+            break;
+        case 12:
+            finalResidence = 12;
+            break;
+        case 13:
+            finalResidence = 13;
+            break;
+        case 14:
+            finalResidence = 14;
+            break;
+        default:
+            break;
         }
 
     }
@@ -331,7 +333,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             // update the DB
             String updatedName = inputName;
             name = inputName;
-            MainActivity.display_name = updatedName;
+            MainActivity.displayName = updatedName;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("name")
@@ -344,7 +346,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateTelegramHandle() {
         String inputHandle = editTelegramHandle.getText().toString().trim();
         if (!inputHandle.equals(telegram)) {
-            MainActivity.display_telegram = inputHandle;
+            MainActivity.displayTelegram = inputHandle;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("TelegramHandle")
@@ -368,7 +370,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();
         long inputNumber = Long.parseLong(inputNumberString);
-        MainActivity.display_phone = inputNumber;
+        MainActivity.displayPhone = inputNumber;
         if (inputNumber != phone) {
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
@@ -381,7 +383,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateResidence() {
         if (finalResidence != residence) { // these are ints
             // update the DB
-            MainActivity.display_residential = intToRes(finalResidence);
+            MainActivity.displayResidential = intToRes(finalResidence);
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("residential")

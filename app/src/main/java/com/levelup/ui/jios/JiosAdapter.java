@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.levelup.R;
-import com.levelup.occasion.ActivityOccasionItem;
-import com.levelup.occasion.LikeOccasionItem;
-import com.levelup.activity.MainActivity;
-import com.levelup.user.UserItem;
-import com.levelup.user.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +14,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.LikeOccasionItem;
+import com.levelup.user.UserItem;
+import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;

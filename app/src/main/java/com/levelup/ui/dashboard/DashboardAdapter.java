@@ -1,17 +1,8 @@
 package com.levelup.ui.dashboard;
 
-import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.ToggleButton;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,9 +17,17 @@ import com.levelup.occasion.Occasion;
 import com.levelup.ui.events.EventPage;
 import com.levelup.user.UserItem;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Locale;
+import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.DashboardViewHolder> {
 

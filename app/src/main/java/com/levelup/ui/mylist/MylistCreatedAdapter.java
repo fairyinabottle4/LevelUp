@@ -1,17 +1,9 @@
 package com.levelup.ui.mylist;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,10 +21,17 @@ import com.levelup.user.UserItem;
 import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdapter.MylistCreatedViewHolder> {
     private ArrayList<Occasion> mMylistList;

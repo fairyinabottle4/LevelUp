@@ -1,24 +1,10 @@
 package com.levelup.ui.mktplace;
 
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +17,18 @@ import com.levelup.fragment.mktplace.MktplaceFragment;
 import com.levelup.occasion.LikeOccasionItem;
 import com.levelup.user.UserItem;
 import com.levelup.user.UserProfile;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class MktplacePage extends AppCompatActivity {

@@ -1,5 +1,21 @@
 package com.levelup.ui.mylist;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Locale;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.ui.events.DatePickerFragment;
+import com.levelup.ui.events.EventsItem;
+import com.levelup.ui.events.TimePickerFragment;
+import com.levelup.ui.jios.JiosItem;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -17,27 +33,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.levelup.R;
-import com.levelup.ui.events.DatePickerFragment;
-import com.levelup.ui.events.EventsItem;
-import com.levelup.ui.events.TimePickerFragment;
-import com.levelup.ui.jios.JiosItem;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class EditOccasionInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
@@ -179,12 +178,18 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                 // Toast.makeText(EditOccasionInfoActivity.this, dateTextView.getText(), Toast.LENGTH_SHORT).show();
                                 // mDatabaseReferenceEvents.child(occID).setValue(neww);
                                 if (validDate) {
-                                    Toast.makeText(EditOccasionInfoActivity.this, "Date selected cannot be before current date", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(EditOccasionInfoActivity.this,
+                                            "Date selected cannot be before current date",
+                                            Toast.LENGTH_LONG).show();
                                 } else if (!factors) {
-                                    Toast.makeText(EditOccasionInfoActivity.this, "Please check all fields and try again", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(EditOccasionInfoActivity.this,
+                                            "Please check all fields and try again",
+                                            Toast.LENGTH_LONG).show();
                                 } else if (factors && updatedEventsItem != null) {
                                     mDatabaseReferenceEvents.child(occID).setValue(updatedEventsItem);
-                                    Toast.makeText(EditOccasionInfoActivity.this, "Successfully Changed", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(EditOccasionInfoActivity.this,
+                                            "Successfully Changed",
+                                            Toast.LENGTH_LONG).show();
                                     finish();
                                 }
                             }
@@ -230,7 +235,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     updatedJiosItem = new JiosItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
-                                            updatedLocationInfo, updatedTitle, updatedDescription,updatedCategory);
+                                            updatedLocationInfo, updatedTitle, updatedDescription, updatedCategory);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();

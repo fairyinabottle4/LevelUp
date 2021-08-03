@@ -1,18 +1,5 @@
 package com.levelup.user;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +12,25 @@ import com.levelup.R;
 import com.levelup.activity.MainActivity;
 import com.squareup.picasso.Picasso;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class UserProfile extends AppCompatActivity {
+    private static final String[] residentials = {"I don't stay on campus",
+            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+            "Select Residence"};
+
     private TextView displayName;
     private TextView residence;
     private ImageView displayPicture;
@@ -51,12 +56,6 @@ public class UserProfile extends AppCompatActivity {
     float sumOfRatings = 0;
     float numOfRatings = 0;
     float averageRatingGlobal;
-
-    private static final String[] residentials = {"I don't stay on campus",
-            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-            "Select Residence"};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,7 +112,8 @@ public class UserProfile extends AppCompatActivity {
 
 
         //pulling the rating from the database
-        db.getReference().child("Users").child(creatorId).child("Ratings").addListenerForSingleValueEvent(new ValueEventListener() {
+        db.getReference().child("Users").child(creatorId).child("Ratings")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

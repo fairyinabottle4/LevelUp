@@ -8,6 +8,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.ui.mktplace.MktplaceAdapter;
+import com.levelup.ui.mktplace.MktplaceAdder;
+import com.levelup.ui.mktplace.MktplaceItem;
+import com.levelup.ui.mktplace.MktplaceLikedFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,13 +34,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-
-import com.levelup.R;
-import com.levelup.ui.mktplace.MktplaceAdapter;
-import com.levelup.ui.mktplace.MktplaceAdder;
-import com.levelup.ui.mktplace.MktplaceItem;
-import com.levelup.ui.mktplace.MktplaceLikedFragment;
 
 
 public class MktplaceFragment extends Fragment {

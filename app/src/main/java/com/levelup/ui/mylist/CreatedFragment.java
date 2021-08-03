@@ -1,22 +1,21 @@
 package com.levelup.ui.mylist;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.android.material.tabs.TabLayout;
+import com.levelup.R;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.tabs.TabLayout;
-import com.levelup.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CreatedFragment extends Fragment {
     @Override
@@ -28,7 +27,7 @@ public class CreatedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.mylist_createdpage, container,false);
+        View rootview = inflater.inflate(R.layout.mylist_createdpage, container, false);
         ViewPager viewPager = rootview.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
