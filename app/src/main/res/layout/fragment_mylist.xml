@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:id="@+id/mylist_layout"
         android:layout_height="match_parent"
-        tools:context="com.example.LevelUp.ui.mylist.MylistFragment">
+        tools:context="com.levelup.fragment.mylist.MylistFragment">
 
 
         <com.google.android.material.appbar.MaterialToolbar
