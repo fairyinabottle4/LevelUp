@@ -406,6 +406,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mOccasionEvents.clear();
+                mOccasionJios.clear();
                 mOccasionAll.clear();
                 mNewlyCreatedJios.clear();
                 mNewlyCreatedEvents.clear();
