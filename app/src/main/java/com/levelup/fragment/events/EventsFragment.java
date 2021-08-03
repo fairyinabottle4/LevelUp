@@ -1,5 +1,6 @@
 package com.levelup.fragment.events;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,46 +42,44 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class EventsFragment extends Fragment {
+    public static boolean refresh;
+    private static final String[] categories = {"All",
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private static ArrayList<EventsItem> EventsItemList;
     private static ArrayList<EventsItem> copy;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
-    ValueEventListener mValueEventListener;
-    private static final String[] categories = {"All",
-            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private EventsAdapter mAdapter;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private ValueEventListener valueEventListener;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private EventsAdapter adapter;
     private View rootView;
 
-    public FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButton;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static boolean refresh;
 
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_events, container, false);
 
-
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Events");
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference().child("Events");
         createEventsList();
 
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
         if (MainActivity.getCurrentUser() != null && MainActivity.getCurrentUser().getIsStaff()) {
             floatingActionButton.setAlpha(0.50f); // setting transparency
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), EventsAdder.class);
-                    startActivity(intent);
-                }
+            floatingActionButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), EventsAdder.class);
+                startActivity(intent);
             });
         } else {
             floatingActionButton.setVisibility(View.INVISIBLE);
@@ -93,14 +93,11 @@ public class EventsFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
 
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutevents);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                EventsItemList.clear();
-                loadDataEvents();
-                // mAdapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            EventsItemList.clear();
+            loadDataEvents();
+            // adapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         return rootView;
@@ -110,76 +107,77 @@ public class EventsFragment extends Fragment {
         EventsItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds a recycler view of a scrolling list of all the Eventitems
+     */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new EventsAdapter(getActivity(), EventsItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new EventsAdapter(getActivity(), EventsItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_search:
-                MenuItem searchItem = item;
-                SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-                searchItem.setActionView(searchView);
+        case R.id.action_search:
+            MenuItem searchItem = item;
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchItem.setActionView(searchView);
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
-                break;
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
+            break;
 
-            case R.id.action_filter:
-                break;
-            case R.id.subitem1:
-                loadDataEvents();
-            case R.id.subitem2:
-                getSelectedCategoryData(0);
-                break;
-            case R.id.subitem3:
-                getSelectedCategoryData(1);
-                break;
-            case R.id.subitem4:
-                getSelectedCategoryData(2);
-                break;
-            case R.id.subitem5:
-                getSelectedCategoryData(3);
-                break;
-            case R.id.subitem6:
-                getSelectedCategoryData(4);
-                break;
-            case R.id.subitem7:
-                getSelectedCategoryData(5);
-                break;
-            case R.id.action_cfmed_events: // the tick
-                EventsMyListFragment nextFrag = new EventsMyListFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case R.id.action_fav: // the heart
-                EventsLikedFragment nextFrag2 = new EventsLikedFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag2)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        case R.id.action_filter:
+            break;
+        case R.id.subitem1:
+            loadDataEvents();
+        case R.id.subitem2:
+            getSelectedCategoryData(0);
+            break;
+        case R.id.subitem3:
+            getSelectedCategoryData(1);
+            break;
+        case R.id.subitem4:
+            getSelectedCategoryData(2);
+            break;
+        case R.id.subitem5:
+            getSelectedCategoryData(3);
+            break;
+        case R.id.subitem6:
+            getSelectedCategoryData(4);
+            break;
+        case R.id.subitem7:
+            getSelectedCategoryData(5);
+            break;
+        case R.id.action_cfmed_events: // the tick
+            EventsMyListFragment nextFrag = new EventsMyListFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
+            break;
+        case R.id.action_fav: // the heart
+            EventsLikedFragment nextFrag2 = new EventsLikedFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag2)
+                    .addToBackStack(null)
+                    .commit();
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -202,22 +200,12 @@ public class EventsFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-//                EventsItemList.clear();
-//                loadDataEvents();
-//                mAdapter.notifyDataSetChanged();
-                mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+                adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 closeKeyboard();
                 return true;
             }
         });
-
-//        MenuItem filterItem = menu.findItem(R.id.action_filter);
-//        Spinner spinnerMenu = (Spinner) filterItem.getActionView();
-//        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(),
-//                android.R.layout.simple_spinner_item, categories);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerMenu.setAdapter(spinnerAdapter);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -235,51 +223,49 @@ public class EventsFragment extends Fragment {
         EventsItemList = eventsList;
     }
 
-    public static ArrayList<EventsItem> getEventsItemListCopy() {
-        return copy;
+    public static ArrayList<EventsItem> getEventsItemList() {
+        return EventsItemList;
     }
 
-    public static ArrayList<EventsItem> getEventsItemList() { return EventsItemList; }
-
+    /**
+     * Load data from the database into an ArrayList that will display the Events
+     */
     public void loadDataEvents() {
-        mValueEventListener = new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 EventsItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    EventsItem selected = snapshot.getValue(EventsItem.class);
-                    // EventsItemList.add(selected);
+                    try {
+                        EventsItem selected = snapshot.getValue(EventsItem.class);
 
-                    // To show ALL Events created comment out lines 231 to 261 and uncomment out line 227
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
-
-                    // Toast.makeText(getActivity(), eventDate.toString(), Toast.LENGTH_SHORT).show();
-
-                    Date currentDate = new Date();
-                    // eventDate.compareTo(currentDate) >= 0
-                    //eventDate.after(currentDate)
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        EventsItemList.add(selected);
+                        Date currentDate = new Date();
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            EventsItemList.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 copy = new ArrayList<>(EventsItemList);
                 EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-                mRecyclerView.setAdapter(eventsAdapter);
-                mAdapter = eventsAdapter; // YI EN ADDED THIS LINE
+                recyclerView.setAdapter(eventsAdapter);
+                adapter = eventsAdapter;
                 MainActivity.sort(EventsItemList);
             }
 
@@ -288,28 +274,24 @@ public class EventsFragment extends Fragment {
 
             }
         };
-        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
-        mAdapter.notifyDataSetChanged();
+        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        adapter.notifyDataSetChanged();
     }
 
     private void getSelectedCategoryData(int categoryID) {
         //This arraylist will contain only those in the certain categories
         ArrayList<EventsItem> list = new ArrayList<>();
         EventsAdapter eventsAdapter;
-//        if (categoryID == 0) {
-//            eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
-//        } else {
-            //filter by id
-            for (EventsItem eventsItem : EventsItemList) {
-                if (eventsItem.getCategory() == categoryID) {
-                    list.add(eventsItem);
-                }
+        //filter by id
+        for (EventsItem eventsItem : EventsItemList) {
+            if (eventsItem.getCategory() == categoryID) {
+                list.add(eventsItem);
             }
-            eventsAdapter = new EventsAdapter(getActivity(), list);
-        // }
-        mRecyclerView.setAdapter(eventsAdapter);
-        mAdapter = eventsAdapter;
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        }
+        eventsAdapter = new EventsAdapter(getActivity(), list);
+        recyclerView.setAdapter(eventsAdapter);
+        adapter = eventsAdapter;
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public static void setRefresh(boolean toSet) {

@@ -1,5 +1,16 @@
 package com.levelup.fragment.jios;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,12 +32,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.levelup.R;
 import com.levelup.activity.MainActivity;
 import com.levelup.ui.jios.JiosAdapter;
@@ -36,52 +40,46 @@ import com.levelup.ui.jios.JiosItem;
 import com.levelup.ui.jios.JiosLikedFragment;
 import com.levelup.ui.jios.JiosMyListFragment;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class JiosFragment extends Fragment {
+    public static boolean refresh;
+
     private static ArrayList<JiosItem> JiosItemList;
     private static ArrayList<JiosItem> copy;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
-    ValueEventListener mValueEventListener;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private JiosAdapter mAdapter;
+
+    private FloatingActionButton floatingActionButton;
+
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private ValueEventListener valueEventListener;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private JiosAdapter adapter;
     private View rootView;
-    public FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private static final String[] categories = {"All",
             "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
-
-    public static boolean refresh;
-
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_jios, container, false);
 
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Jios");
+        database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference().child("Jios");
         createJiosList();
 
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab);
         floatingActionButton.setAlpha(0.50f); // setting transparency
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), JiosAdder.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), JiosAdder.class);
+            startActivity(intent);
         });
 
         loadDataJios();
-
-
         // setting up Toolbar
         setHasOptionsMenu(true);
         Toolbar toolbar = rootView.findViewById(R.id.jios_toolbar);
@@ -89,14 +87,11 @@ public class JiosFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutjios);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                JiosItemList.clear();
-                loadDataJios();
-                mAdapter.notifyDataSetChanged();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            JiosItemList.clear();
+            loadDataJios();
+            adapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         return rootView;
@@ -106,79 +101,80 @@ public class JiosFragment extends Fragment {
         JiosItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds the list of items that will be contained in the Fragment
+     */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new JiosAdapter(getActivity(), JiosItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new JiosAdapter(getActivity(), JiosItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_search:
+        case R.id.action_search:
 
-                MenuItem searchItem = item;
-                SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-                searchItem.setActionView(searchView);
+            MenuItem searchItem = item;
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchItem.setActionView(searchView);
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
 
-                break;
-            case R.id.action_filter:
-                break;
-            case R.id.subitem1:
-                loadDataJios();
-                break;
-            case R.id.subitem2:
-                getSelectedCategoryData(0);
-                break;
-            case R.id.subitem3:
-                getSelectedCategoryData(1);
-                break;
-            case R.id.subitem4:
-                getSelectedCategoryData(2);
-                break;
-            case R.id.subitem5:
-                getSelectedCategoryData(3);
-                break;
-            case R.id.subitem6:
-                getSelectedCategoryData(4);
-                break;
-            case R.id.subitem7:
-                getSelectedCategoryData(5);
-                break;
+            break;
+        case R.id.action_filter:
+            break;
+        case R.id.subitem1:
+            loadDataJios();
+            break;
+        case R.id.subitem2:
+            getSelectedCategoryData(0);
+            break;
+        case R.id.subitem3:
+            getSelectedCategoryData(1);
+            break;
+        case R.id.subitem4:
+            getSelectedCategoryData(2);
+            break;
+        case R.id.subitem5:
+            getSelectedCategoryData(3);
+            break;
+        case R.id.subitem6:
+            getSelectedCategoryData(4);
+            break;
+        case R.id.subitem7:
+            getSelectedCategoryData(5);
+            break;
 
-            case R.id.action_cfmed_events: // the tick
-                JiosMyListFragment nextFrag = new JiosMyListFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-                break;
-            case R.id.action_fav: // the heart
-                JiosLikedFragment nextFrag2 = new JiosLikedFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag2)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        case R.id.action_cfmed_events: // the tick
+            JiosMyListFragment nextFrag = new JiosMyListFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag)
+                    .addToBackStack(null)
+                    .commit();
+            break;
+        case R.id.action_fav: // the heart
+            JiosLikedFragment nextFrag2 = new JiosLikedFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, nextFrag2)
+                    .addToBackStack(null)
+                    .commit();
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,18 +197,12 @@ public class JiosFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-//                JiosItemList.clear();
-//                loadDataJios();
-//                mAdapter.notifyDataSetChanged();
-                mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+                adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 closeKeyboard();
                 return true;
             }
         });
-
-        // ???
-        // searchItem.setOnMenuItemClickListener()
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -220,19 +210,11 @@ public class JiosFragment extends Fragment {
     private void closeKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         }
-    }
-
-
-    public static void setJiosItemList(ArrayList<JiosItem> jioslist) {
-        JiosItemList = jioslist;
-    }
-
-    public static ArrayList<JiosItem> getJiosItemListCopy() {
-        return copy;
     }
 
     public static ArrayList<JiosItem> getJiosItemList() {
@@ -243,58 +225,58 @@ public class JiosFragment extends Fragment {
         //This arraylist will contain only those in the certain categories
         ArrayList<JiosItem> list = new ArrayList<>();
         JiosAdapter jiosAdapter;
-//        if (categoryID == 0) {
-//            jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-//        } else {
-            //filter by id
-            for (JiosItem jiosItem : JiosItemList) {
-                if (jiosItem.getCategory() == categoryID) {
-                    list.add(jiosItem);
-                }
+        //filter by id
+        for (JiosItem jiosItem : JiosItemList) {
+            if (jiosItem.getCategory() == categoryID) {
+                list.add(jiosItem);
             }
-            jiosAdapter = new JiosAdapter(getActivity(), list);
-        // }
-        mRecyclerView.setAdapter(jiosAdapter);
-        mAdapter = jiosAdapter;
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        }
+        jiosAdapter = new JiosAdapter(getActivity(), list);
+        recyclerView.setAdapter(jiosAdapter);
+        adapter = jiosAdapter;
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
+    /**
+     * Load data from database into ArrayList which contains the JiosItem
+     */
     public void loadDataJios() {
-        mValueEventListener = new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 JiosItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    JiosItem selected = snapshot.getValue(JiosItem.class);
-                    // JiosItemList.add(selected);
+                    try {
+                        JiosItem selected = snapshot.getValue(JiosItem.class);
 
-                    // To show ALL Jios created comment out lines 224 to 242 and uncomment out line 220
+                        if (selected.getTimeInfo().length() > 4) {
+                            continue;
+                        }
 
-                    if (selected.getTimeInfo().length() > 4) {
-                        continue;
-                    }
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
+                        int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
-                    int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
-                    int min = Integer.parseInt(selected.getTimeInfo().substring(2));
+                        Date eventDateZero = selected.getDateInfo();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(eventDateZero);
+                        cal.set(Calendar.HOUR_OF_DAY, hour);
+                        cal.set(Calendar.MINUTE, min);
+                        Date eventDate = cal.getTime();
 
-                    Date eventDateZero = selected.getDateInfo();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(eventDateZero);
-                    cal.set(Calendar.HOUR_OF_DAY, hour);
-                    cal.set(Calendar.MINUTE, min);
-                    Date eventDate = cal.getTime();
+                        Date currentDate = new Date();
 
-                    Date currentDate = new Date();
-
-                    if (eventDate.compareTo(currentDate) >= 0) {
-                        JiosItemList.add(selected);
+                        if (eventDate.compareTo(currentDate) >= 0) {
+                            JiosItemList.add(selected);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
                     }
                 }
                 copy = new ArrayList<>(JiosItemList);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
-                mRecyclerView.setAdapter(jiosAdapter);
-                mAdapter = jiosAdapter; // YI EN ADDED THIS LINE
+                recyclerView.setAdapter(jiosAdapter);
+                adapter = jiosAdapter;
                 MainActivity.sort(JiosItemList);
             }
 
@@ -303,7 +285,7 @@ public class JiosFragment extends Fragment {
 
             }
         };
-        mDatabaseReference.addListenerForSingleValueEvent(mValueEventListener);
+        databaseReference.addListenerForSingleValueEvent(valueEventListener);
     }
 
     public static void setRefresh(boolean toSet) {

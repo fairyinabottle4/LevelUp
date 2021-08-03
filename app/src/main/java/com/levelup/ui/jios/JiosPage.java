@@ -1,19 +1,8 @@
 package com.levelup.ui.jios;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,34 +22,45 @@ import com.levelup.occasion.LikeOccasionItem;
 import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class JiosPage extends AppCompatActivity {
 
-    private ImageView mImageView;
-    private ToggleButton mAddButton;
-    private ToggleButton mLikeButton;
-    private TextView mTextView1;
-    private TextView mTextView2;
-    private TextView mTextView3;
-    private TextView mTextView4;
-    private TextView mTextView5;
-    private TextView mTextView6;
-    private TextView mNumLikes;
+    private ImageView imageView;
+    private ToggleButton addButton;
+    private ToggleButton likeButton;
+    private TextView titleView;
+    private TextView dateView;
+    private TextView timeView;
+    private TextView locationView;
+    private TextView descriptionView;
+    private TextView creatorView;
+    private TextView numLikesView;
     private int position;
     private ArrayList<JiosItem> jiosItemArrayList = JiosFragment.getJiosItemList();
     private Context mContext = this;
-    private StorageReference mProfileStorageRef;
-    private FirebaseDatabase mFirebaseDatabase;
+    private StorageReference profileStorageRef;
+    private FirebaseDatabase firebaseDatabase;
 
-    String uid;
-    String creatorName;
-    int creatorResidence;
-    String profilePictureUri;
-    String email;
-    long phone;
-    String telegram;
+    private String uid;
+    private String creatorName;
+    private int creatorResidence;
+    private String profilePictureUri;
+    private String email;
+    private long phone;
+    private String telegram;
 
 
     private boolean changes = false;
@@ -69,19 +69,19 @@ public class JiosPage extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.occasion_page);
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mProfileStorageRef = FirebaseStorage.getInstance()
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
-        mImageView = findViewById(R.id.event_page_image);
-        mAddButton = findViewById(R.id.events_page_image_add);
-        mLikeButton = findViewById(R.id.events_page_image_like);
-        mTextView1 = findViewById(R.id.event_page_title);
-        mTextView2 = findViewById(R.id.event_page_date);
-        mTextView3 = findViewById(R.id.event_page_time);
-        mTextView4 = findViewById(R.id.event_page_location);
-        mTextView5 = findViewById(R.id.event_page_description);
-        mTextView6 = findViewById(R.id.event_page_creator);
-        mNumLikes = findViewById(R.id.numlikes_textview);
+        imageView = findViewById(R.id.event_page_image);
+        addButton = findViewById(R.id.events_page_image_add);
+        likeButton = findViewById(R.id.events_page_image_like);
+        titleView = findViewById(R.id.event_page_title);
+        dateView = findViewById(R.id.event_page_date);
+        timeView = findViewById(R.id.event_page_time);
+        locationView = findViewById(R.id.event_page_location);
+        descriptionView = findViewById(R.id.event_page_description);
+        creatorView = findViewById(R.id.event_page_creator);
+        numLikesView = findViewById(R.id.numlikes_textview);
 
 
         Intent intent = getIntent();
@@ -105,7 +105,7 @@ public class JiosPage extends AppCompatActivity {
         position = intent.getIntExtra("position", 0);
         final String userID = MainActivity.currUser.getId();
 
-        mImageView.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UserProfile.class);
@@ -121,7 +121,7 @@ public class JiosPage extends AppCompatActivity {
             }
         });
 
-        mTextView6.setOnClickListener(new View.OnClickListener() {
+        creatorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UserProfile.class);
@@ -137,65 +137,63 @@ public class JiosPage extends AppCompatActivity {
             }
         });
 
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(uid);
-        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        StorageReference profileStorageRefIndiv = profileStorageRef.child(uid);
+        profileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(mImageView);
+                Picasso.get().load(uri).into(imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                mImageView.setImageResource(R.drawable.fake_user_dp);
+                imageView.setImageResource(R.drawable.fake_user_dp);
             }
         });
-        // mImageView.setImageResource(R.mipmap.ic_launcher_round);
-        // mAddButton.setImageResource(R.drawable.ic_add_black_24dp);
-        mTextView1.setText(title);
-        mTextView2.setText(date);
-        mTextView3.setText(time);
-        mTextView4.setText(location);
-        mTextView5.setText(description);
-        mTextView6.setText(creatorName);
+        titleView.setText(title);
+        dateView.setText(date);
+        timeView.setText(time);
+        locationView.setText(location);
+        descriptionView.setText(description);
+        creatorView.setText(creatorName);
 
-        mNumLikes.setText(Integer.toString(numLikes));
+        numLikesView.setText(Integer.toString(numLikes));
 
         if (isChecked) {
-            mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+            addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
         } else {
-            mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+            addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
         }
 
-        mAddButton.setChecked(isChecked);
+        addButton.setChecked(isChecked);
 
-        mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        addButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 changes = true;
                 if (isChecked) {
                     // change to tick
-                    mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
 
                     // add to ActivityEvent firebase
-                    DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
+                    DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");
                     ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(jioID, userID);
-                    mActivityJioRef.push().setValue(activityOccasionItem);
+                    activityJioRef.push().setValue(activityOccasionItem);
 
                     Toast.makeText(mContext, "Jio added to your list!", Toast.LENGTH_SHORT).show();
                 } else {
                     // change back to plus
-                    mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
 
                     // delete the entry from activity DB
-                    final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
-                    mActivityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");
+                    activityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                                 if (jioID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
-                                    mActivityJioRef.child(key).removeValue();
+                                    activityJioRef.child(key).removeValue();
                                     Toast.makeText(mContext, "Jio removed from your list", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -212,44 +210,44 @@ public class JiosPage extends AppCompatActivity {
         });
 
         if (isLiked) {
-            mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
         } else {
-            mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
         }
 
-        mLikeButton.setChecked(isLiked);
+        likeButton.setChecked(isLiked);
 
-        mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        likeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 changes = true;
                 if (isChecked) {
-                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
 
                     // send to Database
-                    DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                    DatabaseReference likeJioRef = firebaseDatabase.getReference("LikeJio");
                     LikeOccasionItem likeOccasionItem = new LikeOccasionItem(jioID, userID);
-                    mLikeJioRef.push().setValue(likeOccasionItem);
+                    likeJioRef.push().setValue(likeOccasionItem);
 
                     // +1 to the Likes on the jiosItem
                     int currLikes = numLikesArrLi.get(0);
-                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
-                    mJioRef.child(jioID).child("numLikes").setValue(currLikes + 1);
+                    DatabaseReference jioRef = firebaseDatabase.getReference("Jios");
+                    jioRef.child(jioID).child("numLikes").setValue(currLikes + 1);
                     numLikesArrLi.set(0, currLikes + 1);
-                    mNumLikes.setText(Integer.toString(currLikes + 1)); // for display only
+                    numLikesView.setText(Integer.toString(currLikes + 1)); // for display only
                 } else {
-                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
 
                     // delete the entry from like DB
-                    final DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
-                    mLikeJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final DatabaseReference likeJioRef = firebaseDatabase.getReference("LikeJio");
+                    likeJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                                 if (jioID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
-                                    mLikeJioRef.child(key).removeValue();
+                                    likeJioRef.child(key).removeValue();
                                     Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -263,10 +261,10 @@ public class JiosPage extends AppCompatActivity {
 
                     // -1 to the Likes on the jioItem
                     int currLikes = numLikesArrLi.get(0);
-                    DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
-                    mJioRef.child(jioID).child("numLikes").setValue(currLikes - 1);
+                    DatabaseReference jioRef = firebaseDatabase.getReference("Jios");
+                    jioRef.child(jioID).child("numLikes").setValue(currLikes - 1);
                     numLikesArrLi.set(0, currLikes - 1);
-                    mNumLikes.setText(Integer.toString(currLikes - 1)); // for display only
+                    numLikesView.setText(Integer.toString(currLikes - 1)); // for display only
 
                     MainActivity.mLikeJioIDs.remove(jioID);
                 }
@@ -276,13 +274,21 @@ public class JiosPage extends AppCompatActivity {
 
     }
 
-    public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+    public void setProfilePictureUri(String profilePictureUri) {
+        this.profilePictureUri = profilePictureUri;
+    }
 
-    public void setEmail(String email) {this.email = email;}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public void setTelegram(String telegram) { this.telegram = telegram;}
+    public void setTelegram(String telegram) {
+        this.telegram = telegram;
+    }
 
-    public void setPhone(long phone) {this.phone = phone;}
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
 
     @Override
     public void onBackPressed() {

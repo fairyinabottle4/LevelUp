@@ -1,5 +1,14 @@
 package com.levelup.ui.mktplace;
 
+import java.util.ArrayList;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,100 +23,97 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import com.levelup.R;
 import com.levelup.occasion.LikeOccasionItem;
 
-import java.util.ArrayList;
 
 public class MktplaceLikedFragment extends Fragment {
-  private RecyclerView mRecyclerView;
-  private RecyclerView.LayoutManager mLayoutManager;
-  private MktplaceLikedAdapter mAdapter;
-  private View rootView;
 
-  public static ArrayList<String> mMktplaceIDs = new ArrayList<>();
-  public static ArrayList<MktplaceItem> mMktplaceItems = new ArrayList<>();
+    public static ArrayList<String> mktplaceIDs = new ArrayList<>();
+    public static ArrayList<MktplaceItem> mktplaceItems = new ArrayList<>();
 
-  // private static boolean refreshList;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MktplaceLikedAdapter adapter;
+    private View rootView;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    rootView = inflater.inflate(R.layout.mktplace_plain_withtb, container, false);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.mktplace_plain_withtb, container, false);
 
-    Toolbar tb = rootView.findViewById(R.id.mktplace_toolbar);
-    AppCompatActivity activity = (AppCompatActivity) getActivity();
-    activity.setSupportActionBar(tb);
-    tb.setTitle("Listings I Liked");
+        Toolbar toolbar = rootView.findViewById(R.id.mktplace_toolbar);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        toolbar.setTitle("Listings I Liked");
 
-    buildRecyclerView();
+        buildRecyclerView();
 
-    initializeList();
+        initializeList();
 
-    return rootView;
+        return rootView;
 
-  }
+    }
 
-  public void buildRecyclerView() {
-    mRecyclerView = rootView.findViewById(R.id.recyclerview);
-    mLayoutManager = new GridLayoutManager(getActivity(), 2);
-    mAdapter = new MktplaceLikedAdapter(getActivity(), mMktplaceItems);
-    mRecyclerView.setLayoutManager(mLayoutManager);
-    mRecyclerView.setAdapter(mAdapter);
-    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-  }
+    /**
+     * Method that builds the recycler view so that the listings will be shown in a list format.
+     */
+    public void buildRecyclerView() {
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        adapter = new MktplaceLikedAdapter(getActivity(), mktplaceItems);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
-  private void initializeList() {
-    FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-    final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    DatabaseReference mDatabaseReferenceLikeMktplace = mFirebaseDatabase.getReference().child("LikeMktplace");
-    mDatabaseReferenceLikeMktplace.addValueEventListener(new ValueEventListener() {
-      @Override
-      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        mMktplaceIDs.clear();
-        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-          LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-          String selectedUserID = selected.getUserID();
-          if (selectedUserID.equals(fbUIDFinal)) {
-            mMktplaceIDs.add(selected.getOccasionID());
-          }
-        }
-      }
+    private void initializeList() {
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseRefLikeMktplace = mFirebaseDatabase.getReference().child("LikeMktplace");
+        databaseRefLikeMktplace.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mktplaceIDs.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
+                    String selectedUserID = selected.getUserID();
+                    if (selectedUserID.equals(fbUidFinal)) {
+                        mktplaceIDs.add(selected.getOccasionID());
+                    }
+                }
+            }
 
-      @Override
-      public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-      }
-    });
-    DatabaseReference mDatabaseReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
-    mDatabaseReferenceMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
-      @Override
-      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        mMktplaceItems.clear();
-        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-          MktplaceItem selected = snapshot.getValue(MktplaceItem.class);
-          String mktplaceID = selected.getMktPlaceID();
-          if (mMktplaceIDs.contains(mktplaceID)) {
-            mMktplaceItems.add(selected);
-          }
-        }
-        MktplaceLikedAdapter mktplaceAdapter = new MktplaceLikedAdapter(getActivity(), mMktplaceItems);
-        mAdapter = mktplaceAdapter;
-        mRecyclerView.setAdapter(mAdapter);
+            }
+        });
+        DatabaseReference mDatabaseReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
+        mDatabaseReferenceMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mktplaceItems.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    MktplaceItem selected = snapshot.getValue(MktplaceItem.class);
+                    String mktplaceID = selected.getMktPlaceID();
+                    if (mktplaceIDs.contains(mktplaceID)) {
+                        mktplaceItems.add(selected);
+                    }
+                }
+                MktplaceLikedAdapter mktplaceAdapter = new MktplaceLikedAdapter(getActivity(), mktplaceItems);
+                adapter = mktplaceAdapter;
+                recyclerView.setAdapter(adapter);
 
-      }
+            }
 
-      @Override
-      public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-      }
-    });
-  }
+            }
+        });
+    }
 
 }

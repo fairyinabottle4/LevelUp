@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,30 +31,27 @@ import com.levelup.occasion.ActivityOccasionItem;
 import com.levelup.occasion.Occasion;
 import com.levelup.ui.mylist.MylistAdapter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
-
 public class JiosMyListFragment extends Fragment {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
-    private View rootView;
-    public static ArrayList<String> mJioIDs = new ArrayList<>();
-    public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
+    public static ArrayList<String> jioIdList = new ArrayList<>();
+    public static ArrayList<Occasion> occasionJioList = new ArrayList<>();
 
     private static boolean refreshList;
 
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MylistAdapter adapter;
+    private View rootView;
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment, container, false);
 
-        Toolbar tb = rootView.findViewById(R.id.occ_mylist_fragment_title);
+        Toolbar toolbar = rootView.findViewById(R.id.occ_mylist_fragment_title);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(tb);
-        tb.setTitle("Jios I Signed Up For");
+        activity.setSupportActionBar(toolbar);
+        toolbar.setTitle("Jios I Signed Up For");
 
 
 
@@ -62,27 +64,27 @@ public class JiosMyListFragment extends Fragment {
     }
 
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mOccasionJios);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new MylistAdapter(getActivity(), occasionJioList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void initializeList() {
-        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference mDatabaseReferenceActivityJio = firebaseDatabase.getReference().child("ActivityJio");
         mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mJioIDs.clear();
+                jioIdList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mJioIDs.add(selected.getOccasionID());
+                    if (selectedUserID.equals(fbUidFinal)) {
+                        jioIdList.add(selected.getOccasionID());
                     }
                 }
             }
@@ -92,21 +94,21 @@ public class JiosMyListFragment extends Fragment {
 
             }
         });
-        DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-        mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseRefJios = firebaseDatabase.getReference().child("Jios");
+        databaseRefJios.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
+                occasionJioList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
-                    String jioID = selected.getOccasionID();
+                    String jioId = selected.getOccasionID();
 
-                    if (mJioIDs.contains(jioID)) {
+                    if (jioIdList.contains(jioId)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -119,14 +121,14 @@ public class JiosMyListFragment extends Fragment {
                         Date currentDate = new Date();
 
                         if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionJios.add(selected);
+                            occasionJioList.add(selected);
                         }
                     }
                 }
-                MainActivity.sort(mOccasionJios);
-                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), mOccasionJios);
-                mAdapter = mylistAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MainActivity.sort(occasionJioList);
+                MylistAdapter mylistAdapter = new MylistAdapter(getActivity(), occasionJioList);
+                adapter = mylistAdapter;
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -134,7 +136,7 @@ public class JiosMyListFragment extends Fragment {
 
             }
         });
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public static void setRefreshList(boolean refreshList) {

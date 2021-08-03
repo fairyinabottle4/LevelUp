@@ -1,5 +1,14 @@
 package com.levelup.fragment.mktplace;
 
+import java.util.ArrayList;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,35 +30,31 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import com.levelup.R;
 import com.levelup.ui.mktplace.MktplaceAdapter;
 import com.levelup.ui.mktplace.MktplaceAdder;
 import com.levelup.ui.mktplace.MktplaceItem;
 import com.levelup.ui.mktplace.MktplaceLikedFragment;
 
-import java.util.ArrayList;
 
 public class MktplaceFragment extends Fragment {
-    private static ArrayList<MktplaceItem> mktplaceItemList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MktplaceAdapter mAdapter;
+    public static boolean refresh;
+
+    private static ArrayList<MktplaceItem> MktplaceItemList;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MktplaceAdapter adapter;
     private View rootView;
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private DatabaseReference mDatabaseRef;
-    TextView nothingView;
-    public static boolean refresh;
+    private DatabaseReference databaseRef;
+    private TextView nothingView;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_mktplace, container, false);
         nothingView = rootView.findViewById(R.id.nothing2);
         createMktplaceList();
@@ -58,15 +62,12 @@ public class MktplaceFragment extends Fragment {
         buildRecyclerView();
         floatingActionButton = rootView.findViewById(R.id.fab_mktplace);
         floatingActionButton.setAlpha(0.50f); // setting transparency
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MktplaceAdder.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MktplaceAdder.class);
+            startActivity(intent);
         });
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
+        databaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
         loadDataMktplace();
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutmktplace);
@@ -78,82 +79,62 @@ public class MktplaceFragment extends Fragment {
         assert activity != null;
         activity.setSupportActionBar(toolbar);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mktplaceItemList.clear();
-                loadDataMktplace();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            MktplaceItemList.clear();
+            loadDataMktplace();
+            swipeRefreshLayout.setRefreshing(false);
         });
         return rootView;
     }
 
-    /*
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        mktplaceViewModel =
-                ViewModelProviders.of(this).get(MktplaceViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_mktplace, container, false);
-        final TextView textView = root.findViewById(R.id.text_mktplace);
-        mktplaceViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
-    }
-
-     */
-
     public void createMktplaceList() {
-        mktplaceItemList = new ArrayList<>();
+        MktplaceItemList = new ArrayList<>();
     }
 
+    /**
+     * Builds the list of items that will be contained in the Fragment
+     */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        adapter = new MktplaceAdapter(getActivity(), MktplaceItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
-            case R.id.action_search:
+        case R.id.action_search:
 
-                MenuItem searchItem = item;
-                SearchView searchView = (SearchView) searchItem.getActionView();
-                // searchView.setQueryHint("Search");
-                // searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-                searchItem.setActionView(searchView);
+            MenuItem searchItem = item;
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchItem.setActionView(searchView);
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        mAdapter.getFilter().filter(newText);
-                        return false;
-                    }
-                });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return false;
+                }
+            });
 
-                break;
+            break;
 
-            case R.id.action_fav: // the heart
-                MktplaceLikedFragment nextFrag2 = new MktplaceLikedFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag2)
-                        .addToBackStack(null)
-                        .commit();
-                break;
+        case R.id.action_fav: // the heart
+            MktplaceLikedFragment nextFrag2 = new MktplaceLikedFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment, nextFrag2)
+                .addToBackStack(null)
+                .commit();
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -176,33 +157,32 @@ public class MktplaceFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mAdapter.resetAdapter();
-                mRecyclerView.setAdapter(mAdapter);
+                adapter.resetAdapter();
+                recyclerView.setAdapter(adapter);
                 return true;
             }
         });
-
-        // ???
-        // searchItem.setOnMenuItemClickListener()
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    /**
+     * Loads listing data from the database into the ArrayList which will be displayed
+     */
     public void loadDataMktplace() {
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mktplaceItemList.clear();
+                MktplaceItemList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-                    mktplaceItemList.add(upload);
+                    MktplaceItemList.add(upload);
                 }
 
-                if (mktplaceItemList.isEmpty()) {
+                if (MktplaceItemList.isEmpty()) {
                     nothingView.setVisibility(View.VISIBLE);
                 }
-                mAdapter = new MktplaceAdapter(getActivity(), mktplaceItemList);
-                mRecyclerView.setAdapter(mAdapter);
+                adapter = new MktplaceAdapter(getActivity(), MktplaceItemList);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -210,7 +190,7 @@ public class MktplaceFragment extends Fragment {
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public static void setRefresh(boolean toSet) {

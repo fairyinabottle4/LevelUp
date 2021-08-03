@@ -1,18 +1,9 @@
 package com.levelup.ui.jios;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,30 +17,41 @@ import com.levelup.occasion.LikeOccasionItem;
 import com.levelup.occasion.Occasion;
 import com.levelup.ui.mylist.MylistLikedAdapter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class JiosLikedFragment extends Fragment {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MylistLikedAdapter mAdapter;
-    private View rootView;
 
-    public static ArrayList<String> mJioIDs = new ArrayList<>();
-    public static ArrayList<Occasion> mOccasionJios = new ArrayList<>();
+    public static ArrayList<String> jioIds = new ArrayList<>();
+    public static ArrayList<Occasion> occasionJios = new ArrayList<>();
 
     private static boolean refreshList;
 
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MylistLikedAdapter adapter;
+    private View rootView;
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment, container, false);
 
-        Toolbar tb = rootView.findViewById(R.id.occ_mylist_fragment_title);
+        Toolbar toolbar = rootView.findViewById(R.id.occ_mylist_fragment_title);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(tb);
-        tb.setTitle("Jios I Liked");
+        activity.setSupportActionBar(toolbar);
+        toolbar.setTitle("Jios I Liked");
 
 
         buildRecyclerView();
@@ -60,29 +62,31 @@ public class JiosLikedFragment extends Fragment {
 
     }
 
+    /**
+     * Builds the recycler view which contains the list of liked JioItems
+     */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistLikedAdapter(getActivity(), mOccasionJios);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new MylistLikedAdapter(getActivity(), occasionJios);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void initializeList() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference mDatabaseReferenceLikeJio = mFirebaseDatabase.getReference().child("LikeJio");
-        mDatabaseReferenceLikeJio.addValueEventListener(new ValueEventListener() {
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseRefLikeJio = mFirebaseDatabase.getReference().child("LikeJio");
+        databaseRefLikeJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mJioIDs.clear();
+                jioIds.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
-                        mJioIDs.add(selected.getOccasionID());
-                        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
+                    if (selectedUserID.equals(fbUidFinal)) {
+                        jioIds.add(selected.getOccasionID());
                     }
                 }
             }
@@ -92,21 +96,21 @@ public class JiosLikedFragment extends Fragment {
 
             }
         });
-        DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference databaseRefJios = mFirebaseDatabase.getReference().child("Jios");
+        databaseRefJios.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mOccasionJios.clear();
+                occasionJios.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
                     String eventID = selected.getOccasionID();
 
-                    if (mJioIDs.contains(eventID)) {
+                    if (jioIds.contains(eventID)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();
@@ -119,15 +123,15 @@ public class JiosLikedFragment extends Fragment {
 
                         Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) >= 0) {
-                            mOccasionJios.add(selected);
+                            occasionJios.add(selected);
                         }
                         // mOccasionEvents.add(selected);
                     }
                 }
-                MainActivity.sort(mOccasionJios);
-                MylistLikedAdapter mylistAdapter = new MylistLikedAdapter(getActivity(), mOccasionJios);
-                mAdapter = mylistAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MainActivity.sort(occasionJios);
+                MylistLikedAdapter mylistAdapter = new MylistLikedAdapter(getActivity(), occasionJios);
+                adapter = mylistAdapter;
+                recyclerView.setAdapter(adapter);
 
             }
 
@@ -136,10 +140,6 @@ public class JiosLikedFragment extends Fragment {
 
             }
         });
-    }
-
-    public static void setRefreshList(boolean refreshList) {
-        JiosLikedFragment.refreshList = refreshList;
     }
 
     @Override

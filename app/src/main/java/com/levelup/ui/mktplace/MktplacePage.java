@@ -1,5 +1,6 @@
 package com.levelup.ui.mktplace;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,17 +32,15 @@ import com.levelup.occasion.LikeOccasionItem;
 import com.levelup.user.UserItem;
 import com.levelup.user.UserProfile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MktplacePage extends AppCompatActivity {
 
-    private ImageView mImageView;
-    private TextView mTextView1;
-    private TextView mTextView2;
-    private TextView mTextView3;
-    private TextView mTextView4;
-    private TextView mNumLikesTextView;
+    private ImageView imageView;
+    private TextView titleView;
+    private TextView locationView;
+    private TextView descView;
+    private TextView creatorView;
+    private TextView numLikesView;
 
     private String url;
     private String title;
@@ -55,22 +58,22 @@ public class MktplacePage extends AppCompatActivity {
 
     private boolean isLiked;
     private int numLikes;
-    private ToggleButton mLikeButton;
-    private FirebaseDatabase mFirebaseDatabase;
+    private ToggleButton likeButton;
+    private FirebaseDatabase firebaseDatabase;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.marketplace_page);
-        mImageView = findViewById(R.id.listing_image_full);
-        mTextView1 = findViewById(R.id.listing_title_full);
-        mTextView2 = findViewById(R.id.meetup_location_full);
-        mTextView3 = findViewById(R.id.listing_description_full);
-        mTextView4 = findViewById(R.id.creator_name);
-        mNumLikesTextView = findViewById(R.id.numlikes_textview);
-        mLikeButton = findViewById(R.id.image_like);
+        imageView = findViewById(R.id.listing_image_full);
+        titleView = findViewById(R.id.listing_title_full);
+        locationView = findViewById(R.id.meetup_location_full);
+        descView = findViewById(R.id.listing_description_full);
+        creatorView = findViewById(R.id.creator_name);
+        numLikesView = findViewById(R.id.numlikes_textview);
+        likeButton = findViewById(R.id.image_like);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -89,18 +92,18 @@ public class MktplacePage extends AppCompatActivity {
         email = extras.getString("email");
         phone = extras.getLong("phone");
 
-        mNumLikesTextView.setText(Integer.toString(numLikes));
+        numLikesView.setText(Integer.toString(numLikes));
 
         if (isLiked) {
-            mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
         } else {
-            mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
         }
 
-        mLikeButton.setChecked(isLiked);
+        likeButton.setChecked(isLiked);
 
-        DatabaseReference mUserRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -109,7 +112,7 @@ public class MktplacePage extends AppCompatActivity {
 
                     if (creatorID.equals(id)) {
                         String name = selected.getName();
-                        mTextView4.setText(name);
+                        creatorView.setText(name);
                     }
                 }
             }
@@ -120,56 +123,47 @@ public class MktplacePage extends AppCompatActivity {
             }
         });
 
-        // Toast.makeText(this, creatorID, Toast.LENGTH_SHORT).show();
-
-
-        /*
-        url = intent.getStringExtra("imageurl");
-        title = intent.getStringExtra("title");
-        location = intent.getStringExtra("location");
-        description = intent.getStringExtra("description");
-         */
-
-        Glide.with(mImageView.getContext()).load(url).into(mImageView);
-        mTextView1.setText(title);
-        mTextView2.setText(location);
-        mTextView3.setText(description);
+        Glide.with(imageView.getContext()).load(url).into(imageView);
+        titleView.setText(title);
+        locationView.setText(location);
+        descView.setText(description);
 
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         final ArrayList<Integer> numLikesArrLi = new ArrayList<>(Arrays.asList(numLikes));
 
-        mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        likeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
 
                     // send to Database
-                    DatabaseReference mLikeMktplaceRef = mFirebaseDatabase.getReference("LikeMktplace");
+                    DatabaseReference likeMktplaceref = firebaseDatabase.getReference("LikeMktplace");
                     LikeOccasionItem likeOccasionItem = new LikeOccasionItem(mktplaceID, userID);
-                    mLikeMktplaceRef.push().setValue(likeOccasionItem);
+                    likeMktplaceref.push().setValue(likeOccasionItem);
 
                     // +1 to the Likes on the eventItem
                     int currLikes = numLikesArrLi.get(0);
-                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("mktplace uploads");
+                    DatabaseReference mEventRef = firebaseDatabase.getReference("mktplace uploads");
                     mEventRef.child(mktplaceID).child("numLikes").setValue(currLikes + 1);
                     numLikesArrLi.set(0, currLikes + 1);
-                    mNumLikesTextView.setText(Integer.toString(currLikes + 1)); // for display only
+                    numLikesView.setText(Integer.toString(currLikes + 1)); // for display only
 
                 } else {
-                    mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
 
                     // delete the entry from like DB
-                    final DatabaseReference mLikeMktplaceRef = mFirebaseDatabase.getReference("LikeMktplace");
-                    mLikeMktplaceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final DatabaseReference likeMktplaceref = firebaseDatabase.getReference("LikeMktplace");
+                    likeMktplaceref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                                if (mktplaceID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                if (mktplaceID.equals(selected.getOccasionID())
+                                    && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
-                                    mLikeMktplaceRef.child(key).removeValue();
+                                    likeMktplaceref.child(key).removeValue();
                                     Toast.makeText(getApplicationContext(), "Unliked", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -183,17 +177,17 @@ public class MktplacePage extends AppCompatActivity {
 
                     // -1 to the Likes on the mktplaceItem
                     int currLikes = numLikesArrLi.get(0);
-                    DatabaseReference mMktplaceRef = mFirebaseDatabase.getReference("mktplace uploads");
-                    mMktplaceRef.child(mktplaceID).child("numLikes").setValue(currLikes - 1);
+                    DatabaseReference mktplaceRef = firebaseDatabase.getReference("mktplace uploads");
+                    mktplaceRef.child(mktplaceID).child("numLikes").setValue(currLikes - 1);
                     numLikesArrLi.set(0, currLikes - 1);
-                    mNumLikesTextView.setText(Integer.toString(currLikes - 1)); // for display only
+                    numLikesView.setText(Integer.toString(currLikes - 1)); // for display only
 
                     MainActivity.mLikeMktplaceIDs.remove(mktplaceID);
                 }
             }
         });
 
-        mTextView4.setOnClickListener(new View.OnClickListener() {
+        creatorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), UserProfile.class);
@@ -212,7 +206,6 @@ public class MktplacePage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        MylistFragment.setRefreshList(true);
         MktplaceFragment.setRefresh(true);
         super.onBackPressed();
     }

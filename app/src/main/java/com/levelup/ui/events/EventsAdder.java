@@ -1,5 +1,14 @@
 package com.levelup.ui.events;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.net.Uri;
@@ -14,49 +23,43 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.levelup.R;
 import com.levelup.activity.MainActivity;
 import com.levelup.fragment.events.EventsFragment;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
+
 
 public class EventsAdder extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
+    private static final String[] categories = {
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseReference;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseRef;
 
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private int selection;
-    TextView mDateSelected;
-    TextView mTimeSelected;
-    EditText mEventTitle;
-    Button mDateSelector;
-    Button mTimeSelector;
-    Button mSaveJio;
-    EditText mEventDescription;
-    EditText mEventLocation;
-    Uri currentUri;
-    Spinner eventSpinner;
+    private TextView dateSelected;
+    private TextView timeSelected;
+    private EditText eventTitle;
+    private Button dateSelector;
+    private Button timeSelector;
+    private Button saveJio;
+    private EditText eventDescription;
+    private EditText eventLocation;
+    private Uri currentUri;
+    private Spinner eventSpinner;
 
-    private static final String[] categories = {
-            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private int hourOfDay;
     private int minute;
-    boolean validDate;
-    boolean validTime = false;
-    boolean dateIsSame;
+    private boolean validDate;
+    private boolean validTime = false;
+    private boolean dateIsSame;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,48 +67,48 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         setContentView(R.layout.events_adder);
         currentUri = getIntent().getData();
 
-        mEventTitle = findViewById(R.id.event_title);
+        eventTitle = findViewById(R.id.event_title);
 
-        mDateSelector = findViewById(R.id.event_date);
-        mDateSelector.setOnClickListener(new View.OnClickListener() {
+        dateSelector = findViewById(R.id.event_date);
+        dateSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
-        mDateSelected = findViewById(R.id.date_selected);
+        dateSelected = findViewById(R.id.date_selected);
 
-        mTimeSelector = findViewById(R.id.event_time);
-        mTimeSelector.setOnClickListener(new View.OnClickListener() {
+        timeSelector = findViewById(R.id.event_time);
+        timeSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment timePicker = new TimePickerFragment();
                 timePicker.show(getSupportFragmentManager(), "time picker");
             }
         });
-        mTimeSelected = findViewById(R.id.time_selected);
+        timeSelected = findViewById(R.id.time_selected);
 
-        mEventDescription = findViewById(R.id.event_description);
-        mEventLocation = findViewById(R.id.location);
+        eventDescription = findViewById(R.id.event_description);
+        eventLocation = findViewById(R.id.location);
 
 
         initializeSpinner();
 
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Events");
-        mSaveJio = findViewById(R.id.save_jio);
-        mSaveJio.setOnClickListener(new View.OnClickListener() {
+        database = FirebaseDatabase.getInstance();
+        databaseRef = database.getReference().child("Events");
+        saveJio = findViewById(R.id.save_jio);
+        saveJio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventsItem eventsItem = null;
-                String key = mDatabaseReference.push().getKey();
-                String eventCreatorUID = MainActivity.currUser.getId();
+                String key = databaseRef.push().getKey();
+                String eventCreatorUid = MainActivity.currUser.getId();
                 try {
-                    eventsItem = new EventsItem(0, key, eventCreatorUID,
-                            df.parse((String) mDateSelected.getText()), (String) mTimeSelected.getText(),
-                            hourOfDay, minute, mEventLocation.getText().toString(),
-                            mEventTitle.getText().toString(), mEventDescription.getText().toString(),
+                    eventsItem = new EventsItem(0, key, eventCreatorUid,
+                            df.parse((String) dateSelected.getText()), (String) timeSelected.getText(),
+                            hourOfDay, minute, eventLocation.getText().toString(),
+                            eventTitle.getText().toString(), eventDescription.getText().toString(),
                             selection);
                     // Toast.makeText(EventsAdder.this, key, Toast.LENGTH_SHORT).show();
                 } catch (ParseException e) {
@@ -115,30 +118,34 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
                 String str = sdf.format(Calendar.getInstance().getTime());
                 int intCurrentTime = Integer.parseInt(str);
                 try {
-                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM,Locale.UK).format(Calendar.getInstance().getTime()))
-                            .compareTo(df.parse(mDateSelected.getText().toString())) > 0;
-                    dateIsSame = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(Calendar.getInstance().getTime()))
-                            .compareTo(df.parse(mDateSelected.getText().toString())) == 0;
-                    if (!mTimeSelected.getText().toString().equals("No Time Selected") && dateIsSame) {
-                        validTime = intCurrentTime > Integer.parseInt(mTimeSelected.getText().toString());
+                    validDate = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM,
+                        Locale.UK).format(Calendar.getInstance().getTime()))
+                            .compareTo(df.parse(dateSelected.getText().toString())) > 0;
+                    dateIsSame = df.parse(DateFormat.getDateInstance(DateFormat.MEDIUM,
+                        Locale.UK).format(Calendar.getInstance().getTime()))
+                            .compareTo(df.parse(dateSelected.getText().toString())) == 0;
+                    if (!timeSelected.getText().toString().equals("No Time Selected") && dateIsSame) {
+                        validTime = intCurrentTime > Integer.parseInt(timeSelected.getText().toString());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                boolean factors = !mEventLocation.getText().toString().equals("")
-                        && !mEventTitle.getText().toString().equals("")
-                        && !mEventDescription.getText().toString().equals("")
-                        && !mTimeSelected.getText().toString().equals("No Time Selected")
-                        && !mDateSelected.getText().toString().equals("No Date Selected")
+                boolean factors = !eventLocation.getText().toString().equals("")
+                        && !eventTitle.getText().toString().equals("")
+                        && !eventDescription.getText().toString().equals("")
+                        && !timeSelected.getText().toString().equals("No Time Selected")
+                        && !dateSelected.getText().toString().equals("No Date Selected")
                         //validDate must be an incorrect date
                         && !validDate
                         //validTime must be an incorrect time
                         && !validTime;
                 if (!factors) {
-                    Toast.makeText(EventsAdder.this, "Please check all fields and try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EventsAdder.this, "Please check all fields and try again",
+                        Toast.LENGTH_LONG).show();
                 } else if (factors) {
-                    mDatabaseReference.child(key).setValue(eventsItem);
-                    Toast.makeText(EventsAdder.this, "Event saved successfully", Toast.LENGTH_LONG).show();
+                    databaseRef.child(key).setValue(eventsItem);
+                    Toast.makeText(EventsAdder.this, "Event saved successfully",
+                        Toast.LENGTH_LONG).show();
                     EventsFragment.setRefresh(true);
                     onBackPressed();
                 }
@@ -153,7 +160,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(c.getTime());
-        mDateSelected.setText(currentDateString);
+        dateSelected.setText(currentDateString);
     }
 
     @Override
@@ -161,7 +168,7 @@ public class EventsAdder extends AppCompatActivity implements TimePickerDialog.O
         String initial = hourOfDay < 10 ? "0" : "";
         String after = minute < 10 ? "0" : "";
         String currentTimeString = initial + hourOfDay + after + minute;
-        mTimeSelected.setText(currentTimeString);
+        timeSelected.setText(currentTimeString);
         this.hourOfDay = hourOfDay;
         this.minute = minute;
     }
