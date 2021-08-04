@@ -44,7 +44,9 @@ public class JiosFragment extends Fragment {
     public static boolean refresh;
 
     private static ArrayList<JiosItem> jiosItemList;
-    private static ArrayList<JiosItem> copy;
+
+    private static final String[] categories = {"All",
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     private FloatingActionButton floatingActionButton;
 
@@ -56,9 +58,6 @@ public class JiosFragment extends Fragment {
     private JiosAdapter adapter;
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    private static final String[] categories = {"All",
-        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     @Nullable
     @Override
@@ -274,7 +273,6 @@ public class JiosFragment extends Fragment {
                         System.out.println(e);
                     }
                 }
-                copy = new ArrayList<>(jiosItemList);
                 JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), jiosItemList);
                 recyclerView.setAdapter(jiosAdapter);
                 adapter = jiosAdapter;

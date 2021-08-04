@@ -32,7 +32,7 @@ public class UserReviews extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-    private ArrayList<ReviewItem> ReviewItemList;
+    private ArrayList<ReviewItem> reviewItemList;
     private ValueEventListener mValueEventListener;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Button submitButton;
@@ -64,7 +64,7 @@ public class UserReviews extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ReviewItemList.clear();
+                reviewItemList.clear();
                 loadDataReviews();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -85,14 +85,14 @@ public class UserReviews extends AppCompatActivity {
     }
 
     public void createReviewList() {
-        ReviewItemList = new ArrayList<>();
+        reviewItemList = new ArrayList<>();
     }
 
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.recyclerviewReviews);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ReviewAdapter(ReviewItemList);
+        mAdapter = new ReviewAdapter(reviewItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -101,12 +101,12 @@ public class UserReviews extends AppCompatActivity {
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ReviewItemList.clear();
+                reviewItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ReviewItem selected = snapshot.getValue(ReviewItem.class);
-                    ReviewItemList.add(selected);
+                    reviewItemList.add(selected);
                 }
-                ReviewAdapter reviewAdapter = new ReviewAdapter(ReviewItemList);
+                ReviewAdapter reviewAdapter = new ReviewAdapter(reviewItemList);
                 mRecyclerView.setAdapter(reviewAdapter);
                 mAdapter = reviewAdapter;
             }

@@ -68,25 +68,25 @@ public class CreatorViewLikeNames extends AppCompatActivity {
                                             UserItem selectedUser = snapshot.getValue(UserItem.class);
                                             if (userID.equals(selectedUser.getId())) {
                                                 names.add("(" + intToRes(selectedUser.getResidential())
-                                                + ") " + selectedUser.getName());
+                                                    + ") " + selectedUser.getName());
                                             }
                                         }
 
-                                    ArrayAdapter adapter = new ArrayAdapter(CreatorViewLikeNames.this,
-                                        android.R.layout.simple_list_item_1, names);
-                                    list.setAdapter(adapter);
-                                    getSupportActionBar().setTitle(names.size()
-                                        + (names.size() == 1 ? " Person " : " People ") + "Liked");
-                                }
+                                        ArrayAdapter adapter = new ArrayAdapter(CreatorViewLikeNames.this,
+                                            android.R.layout.simple_list_item_1, names);
+                                        list.setAdapter(adapter);
+                                        getSupportActionBar().setTitle(names.size()
+                                            + (names.size() == 1 ? " Person " : " People ") + "Liked");
+                                    }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
                     }
-                }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -102,28 +102,33 @@ public class CreatorViewLikeNames extends AppCompatActivity {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         if (occID.equals(selected.getOccasionID())) {
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        UserItem selectedUser = snapshot.getValue(UserItem.class);
-                                        if (userID.equals(selectedUser.getId())) {
-                                            names.add("(" + intToRes(selectedUser.getResidential()) + ") " + selectedUser.getName());
+                            mFirebaseDatabase.getReference("Users")
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            UserItem selectedUser = snapshot.getValue(UserItem.class);
+                                            if (userID.equals(selectedUser.getId())) {
+                                                names.add("(" + intToRes(selectedUser.getResidential())
+                                                    + ") " + selectedUser.getName());
+                                            }
                                         }
+
+                                        ArrayAdapter adapter = new ArrayAdapter(
+                                            CreatorViewLikeNames.this,
+                                            android.R.layout.simple_list_item_1, names);
+                                        list.setAdapter(adapter);
+
+                                        getSupportActionBar().setTitle(names.size()
+                                            + (names.size() == 1 ? " Person " : " People ") + "Liked");
+
                                     }
 
-                                    ArrayAdapter adapter = new ArrayAdapter(CreatorViewLikeNames.this, android.R.layout.simple_list_item_1, names);
-                                    list.setAdapter(adapter);
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Liked");
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                                    }
+                                });
                         }
                     }
                 }
@@ -133,12 +138,6 @@ public class CreatorViewLikeNames extends AppCompatActivity {
                 }
             });
         }
-
-//        if (names.size() == 0) {
-//            names.add("No one has signed up yet");
-//            ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
-//            list.setAdapter(adapter);
-//        }
 
         super.onCreate(savedInstanceState);
     }

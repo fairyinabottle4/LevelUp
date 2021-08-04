@@ -38,11 +38,12 @@ public class HistoryJiosFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // pulling activityjio with my userID
 
@@ -53,7 +54,7 @@ public class HistoryJiosFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
+                    if (selectedUserID.equals(fbUidFinal)) {
                         mJioIDs.add(selected.getOccasionID());
                     }
                 }
@@ -78,7 +79,7 @@ public class HistoryJiosFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();

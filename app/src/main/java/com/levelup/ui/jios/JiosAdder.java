@@ -36,6 +36,9 @@ import androidx.fragment.app.DialogFragment;
 public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
 
+    private static final String[] categories = {
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
+
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
@@ -56,9 +59,6 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     private boolean dateIsSame;
 
     private Spinner jioSpinner;
-
-    private static final String[] categories = {
-        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

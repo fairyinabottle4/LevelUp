@@ -26,8 +26,9 @@ public class HistoryFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.mylist_createdpage, container,false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View rootview = inflater.inflate(R.layout.mylist_createdpage, container, false);
         ViewPager viewPager = rootview.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 

@@ -47,6 +47,16 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
     private Occasion item;
 
+    //Constructor
+    public MylistCreatedAdapter(Context context, ArrayList<Occasion> mylistList) {
+        mContext = context;
+        mMylistList = mylistList;
+        mProfileStorageRef = FirebaseStorage.getInstance()
+            .getReference("profile picture uploads");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserRef = mFirebaseDatabase.getReference("Users");
+    }
+
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -82,7 +92,8 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         public TextView mTextView5;
         public TextView mTextView6;
 
-        public MylistCreatedViewHolder(final Context context, View itemView, final MylistCreatedAdapter.OnItemClickListener listener) {
+        public MylistCreatedViewHolder(final Context context, View itemView,
+                                       final MylistCreatedAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mImageView.setOnClickListener(new View.OnClickListener() {
@@ -116,17 +127,14 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     // Toast.makeText(context, "Button Clicked", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(context, CreatedOccasionPage.class);
-//                    if (isJio) {
-//                        intent = new Intent(context, JiosPage.class);
-//                        intent.putExtra("jioID", occID);
-//                        // Toast.makeText(context, "JIO!", Toast.LENGTH_SHORT).show();
-//                    }
+
                     intent.putExtra("uid", creatorUid);
                     intent.putExtra("creatorName", creatorName);
                     intent.putExtra("title", mTextView1.getText().toString());
                     intent.putExtra("description", mTextView2.getText().toString());
                     intent.putExtra("date", mTextView5.getText().toString());
-                    intent.putExtra("dateToShow", DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(date));
+                    intent.putExtra("dateToShow", DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK)
+                        .format(date));
                     intent.putExtra("location", mTextView4.getText().toString());
                     intent.putExtra("time", mTextView3.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
@@ -151,15 +159,25 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
             this.creatorUid = creatorUid;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
         public void setOccID(String occID) {
             this.occID = occID;
@@ -182,21 +200,13 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         }
     } // static class ends here
 
-    //Constructor
-    public MylistCreatedAdapter(Context context, ArrayList<Occasion> MylistList) {
-        mContext = context;
-        mMylistList = MylistList;
-        mProfileStorageRef = FirebaseStorage.getInstance()
-                .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
-    }
-
     @NonNull
     @Override
     public MylistCreatedAdapter.MylistCreatedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item_editmode, parent, false);
-        MylistCreatedAdapter.MylistCreatedViewHolder evh = new MylistCreatedAdapter.MylistCreatedViewHolder(mContext, v, mListener);
+        View v = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.occ_item_editmode, parent, false);
+        MylistCreatedAdapter.MylistCreatedViewHolder evh = new MylistCreatedAdapter
+            .MylistCreatedViewHolder(mContext, v, mListener);
         return evh;
     }
 
@@ -210,13 +220,13 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
 
         final MylistCreatedAdapter.MylistCreatedViewHolder holder1 = holder;
-        final String creatorUID = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUID);
+        final String creatorUid = currentItem.getCreatorID();
+        holder1.setCreatorUid(creatorUid);
         holder1.setOccID(occID);
         holder1.setIsJio(currentItem.isJio());
         holder1.setDate(currentItem.getDateInfo());
 
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
+        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUid);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -248,7 +258,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
                         holder1.mTextView6.setText(name);
                         holder1.setCreatorName(name);

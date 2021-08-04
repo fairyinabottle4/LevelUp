@@ -125,7 +125,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
             this.creatorResidence = creatorResidence;
         }
 
-        public void setProfilePictureUri(String profilePictureUri) { 
+        public void setProfilePictureUri(String profilePictureUri) {
             this.profilePictureUri = profilePictureUri;
         }
 
@@ -154,11 +154,11 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
      * Constructor for MktplaceLikedAdapter class. This ArrayList contains the complete
      * list of items that are added to the View
      * @param context Context of the fragment
-     * @param MktplaceList List of items
+     * @param mktplaceList List of items
      */
-    public MktplaceLikedAdapter(FragmentActivity context, ArrayList<MktplaceItem> MktplaceList) {
+    public MktplaceLikedAdapter(FragmentActivity context, ArrayList<MktplaceItem> mktplaceList) {
         this.mktplaceContext = context;
-        mktplaceLikedList = MktplaceList;
+        mktplaceLikedList = mktplaceList;
         firebaseDatabase = FirebaseDatabase.getInstance();
         userRef = firebaseDatabase.getReference("Users");
     }

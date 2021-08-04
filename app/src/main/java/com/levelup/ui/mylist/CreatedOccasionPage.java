@@ -176,8 +176,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
                 if (updatedDate == null) {
                     intent.putExtra("date", dateToShow);
                 } else {
-                    intent.putExtra("date", DateFormat.
-                        getDateInstance(DateFormat.MEDIUM, Locale.UK).format(updatedDate));
+                    intent.putExtra("date", DateFormat
+                        .getDateInstance(DateFormat.MEDIUM, Locale.UK).format(updatedDate));
                 }
                 intent.putExtra("time", mTextView3.getText().toString().trim());
                 intent.putExtra("occID", occID);
@@ -287,10 +287,10 @@ public class CreatedOccasionPage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-    //        if (changes) {
-    //            EventsFragment.setRefresh(true);
-    //        }
-    // refresh the Jios Created Fragment and Events Created Fragment
+        //        if (changes) {
+        //            EventsFragment.setRefresh(true);
+        //        }
+        // refresh the Jios Created Fragment and Events Created Fragment
         super.onBackPressed();
     }
 

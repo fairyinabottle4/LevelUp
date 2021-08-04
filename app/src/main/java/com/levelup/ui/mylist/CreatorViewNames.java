@@ -59,26 +59,32 @@ public class CreatorViewNames extends AppCompatActivity {
                         if (occID.equals(selected.getOccasionID())) {
                             // userIDs.add(selected.getUserID());
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        UserItem selectedUser = snapshot.getValue(UserItem.class);
-                                        if (userID.equals(selectedUser.getId())) {
-                                            names.add("(" + intToRes(selectedUser.getResidential()) + ") " + selectedUser.getName());
+                            mFirebaseDatabase.getReference("Users")
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            UserItem selectedUser = snapshot.getValue(UserItem.class);
+                                            if (userID.equals(selectedUser.getId())) {
+                                                names.add("(" + intToRes(selectedUser.getResidential())
+                                                    + ") " + selectedUser.getName());
+                                            }
                                         }
+
+                                        ArrayAdapter adapter = new ArrayAdapter(
+                                            CreatorViewNames.this,
+                                            android.R.layout.simple_list_item_1, names);
+                                        list.setAdapter(adapter);
+                                        getSupportActionBar().setTitle(names.size()
+                                            + (names.size() == 1 ? " Person " : " People ")
+                                            + "Signed Up");
                                     }
 
-                                    ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
-                                    list.setAdapter(adapter);
-                                    getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Signed Up");
-                                }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                                    }
+                                });
                         }
                     }
                 }
@@ -99,32 +105,32 @@ public class CreatorViewNames extends AppCompatActivity {
                             final String userID = selected.getUserID();
                             mFirebaseDatabase.getReference("Users")
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        UserItem selectedUser = snapshot.getValue(UserItem.class);
-                                        if (userID.equals(selectedUser.getId())) {
-                                            names.add("(" + intToRes(selectedUser.getResidential())
-                                                + ") " + selectedUser.getName());
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            UserItem selectedUser = snapshot.getValue(UserItem.class);
+                                            if (userID.equals(selectedUser.getId())) {
+                                                names.add("(" + intToRes(selectedUser.getResidential())
+                                                    + ") " + selectedUser.getName());
+                                            }
                                         }
+
+                                        ArrayAdapter adapter = new ArrayAdapter(
+                                            CreatorViewNames.this,
+                                                android.R.layout.simple_list_item_1, names);
+                                        list.setAdapter(adapter);
+
+                                        getSupportActionBar().setTitle(names.size()
+                                            + (names.size() == 1 ? " Person " : " People ")
+                                            + "Signed Up");
+
                                     }
 
-                                    ArrayAdapter adapter = new ArrayAdapter(
-                                        CreatorViewNames.this,
-                                            android.R.layout.simple_list_item_1, names);
-                                    list.setAdapter(adapter);
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    getSupportActionBar().setTitle(names.size()
-                                        + (names.size() == 1 ? " Person " : " People ")
-                                        + "Signed Up");
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                                    }
+                                });
                         }
                     }
                 }
@@ -134,63 +140,56 @@ public class CreatorViewNames extends AppCompatActivity {
                 }
             });
         }
-
-//        if (names.size() == 0) {
-//            names.add("No one has signed up yet");
-//            ArrayAdapter adapter = new ArrayAdapter(CreatorViewNames.this, android.R.layout.simple_list_item_1, names);
-//            list.setAdapter(adapter);
-//        }
-
         super.onCreate(savedInstanceState);
     }
 
     public String intToRes(int x) {
-        String residence_name = "";
+        String residenceName = "";
         if (x == 0) {
-            residence_name = "Off Campus";
+            residenceName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residenceName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residenceName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residenceName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residenceName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residenceName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residenceName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residenceName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residenceName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residenceName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residenceName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residenceName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residenceName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residenceName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residenceName = "UTown Residence";
         }
-        return residence_name;
+        return residenceName;
     }
 }

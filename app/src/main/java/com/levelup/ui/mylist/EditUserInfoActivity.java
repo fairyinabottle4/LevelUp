@@ -35,12 +35,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public static Uri profileImageUri;
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String[] residentials = {"I don't stay on campus",
-            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-            "Select Residence"};
+        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+        "Select Residence"};
 
     private FirebaseAuth firebaseAuth;
 
@@ -58,7 +60,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private EditText editEmailAddress;
     private EditText editPhoneNumber;
 
-    public static Uri profileImageUri;
     private ImageView editProfileImage;
 
     private StorageReference mStorageRef;
@@ -82,8 +83,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         phone = MainActivity.displayPhone;
 
 
-        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUID);
+        final String fbUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUid);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
@@ -159,8 +160,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
                 // Open Gallery
-                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                openGalleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                openGalleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "image/*");
                 startActivityForResult(openGalleryIntent, PICK_IMAGE_REQUEST);
             }
         });
@@ -200,26 +203,27 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         super.onActivityResult(requestCode, resultCode, data);
         AlertDialog.Builder builder = new AlertDialog.Builder(EditUserInfoActivity.this);
         builder.setMessage("Set profile picture?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
-                            if (resultCode == Activity.RESULT_OK) {
-                                deleteProfilePicture = false;
-                                Uri imageUri = data.getData();
-                                editProfileImage.setImageURI(imageUri);
-                                profileImageUri = imageUri;
-                                uploadImageToFireBase();
-                            }
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
+                        if (resultCode == Activity.RESULT_OK) {
+                            deleteProfilePicture = false;
+                            Uri imageUri = data.getData();
+                            editProfileImage.setImageURI(imageUri);
+                            profileImageUri = imageUri;
+                            uploadImageToFireBase();
                         }
                     }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+                }
+                })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -230,12 +234,14 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(EditUserInfoActivity.this, "Profile Picture Changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditUserInfoActivity.this, "Profile Picture Changed",
+                    Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(EditUserInfoActivity.this, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditUserInfoActivity.this, "Oops! Something went wrong",
+                    Toast.LENGTH_SHORT).show();
             }
         });
         MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
@@ -245,11 +251,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             .child(MainActivity.currUser.getId())
             .child("profilePictureUri")
             .setValue(newUri);
-
-//        UserItem updatedUser = MainActivity.currUser;
-//        FirebaseDatabase.getInstance().getReference("Users")
-//                .child(MainActivity.currUser.getId())
-//                .setValue(updatedUser);
 
     }
 
@@ -355,18 +356,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
-//    private void updateEmailAddress() {
-//        String inputAddress = editEmailAddress.getText().toString().trim();
-//        if (!inputAddress.equals(email)) {
-//            MainActivity.display_email = inputAddress;
-//            mDatabaseRef
-//                    .child(MainActivity.currUser.getId())
-//                    .child("email")
-//                    .setValue(inputAddress);
-//            changes = true;
-//        }
-//    }
-
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();
         long inputNumber = Long.parseLong(inputNumberString);
@@ -393,54 +382,54 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     }
 
     public String intToRes(int x) {
-        String residence_name = "";
+        String residenceName = "";
         if (x == 0) {
-            residence_name = "Off Campus";
+            residenceName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residenceName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residenceName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residenceName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residenceName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residenceName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residenceName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residenceName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residenceName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residenceName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residenceName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residenceName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residenceName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residenceName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residenceName = "UTown Residence";
         }
 
-        return residence_name;
+        return residenceName;
     }
 
     public void deleteProfilePicture() {
