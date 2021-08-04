@@ -190,10 +190,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
     //Constructor for JiosAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public JiosAdapter(Context context, ArrayList<JiosItem> JiosList) {
+    public JiosAdapter(Context context, ArrayList<JiosItem> jiosList) {
         jiosContext = context;
-        jiosList = JiosList;
-        jiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
+        this.jiosList = jiosList;
+        jiosListFull = new ArrayList<>(jiosList); // copy of jiosList for SearchView
         profileStorageRef = FirebaseStorage.getInstance()
             .getReference("profile picture uploads");
         firebaseDatabase = FirebaseDatabase.getInstance();

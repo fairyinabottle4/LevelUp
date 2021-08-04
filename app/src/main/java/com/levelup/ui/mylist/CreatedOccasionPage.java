@@ -176,7 +176,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
                 if (updatedDate == null) {
                     intent.putExtra("date", dateToShow);
                 } else {
-                    intent.putExtra("date", DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(updatedDate));
+                    intent.putExtra("date", DateFormat.
+                        getDateInstance(DateFormat.MEDIUM, Locale.UK).format(updatedDate));
                 }
                 intent.putExtra("time", mTextView3.getText().toString().trim());
                 intent.putExtra("occID", occID);
@@ -221,7 +222,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
                     EventsItem selected = snapshot.getValue(EventsItem.class);
                     if (occaID.equals(selected.getEventID())) {
                         mTextView1.setText(selected.getTitle());
-                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(selected.getDateInfo()));
+                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK)
+                            .format(selected.getDateInfo()));
                         updatedDate = selected.getDateInfo();
                         mTextView3.setText(selected.getTimeInfo());
                         mTextView4.setText(selected.getLocationInfo());
@@ -249,7 +251,8 @@ public class CreatedOccasionPage extends AppCompatActivity {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
                     if (occaID.equals(selected.getJioID())) {
                         mTextView1.setText(selected.getTitle());
-                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK).format(selected.getDateInfo()));
+                        mTextView2.setText(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK)
+                            .format(selected.getDateInfo()));
                         updatedDate = selected.getDateInfo();
                         mTextView3.setText(selected.getTimeInfo());
                         mTextView4.setText(selected.getLocationInfo());
@@ -266,20 +269,28 @@ public class CreatedOccasionPage extends AppCompatActivity {
         });
     }
 
-    public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+    public void setProfilePictureUri(String profilePictureUri) {
+        this.profilePictureUri = profilePictureUri;
+    }
 
-    public void setEmail(String email) {this.email = email;}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public void setTelegram(String telegram) { this.telegram = telegram;}
+    public void setTelegram(String telegram) {
+        this.telegram = telegram;
+    }
 
-    public void setPhone(long phone) {this.phone = phone;}
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
 
     @Override
     public void onBackPressed() {
-//        if (changes) {
-//            EventsFragment.setRefresh(true);
-//        }
-        // refresh the Jios Created Fragment and Events Created Fragment
+    //        if (changes) {
+    //            EventsFragment.setRefresh(true);
+    //        }
+    // refresh the Jios Created Fragment and Events Created Fragment
         super.onBackPressed();
     }
 

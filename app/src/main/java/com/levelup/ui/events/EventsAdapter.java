@@ -206,12 +206,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
      * Constructor for EventsAdapter class
      *
      * @param context Context of the Fragment which will contain the adapter
-     * @param EventsList Contains the complete list of items that are added to the view
+     * @param eventsItems Contains the complete list of items that are added to the view
      */
-    public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> EventsList) {
-        eventsList = EventsList;
+    public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> eventsItems) {
+        eventsList = eventsItems;
         eventsContext = context;
-        eventsListFull = new ArrayList<>(EventsList);
+        eventsListFull = new ArrayList<>(eventsItems);
         profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
         firebaseDatabase = FirebaseDatabase.getInstance();

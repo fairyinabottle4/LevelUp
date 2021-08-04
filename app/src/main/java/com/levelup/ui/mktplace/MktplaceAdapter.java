@@ -166,12 +166,12 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
      * Constructor for the MktplaceAdapter class.
      *
      * @param context Context that belongs to the Fragment
-     * @param MktplaceList List of items that are added to the View
+     * @param mktplaceList List of items that are added to the View
      */
-    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> MktplaceList) {
+    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> mktplaceList) {
         this.mktplaceContext = context;
-        mktplaceList = MktplaceList;
-        mktplaceListFull = new ArrayList<>(MktplaceList);
+        this.mktplaceList = mktplaceList;
+        mktplaceListFull = new ArrayList<>(mktplaceList);
         firebaseDatabase = FirebaseDatabase.getInstance();
         userRef = firebaseDatabase.getReference("Users");
     }
@@ -287,7 +287,8 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                                if (mktplaceID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                if (mktplaceID.equals(selected.getOccasionID())
+                                    && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
                                     likeMktplaceRef.child(key).removeValue();
                                     Toast.makeText(mktplaceContext, "Unliked", Toast.LENGTH_SHORT).show();

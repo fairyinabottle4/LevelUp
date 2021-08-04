@@ -464,7 +464,8 @@ public class MylistFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
             break;
-
+        default:
+            break;
         }
         return super.onOptionsItemSelected(item);
 
