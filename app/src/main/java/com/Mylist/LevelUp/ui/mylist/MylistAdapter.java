@@ -51,54 +51,109 @@ import java.util.Locale;
 public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistViewHolder> implements Filterable {
     // ArrayList is passed in from Occasion.java
     // ?? isnt it  passed in from MylistFragment -yien
-    private ArrayList<Occasion> mMylistList;
-    private ArrayList<Occasion> mMylistListFull;
-    private MylistAdapter.OnItemClickListener mListener;
+    private ArrayList<Occasion> mylistList;
+    private ArrayList<Occasion> mylistListFull;
+    private MylistAdapter.OnItemClickListener mylistListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-    private Context mContext;
+    private Context fragContext;
 
-    private StorageReference mProfileStorageRef;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUserRef;
+    private StorageReference profileStorageRef;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference userRef;
 
+    private Filter myListFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Occasion> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(mylistListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (Occasion item : mylistListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mylistList.clear();
+            mylistList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+        }
+    };
+
+    /**
+     * Constructor for the MylistAdapter class.
+     *
+     * @param context Context of the fragment
+     * @param mylistList Contains the complete list of items to be added to the View
+     */
+    public MylistAdapter(Context context, ArrayList<Occasion> mylistList) {
+        fragContext = context;
+        mylistList = mylistList;
+        mylistListFull = new ArrayList<>(mylistList);
+        profileStorageRef = FirebaseStorage.getInstance()
+            .getReference("profile picture uploads");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("Users");
+    }
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
     public void setOnItemClickListener(MylistAdapter.OnItemClickListener listener) {
-        mListener = listener;
+        mylistListener = listener;
     }
 
     //the ViewHolder holds the content of the card
     public static class MylistViewHolder extends RecyclerView.ViewHolder {
-        public String creatorName;
-        public String creatorUid;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
-        public String occID;
-        public boolean isJio;
-        public boolean isLiked;
-        public int numLikes;
+        private String creatorName;
+        private String creatorUid;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
+        private String occID;
+        private boolean isJio;
+        private boolean isLiked;
+        private int numLikes;
 
-        public ToggleButton mAddButton;
-        public ToggleButton mLikeButton;
-        public ImageView mImageView;
-        public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextView3;
-        public TextView mTextView4;
-        public TextView mTextView5;
-        public TextView mTextView6;
-        public TextView mNumLikes;
+        private ToggleButton addButton;
+        private ToggleButton likeButton;
+        private ImageView imageView;
+        private TextView titleView;
+        private TextView descView;
+        private TextView timeView;
+        private TextView locationView;
+        private TextView dateView;
+        private TextView creatorView;
+        private TextView numLikesView;
 
-        public MylistViewHolder(final Context context, View itemView, final MylistAdapter.OnItemClickListener listener) {
+        /**
+         * Constructor of the MylistViewHolder class
+         *
+         * @param context Context of the fragment it is in
+         * @param itemView Item to be displayed
+         * @param listener Listener which activates when the user clicks the item
+         */
+        public MylistViewHolder(final Context context, View itemView,
+                                final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mImageView.setOnClickListener(new View.OnClickListener() {
+            imageView = itemView.findViewById(R.id.imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -112,15 +167,15 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     context.startActivity(intent);
                 }
             });
-            mAddButton = itemView.findViewById(R.id.image_add);
-            mLikeButton = itemView.findViewById(R.id.image_like);
-            mTextView1 = itemView.findViewById(R.id.title);
-            mTextView2 = itemView.findViewById(R.id.event_description);
-            mTextView3 = itemView.findViewById(R.id.time);
-            mTextView4 = itemView.findViewById(R.id.location);
-            mTextView5 = itemView.findViewById(R.id.date);
-            mTextView6 = itemView.findViewById(R.id.eventCreator);
-            mTextView6.setOnClickListener(new View.OnClickListener() {
+            addButton = itemView.findViewById(R.id.image_add);
+            likeButton = itemView.findViewById(R.id.image_like);
+            titleView = itemView.findViewById(R.id.title);
+            descView = itemView.findViewById(R.id.event_description);
+            timeView = itemView.findViewById(R.id.time);
+            locationView = itemView.findViewById(R.id.location);
+            dateView = itemView.findViewById(R.id.date);
+            creatorView = itemView.findViewById(R.id.eventCreator);
+            creatorView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -134,7 +189,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     context.startActivity(intent);
                 }
             });
-            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
+            numLikesView = itemView.findViewById(R.id.numlikes_textview);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -149,11 +204,11 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     }
                     intent.putExtra("uid", creatorUid);
                     intent.putExtra("creatorName", creatorName);
-                    intent.putExtra("title", mTextView1.getText().toString());
-                    intent.putExtra("description", mTextView2.getText().toString());
-                    intent.putExtra("date", mTextView5.getText().toString());
-                    intent.putExtra("location", mTextView4.getText().toString());
-                    intent.putExtra("time", mTextView3.getText().toString());
+                    intent.putExtra("title", titleView.getText().toString());
+                    intent.putExtra("description", descView.getText().toString());
+                    intent.putExtra("date", dateView.getText().toString());
+                    intent.putExtra("location", locationView.getText().toString());
+                    intent.putExtra("time", timeView.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("eventID", occID);
                     intent.putExtra("stateLiked", isLiked);
@@ -171,15 +226,25 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             this.creatorUid = creatorUid;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
         public void setOccID(String occID) {
             this.occID = occID;
@@ -198,83 +263,71 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         }
     } // static class ends here
 
-    //Constructor for MylistAdapter class. This ArrayList contains the
-    //complete list of items that we want to add to the View.
-    public MylistAdapter(Context context, ArrayList<Occasion> MylistList) {
-        mContext = context;
-        mMylistList = MylistList;
-        mMylistListFull = new ArrayList<>(MylistList);
-        mProfileStorageRef = FirebaseStorage.getInstance()
-                .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
-    }
-
     //inflate the items in a MylistViewHolder
     @NonNull
     @Override
     public MylistAdapter.MylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
-        MylistAdapter.MylistViewHolder evh = new MylistAdapter.MylistViewHolder(mContext, v, mListener);
+        MylistAdapter.MylistViewHolder evh = new MylistAdapter.MylistViewHolder(fragContext, v, mylistListener);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull MylistAdapter.MylistViewHolder holder, final int position) {
-        final Occasion currentItem = mMylistList.get(position);
+        final Occasion currentItem = mylistList.get(position);
         UserItem user = MainActivity.currUser;
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String occID = currentItem.getOccasionID();
-        final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
-        final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+        final DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");
+        final DatabaseReference activityEventRef = firebaseDatabase.getReference("ActivityEvent");
 
-        final MylistAdapter.MylistViewHolder holder1 = holder;
-        final String creatorUID = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUID);
-        holder1.setOccID(occID);
-        holder1.setIsJio(currentItem.isJio());
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
-        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        final MylistAdapter.MylistViewHolder viewHolder = holder;
+        final String creatorUid = currentItem.getCreatorID();
+        viewHolder.setCreatorUid(creatorUid);
+        viewHolder.setOccID(occID);
+        viewHolder.setIsJio(currentItem.isJio());
+        StorageReference profileStorageRefIndiv = profileStorageRef.child(creatorUid);
+        profileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(holder1.mImageView);
+                Picasso.get().load(uri).into(viewHolder.imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
+                viewHolder.imageView.setImageResource(R.drawable.fake_user_dp);
             }
         });
 
-        holder1.mTextView1.setText(currentItem.getTitle());
-        holder1.mTextView2.setText(currentItem.getDescription());
-        holder1.mTextView3.setText(currentItem.getTimeInfo());
-        holder1.mTextView4.setText(currentItem.getLocationInfo());
-        holder1.mTextView5.setText(df.format(currentItem.getDateInfo()));
-        holder.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
+        viewHolder.titleView.setText(currentItem.getTitle());
+        viewHolder.descView.setText(currentItem.getDescription());
+        viewHolder.timeView.setText(currentItem.getTimeInfo());
+        viewHolder.locationView.setText(currentItem.getLocationInfo());
+        viewHolder.dateView.setText(df.format(currentItem.getDateInfo()));
+        holder.numLikesView.setText(Integer.toString(currentItem.getNumLikes()));
 
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
-                        holder1.mTextView6.setText(name);
-                        holder1.setCreatorName(name);
+                        viewHolder.creatorView.setText(name);
+                        viewHolder.setCreatorName(name);
                         int res = selected.getResidential();
                         String telegram = selected.getTelegram();
                         String email = selected.getEmail();
                         String dpUri = selected.getProfilePictureUri();
                         long phone = selected.getPhone();
-                        holder1.setCreatorName(name);
-                        holder1.setCreatorResidence(res);
-                        holder1.setTelegram(telegram);
-                        holder1.setEmail(email);
-                        holder1.setProfilePictureUri(dpUri);
-                        holder1.setPhone(phone);
+                        viewHolder.setCreatorName(name);
+                        viewHolder.setCreatorResidence(res);
+                        viewHolder.setTelegram(telegram);
+                        viewHolder.setEmail(email);
+                        viewHolder.setProfilePictureUri(dpUri);
+                        viewHolder.setPhone(phone);
                     }
                 }
             }
@@ -285,22 +338,22 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
-        holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-        holder1.mAddButton.setChecked(true);
+        viewHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+        viewHolder.addButton.setChecked(true);
         final Handler handler = new Handler();
         final Runnable myRun = new Runnable() {
             @Override
             public void run() {
                 // delete from Database
                 // Jio
-                mActivityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                activityJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                             if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                 String key = snapshot.getKey();
-                                mActivityJioRef.child(key).removeValue();
+                                activityJioRef.child(key).removeValue();
                             }
                         }
                     }
@@ -311,14 +364,14 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     }
                 });
                 //Events
-                mActivityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                activityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                             if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                 String key = snapshot.getKey();
-                                mActivityEventRef.child(key).removeValue();
+                                activityEventRef.child(key).removeValue();
                             }
                         }
                     }
@@ -333,94 +386,88 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     MainActivity.mJioIDs.remove(occID);
                 }
 
-                if(MainActivity.mEventIDs.contains(occID)) {
+                if (MainActivity.mEventIDs.contains(occID)) {
                     MainActivity.mEventIDs.remove(occID);
                 }
 
 
-                mMylistList.remove(position);
+                mylistList.remove(position);
                 notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mMylistList.size());
+                notifyItemRangeChanged(position, mylistList.size());
 
             }
         };
 
-        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.addButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
+                    viewHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
                     // handler.removeCallbacks(myRun);
-                    Toast.makeText(buttonView.getContext(), "Item added back to your list.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(buttonView.getContext(),
+                        "Item added back to your list.", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
+                    viewHolder.addButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
                     handler.postDelayed(myRun, 0000);
-                    Toast.makeText(buttonView.getContext(), "Item removed from your list.", Toast.LENGTH_SHORT).show();
-
-//                    String msg = "Item will be removed in 5s." + "\n" + "Press the + to add it back to your list.";
-////                    Toast toast = Toast.makeText(buttonView.getContext(), msg, Toast.LENGTH_SHORT);
-////                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-////                    v.setGravity(Gravity.CENTER);
-////                    toast.show();
-
-
+                    Toast.makeText(buttonView.getContext(),
+                        "Item removed from your list.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         if (MainActivity.mLikeEventIDs.contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
-            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-            holder1.setLiked(true);
-            holder1.mLikeButton.setChecked(true);
+            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+            viewHolder.setLiked(true);
+            viewHolder.likeButton.setChecked(true);
         } else {
-            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-            holder1.setLiked(false);
-            holder1.mLikeButton.setChecked(false);
+            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+            viewHolder.setLiked(false);
+            viewHolder.likeButton.setChecked(false);
         }
 
-        holder1.setNumLikes(currentItem.getNumLikes());
+        viewHolder.setNumLikes(currentItem.getNumLikes());
 
-        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.likeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 int currLikes = currentItem.getNumLikes();
 
                 if (isChecked) {
-                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1)); // for display only
+                    viewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
+                    viewHolder.numLikesView.setText(Integer.toString(currLikes + 1)); // for display only
 
                     if (currentItem.isJio()) {
                         // push to LikeJio Database
-                        DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                        DatabaseReference mLikeJioRef = firebaseDatabase.getReference("LikeJio");
                         LikeOccasionItem likeOccasionItem = new LikeOccasionItem(occID, userID);
                         mLikeJioRef.push().setValue(likeOccasionItem);
 
                         // +1 to the Likes on the jiosItem
-                        DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
-                        mJioRef.child(occID).child("numLikes").setValue(currLikes + 1);
-                        holder1.setNumLikes(currLikes + 1);
+                        DatabaseReference jioRef = firebaseDatabase.getReference("Jios");
+                        jioRef.child(occID).child("numLikes").setValue(currLikes + 1);
+                        viewHolder.setNumLikes(currLikes + 1);
 
                     } else {
                         // push to LikeEvent Database
-                        DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                        DatabaseReference mLikeEventRef = firebaseDatabase.getReference("LikeEvent");
                         LikeOccasionItem likeOccasionItem = new LikeOccasionItem(occID, userID);
                         mLikeEventRef.push().setValue(likeOccasionItem);
 
                         // +1 to the Likes on the eventsItem
-                        DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
-                        mEventRef.child(occID).child("numLikes").setValue(currLikes + 1);
-                        holder1.setNumLikes(currLikes + 1);
+                        DatabaseReference eventRef = firebaseDatabase.getReference("Events");
+                        eventRef.child(occID).child("numLikes").setValue(currLikes + 1);
+                        viewHolder.setNumLikes(currLikes + 1);
                     }
 
                 } else {
-                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1)); // for display only
+                    viewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
+                    viewHolder.numLikesView.setText(Integer.toString(currLikes - 1)); // for display only
 
                     // delete and -1 from both jio and events
                     if (currentItem.isJio()) {
                         // Delete the entry from LikeJio
-                        final DatabaseReference mLikeJioRef = mFirebaseDatabase.getReference("LikeJio");
+                        final DatabaseReference mLikeJioRef = firebaseDatabase.getReference("LikeJio");
                         mLikeJioRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -429,7 +476,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                                     if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                         String key = snapshot.getKey();
                                         mLikeJioRef.child(key).removeValue();
-                                        Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(fragContext, "Unliked", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -441,14 +488,14 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         });
 
                         // -1 from jioItem
-                        DatabaseReference mJioRef = mFirebaseDatabase.getReference("Jios");
-                        mJioRef.child(occID).child("numLikes").setValue(currLikes - 1);
-                        holder1.setNumLikes(currLikes - 1);
+                        DatabaseReference jioRef = firebaseDatabase.getReference("Jios");
+                        jioRef.child(occID).child("numLikes").setValue(currLikes - 1);
+                        viewHolder.setNumLikes(currLikes - 1);
 
                         MainActivity.mLikeJioIDs.remove(occID);
                     } else {
                         // delete item from LikeEvent
-                        final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
+                        final DatabaseReference mLikeEventRef = firebaseDatabase.getReference("LikeEvent");
                         mLikeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -457,7 +504,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                                     if (occID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
                                         String key = snapshot.getKey();
                                         mLikeEventRef.child(key).removeValue();
-                                        Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(fragContext, "Unliked", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -469,9 +516,9 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         });
 
                         // -1 to the Likes on the eventItem
-                        DatabaseReference mEventRef = mFirebaseDatabase.getReference("Events");
-                        mEventRef.child(occID).child("numLikes").setValue(currLikes - 1);
-                        holder1.setNumLikes(currLikes - 1);
+                        DatabaseReference eventRef = firebaseDatabase.getReference("Events");
+                        eventRef.child(occID).child("numLikes").setValue(currLikes - 1);
+                        viewHolder.setNumLikes(currLikes - 1);
 
                         MainActivity.mLikeEventIDs.remove(occID);
                     }
@@ -483,7 +530,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
 
     @Override
     public int getItemCount() {
-        return mMylistList.size();
+        return mylistList.size();
     }
 
     @Override
@@ -491,39 +538,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
         return myListFilter;
     }
 
-    private Filter myListFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<Occasion> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(mMylistListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (Occasion item : mMylistListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mMylistList.clear();
-            mMylistList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-        }
-    };
-
     public MylistAdapter resetAdapter() {
-        return new MylistAdapter(mContext, mMylistListFull);
+        return new MylistAdapter(fragContext, mylistListFull);
     }
 }

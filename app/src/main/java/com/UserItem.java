@@ -3,42 +3,38 @@ package com;
 import com.google.firebase.auth.FirebaseUser;
 
 public class UserItem {
-    public String id;
-    public String profilePictureUri;
+    private String id;
+    private String profilePictureUri;
     public String name;
-    public String email;
-    public int residential;
-    public String TelegramHandle;
-    public long PhoneNumber;
+    private String email;
+    private int residential;
+    private String telegramHandle;
+    private long phoneNumber;
     private boolean isStaff;
 
-    public UserItem(String id, String profilePictureUri, String name, String email, int residential, String telegram, long phone, boolean isStaff) {
+    /**
+     * Constructor for the UserItem class
+     *
+     * @param id ID of the user
+     * @param profilePictureUri Link to storage where the user's profile picture is stored
+     * @param name Name of the user
+     * @param email Email of the user
+     * @param residential Residence on campus of the user
+     * @param telegram Telegram handle of the user
+     * @param phone Phone number of the user
+     * @param isStaff If the user is a NUS staff member
+     */
+    public UserItem(String id, String profilePictureUri, String name, String email,
+                    int residential, String telegram, long phone, boolean isStaff) {
         this.id = id;
         this.profilePictureUri = profilePictureUri;
         this.name = name;
         this.email = email;
         this.residential = residential;
-        this.TelegramHandle = telegram;
-        this.PhoneNumber = phone;
+        this.telegramHandle = telegram;
+        this.phoneNumber = phone;
         this.isStaff = isStaff;
     }
-
-
-//    public UserItem(int profilePicture, String name, String email, int residential) {
-//        this.profilePicture =  profilePicture;
-//        this.name = name;
-//        this.email = email;
-//        this.residential = residential;
-//    }
-//
-//    // Overloaded Constructor to push to Firebase
-//    public UserItem(String ID, int profilePicture, String name, String email, int residential) {
-//        this.ID = ID;
-//        this.profilePicture =  profilePicture;
-//        this.name = name;
-//        this.email = email;
-//        this.residential = residential;
-//    }
 
     public UserItem() {
 
@@ -64,9 +60,13 @@ public class UserItem {
         return profilePictureUri;
     }
 
-    public String getTelegram() { return TelegramHandle; }
+    public String getTelegram() {
+        return telegramHandle;
+    }
 
-    public long getPhone() { return PhoneNumber;}
+    public long getPhone() {
+        return phoneNumber;
+    }
 
     public void setProfilePictureUri(String profilePictureUri) {
         this.profilePictureUri = profilePictureUri;

@@ -52,9 +52,9 @@ public class UserProfile extends AppCompatActivity {
     private String currUserId = MainActivity.getCurrentUser().getId();
     private String creatorId;
 
-    float sumOfRatings = 0;
-    float numOfRatings = 0;
-    float averageRatingGlobal;
+    private float sumOfRatings = 0;
+    private float numOfRatings = 0;
+    private float averageRatingGlobal;
 
     private static final String[] residentials = {"I don't stay on campus",
             "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
