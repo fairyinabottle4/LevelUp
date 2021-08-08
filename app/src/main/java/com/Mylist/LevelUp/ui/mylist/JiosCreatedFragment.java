@@ -85,6 +85,9 @@ public class JiosCreatedFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Builds the recycler view to display the list of items
+     */
     public void buildRecyclerView() {
         mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());

@@ -24,30 +24,39 @@ import java.util.ArrayList;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>{
 
-    private ArrayList<ReviewItem> mReviewList;
-    private StorageReference mProfileStorageRef;
+    private ArrayList<ReviewItem> reviewList;
+    private StorageReference profileStorageRef;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserRef;
 
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {
-        public ImageView mProfilePicture;
-        public TextView mReviewerName;
-        public TextView mReviewDate;
-        public TextView mReview;
+        private ImageView profilePicture;
+        private TextView reviewerName;
+        private TextView reviewDate;
+        private TextView review;
 
+        /**
+         * Constructor for the ReviewViewHolder class
+         *
+         * @param itemView View of the item to be displayed
+         */
         public ReviewViewHolder(View itemView) {
             super(itemView);
-            mProfilePicture = itemView.findViewById(R.id.imageViewReview);
-            mReviewerName = itemView.findViewById(R.id.author);
-            mReviewDate = itemView.findViewById(R.id.date);
-            mReview = itemView.findViewById(R.id.review_description);
-            //h
+            profilePicture = itemView.findViewById(R.id.imageViewReview);
+            reviewerName = itemView.findViewById(R.id.author);
+            reviewDate = itemView.findViewById(R.id.date);
+            review = itemView.findViewById(R.id.review_description);
         }
     }
 
-    public ReviewAdapter(ArrayList<ReviewItem> mReviewList) {
-        this.mReviewList = mReviewList;
-        mProfileStorageRef = FirebaseStorage.getInstance()
+    /**
+     * Constructor of the ReviewAdapter class
+     *
+     * @param reviewList List of reviews for a particular user
+     */
+    public ReviewAdapter(ArrayList<ReviewItem> reviewList) {
+        this.reviewList = reviewList;
+        profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
     }
 
@@ -61,28 +70,28 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        ReviewItem currentItem = mReviewList.get(position);
+        ReviewItem currentItem = reviewList.get(position);
         final ReviewViewHolder holder1 = holder;
         String reviewerID = currentItem.getUserID();
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(reviewerID);
-        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        StorageReference profileStorageRefIndiv = profileStorageRef.child(reviewerID);
+        profileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(holder1.mProfilePicture);
+                Picasso.get().load(uri).into(holder1.profilePicture);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                holder1.mProfilePicture.setImageResource(R.drawable.fake_user_dp);
+                holder1.profilePicture.setImageResource(R.drawable.fake_user_dp);
             }
         });
-        holder.mReviewerName.setText(currentItem.getReviewerdisplayName());
-        holder.mReviewDate.setText(currentItem.getDate());
-        holder.mReview.setText(currentItem.getReview());
+        holder.reviewerName.setText(currentItem.getReviewerdisplayName());
+        holder.reviewDate.setText(currentItem.getDate());
+        holder.review.setText(currentItem.getReview());
     }
 
     @Override
     public int getItemCount() {
-        return mReviewList.size();
+        return reviewList.size();
     }
 }
