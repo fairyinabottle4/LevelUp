@@ -1,20 +1,6 @@
 package com.levelup.ui.mylist;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import java.util.ArrayList;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,9 +13,24 @@ import com.levelup.R;
 import com.levelup.ui.mktplace.MktplaceItem;
 import com.levelup.ui.mktplace.MktplacePage;
 
-import java.util.ArrayList;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MktplaceCreatedFragment extends Fragment implements MktplaceCreatedAdapter.OnItemClickListener {
+    public static boolean refresh;
+
     private static ArrayList<MktplaceItem> mktplaceItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -41,12 +42,12 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
     private MktplaceCreatedAdapter.OnItemClickListener mListener = this;
     TextView nothingView;
 
-    public static boolean refresh;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.mktplace_plain, container, false);
-         nothingView = rootView.findViewById(R.id.nothing);
+        nothingView = rootView.findViewById(R.id.nothing);
 
         createMktplaceList();
 

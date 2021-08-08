@@ -1,16 +1,6 @@
 package com.levelup.ui.mylist;
 
-import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
@@ -23,9 +13,18 @@ import com.levelup.ui.mktplace.MktplaceItem;
 import com.levelup.user.UserItem;
 import com.levelup.user.UserProfile;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreatedAdapter.MktplaceCreatedViewHolder>{
+public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreatedAdapter.MktplaceCreatedViewHolder> {
     //ArrayList is passed in from MktplaceItem.java
     private Context mContext;
 
@@ -41,7 +40,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
     }
 
     //the ViewHolder holds the content of the card
-    public static class MktplaceCreatedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class MktplaceCreatedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public String creatorUid;
         public String creatorName;
         public String mktPlaceID;
@@ -59,7 +58,8 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         public Button mPeopleLikedButton;
         private MktplaceCreatedAdapter.OnItemClickListener mListener;
 
-        public MktplaceCreatedViewHolder(final Context context, View itemView, final MktplaceCreatedAdapter.OnItemClickListener listener) {
+        public MktplaceCreatedViewHolder(final Context context, View itemView,
+                                         final MktplaceCreatedAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTitle = itemView.findViewById(R.id.textView);
@@ -89,32 +89,43 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
             mListener.onItemClick(getAdapterPosition());
         }
 
-        public void setCreatorUid(String newUID) {
-            this.creatorUid = newUID;
+        public void setCreatorUid(String newUid) {
+            this.creatorUid = newUid;
         }
 
         public void setCreatorName(String creatorName) {
             this.creatorName = creatorName;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
     }
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public MktplaceCreatedAdapter(Context context, ArrayList<MktplaceItem> MktplaceList, MktplaceCreatedAdapter.OnItemClickListener listener) {
+    public MktplaceCreatedAdapter(Context context, ArrayList<MktplaceItem> mktplaceList,
+                                  MktplaceCreatedAdapter.OnItemClickListener listener) {
         this.mContext = context;
-        mMktplaceList = MktplaceList;
-        mMktplaceListFull = new ArrayList<>(MktplaceList);
+        mMktplaceList = mktplaceList;
+        mMktplaceListFull = new ArrayList<>(mktplaceList);
         mAdapterListener = listener;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserRef = mFirebaseDatabase.getReference("Users");
@@ -123,9 +134,12 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
     //inflate the items in a MktplaceViewHolder
     @NonNull
     @Override
-    public MktplaceCreatedAdapter.MktplaceCreatedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.marketplace_item_edit, parent, false);
-        MktplaceCreatedAdapter.MktplaceCreatedViewHolder evh = new MktplaceCreatedAdapter.MktplaceCreatedViewHolder(mContext,v, mAdapterListener);
+    public MktplaceCreatedAdapter.MktplaceCreatedViewHolder onCreateViewHolder(
+        @NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.marketplace_item_edit,
+            parent, false);
+        MktplaceCreatedAdapter.MktplaceCreatedViewHolder evh = new MktplaceCreatedAdapter
+            .MktplaceCreatedViewHolder(mContext, v, mAdapterListener);
         return evh;
     }
 
@@ -134,8 +148,8 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         final MktplaceItem uploadCurrent = mMktplaceList.get(position);
         final String imageUrl = uploadCurrent.getImageUrl();
         final String mktplaceID = uploadCurrent.getMktPlaceID();
-        final String creatorUID = uploadCurrent.getCreatorID();
-        holder.setCreatorUid(creatorUID);
+        final String creatorUid = uploadCurrent.getCreatorID();
+        holder.setCreatorUid(creatorUid);
         final String title = uploadCurrent.getName();
         final String location = uploadCurrent.getLocation();
         final String description = uploadCurrent.getDescription();
@@ -151,7 +165,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
                 intent.putExtra("title", title);
                 intent.putExtra("location", location);
                 intent.putExtra("description", description);
-                intent.putExtra("creatorUID", creatorUID);
+                intent.putExtra("creatorUid", creatorUid);
                 mContext.startActivity(intent);
             }
         });
@@ -173,7 +187,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
                         holder.mCreatorName.setText(name);
                         holder.setCreatorName(name);

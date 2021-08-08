@@ -50,6 +50,37 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private FragmentActivity eventsContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
+    private Filter eventsFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<EventsItem> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(eventsListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (EventsItem item : eventsListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            eventsList.clear();
+            eventsList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+        }
+    };
 
     // ViewHolder holds the content of the card
     public static class EventsViewHolder extends RecyclerView.ViewHolder {
@@ -206,12 +237,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
      * Constructor for EventsAdapter class
      *
      * @param context Context of the Fragment which will contain the adapter
-     * @param EventsList Contains the complete list of items that are added to the view
+     * @param eventsItems Contains the complete list of items that are added to the view
      */
-    public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> EventsList) {
-        eventsList = EventsList;
+    public EventsAdapter(FragmentActivity context, ArrayList<EventsItem> eventsItems) {
+        eventsList = eventsItems;
         eventsContext = context;
-        eventsListFull = new ArrayList<>(EventsList);
+        eventsListFull = new ArrayList<>(eventsItems);
         profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -456,38 +487,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     public Filter getFilter() { // for the 'implements Filterable'
         return eventsFilter;
     }
-
-    private Filter eventsFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<EventsItem> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(eventsListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (EventsItem item : eventsListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            eventsList.clear();
-            eventsList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-        }
-    };
 
     public void resetAdapter() {
         this.eventsList = eventsListFull;

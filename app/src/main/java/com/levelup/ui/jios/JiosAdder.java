@@ -7,9 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.fragment.jios.JiosFragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -25,20 +27,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.fragment.jios.JiosFragment;
-
-
 
 public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener {
+
+    private static final String[] categories = {
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -60,9 +59,6 @@ public class JiosAdder extends AppCompatActivity implements TimePickerDialog.OnT
     private boolean dateIsSame;
 
     private Spinner jioSpinner;
-
-    private static final String[] categories = {
-        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

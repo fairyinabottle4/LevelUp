@@ -3,13 +3,17 @@ package com.levelup.ui.mktplace;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.LikeOccasionItem;
+import com.levelup.user.UserItem;
+import com.levelup.user.UserProfile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,12 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.occasion.LikeOccasionItem;
-import com.levelup.user.UserItem;
-import com.levelup.user.UserProfile;
-
 
 
 
@@ -45,6 +43,38 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference userRef;
+
+    private Filter mktplaceFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<MktplaceItem> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(mktplaceListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (MktplaceItem item : mktplaceListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getName().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mktplaceList.clear();
+            mktplaceList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+        }
+    };
 
     //the ViewHolder holds the content of the card
     public static class MktplaceViewHolder extends RecyclerView.ViewHolder {
@@ -168,12 +198,12 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
      * Constructor for the MktplaceAdapter class.
      *
      * @param context Context that belongs to the Fragment
-     * @param MktplaceList List of items that are added to the View
+     * @param mktplaceList List of items that are added to the View
      */
-    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> MktplaceList) {
+    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> mktplaceList) {
         this.mktplaceContext = context;
-        mktplaceList = MktplaceList;
-        mktplaceListFull = new ArrayList<>(MktplaceList);
+        this.mktplaceList = mktplaceList;
+        mktplaceListFull = new ArrayList<>(mktplaceList);
         firebaseDatabase = FirebaseDatabase.getInstance();
         userRef = firebaseDatabase.getReference("Users");
     }
@@ -289,7 +319,8 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                                if (mktplaceID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                if (mktplaceID.equals(selected.getOccasionID())
+                                    && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
                                     likeMktplaceRef.child(key).removeValue();
                                     Toast.makeText(mktplaceContext, "Unliked", Toast.LENGTH_SHORT).show();
@@ -330,38 +361,6 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
     public Filter getFilter() { // for the 'implements Filterable'
         return mktplaceFilter;
     }
-
-    private Filter mktplaceFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<MktplaceItem> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(mktplaceListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (MktplaceItem item : mktplaceListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getName().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mktplaceList.clear();
-            mktplaceList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-        }
-    };
 
     public void resetAdapter() {
         this.mktplaceList = mktplaceListFull;

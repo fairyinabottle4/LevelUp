@@ -10,6 +10,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.mylist.MylistAdapter;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,11 +27,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.levelup.R;
-import com.levelup.occasion.ActivityOccasionItem;
-import com.levelup.occasion.Occasion;
-import com.levelup.ui.mylist.MylistAdapter;
 
 public class EventsMyListFragment extends Fragment {
     public static ArrayList<String> eventIDs = new ArrayList<>();

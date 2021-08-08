@@ -1,28 +1,9 @@
 package com.levelup.fragment.events;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -38,16 +19,33 @@ import com.levelup.ui.events.EventsItem;
 import com.levelup.ui.events.EventsLikedFragment;
 import com.levelup.ui.events.EventsMyListFragment;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class EventsFragment extends Fragment {
     public static boolean refresh;
     private static final String[] categories = {"All",
         "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
-    private static ArrayList<EventsItem> EventsItemList;
+    private static ArrayList<EventsItem> eventsItemList;
     private static ArrayList<EventsItem> copy;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -94,7 +92,7 @@ public class EventsFragment extends Fragment {
 
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutevents);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            EventsItemList.clear();
+            eventsItemList.clear();
             loadDataEvents();
             // adapter.notifyDataSetChanged(); - added this line into loadDataEvents itself
             swipeRefreshLayout.setRefreshing(false);
@@ -104,7 +102,7 @@ public class EventsFragment extends Fragment {
     }
 
     public void createEventsList() {
-        EventsItemList = new ArrayList<>();
+        eventsItemList = new ArrayList<>();
     }
 
     /**
@@ -113,7 +111,7 @@ public class EventsFragment extends Fragment {
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new EventsAdapter(getActivity(), EventsItemList);
+        adapter = new EventsAdapter(getActivity(), eventsItemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -146,6 +144,7 @@ public class EventsFragment extends Fragment {
             break;
         case R.id.subitem1:
             loadDataEvents();
+            break;
         case R.id.subitem2:
             getSelectedCategoryData(0);
             break;
@@ -177,6 +176,8 @@ public class EventsFragment extends Fragment {
                     .replace(R.id.nav_host_fragment, nextFrag2)
                     .addToBackStack(null)
                     .commit();
+            break;
+        default:
             break;
         }
         return super.onOptionsItemSelected(item);
@@ -220,11 +221,11 @@ public class EventsFragment extends Fragment {
     }
 
     public static void setEventsItemList(ArrayList<EventsItem> eventsList) {
-        EventsItemList = eventsList;
+        eventsItemList = eventsList;
     }
 
     public static ArrayList<EventsItem> getEventsItemList() {
-        return EventsItemList;
+        return eventsItemList;
     }
 
     /**
@@ -235,7 +236,7 @@ public class EventsFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                EventsItemList.clear();
+                eventsItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
                         EventsItem selected = snapshot.getValue(EventsItem.class);
@@ -256,17 +257,17 @@ public class EventsFragment extends Fragment {
 
                         Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) >= 0) {
-                            EventsItemList.add(selected);
+                            eventsItemList.add(selected);
                         }
                     } catch (Exception e) {
                         System.out.println(e);
                     }
                 }
-                copy = new ArrayList<>(EventsItemList);
-                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), EventsItemList);
+                copy = new ArrayList<>(eventsItemList);
+                EventsAdapter eventsAdapter = new EventsAdapter(getActivity(), eventsItemList);
                 recyclerView.setAdapter(eventsAdapter);
                 adapter = eventsAdapter;
-                MainActivity.sort(EventsItemList);
+                MainActivity.sort(eventsItemList);
             }
 
             @Override
@@ -283,7 +284,7 @@ public class EventsFragment extends Fragment {
         ArrayList<EventsItem> list = new ArrayList<>();
         EventsAdapter eventsAdapter;
         //filter by id
-        for (EventsItem eventsItem : EventsItemList) {
+        for (EventsItem eventsItem : eventsItemList) {
             if (eventsItem.getCategory() == categoryID) {
                 list.add(eventsItem);
             }

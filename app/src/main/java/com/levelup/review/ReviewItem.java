@@ -18,8 +18,19 @@ public class ReviewItem {
 
     }
 
-    public String getUserID() {return  userID;}
-    public String getReviewerdisplayName() {return reviewerdisplayName;}
-    public String getDate() {return date;}
-    public String getReview() {return review;}
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getReviewerdisplayName() {
+        return reviewerdisplayName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getReview() {
+        return review;
+    }
 }

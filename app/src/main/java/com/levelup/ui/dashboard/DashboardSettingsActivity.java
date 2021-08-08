@@ -1,10 +1,9 @@
 package com.levelup.ui.dashboard;
 
-import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.levelup.R;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class DashboardSettingsActivity extends AppCompatActivity {

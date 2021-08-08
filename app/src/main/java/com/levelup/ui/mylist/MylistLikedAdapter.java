@@ -1,20 +1,8 @@
 package com.levelup.ui.mylist;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,9 +25,20 @@ import com.levelup.user.UserItem;
 import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Locale;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.MylistLikedViewHolder> {
     // ArrayList is passed in from Occasion.java
@@ -54,6 +53,17 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserRef;
 
+    //Constructor for MylistAdapter class. This ArrayList contains the
+    //complete list of items that we want to add to the View.
+    public MylistLikedAdapter(Context context, ArrayList<Occasion> mylistList) {
+        mContext = context;
+        mMylistList = mylistList;
+        mMylistListFull = new ArrayList<>(mylistList);
+        mProfileStorageRef = FirebaseStorage.getInstance()
+            .getReference("profile picture uploads");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserRef = mFirebaseDatabase.getReference("Users");
+    }
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -90,7 +100,8 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
         public TextView mTextView6;
         public TextView mNumLikes;
 
-        public MylistLikedViewHolder(final Context context, View itemView, final MylistAdapter.OnItemClickListener listener) {
+        public MylistLikedViewHolder(final Context context, View itemView,
+                                     final MylistAdapter.OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mImageView.setOnClickListener(new View.OnClickListener() {
@@ -167,15 +178,25 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
             this.creatorUid = creatorUid;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
         public void setOccID(String occID) {
             this.occID = occID;
@@ -189,31 +210,23 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
             isLiked = liked;
         }
 
-        public void setChecked(boolean toSet) {this.isChecked = toSet; }
+        public void setChecked(boolean toSet) {
+            this.isChecked = toSet;
+        }
 
         public void setNumLikes(int numLikes) {
             this.numLikes = numLikes;
         }
     } // static class ends here
 
-    //Constructor for MylistAdapter class. This ArrayList contains the
-    //complete list of items that we want to add to the View.
-    public MylistLikedAdapter(Context context, ArrayList<Occasion> MylistList) {
-        mContext = context;
-        mMylistList = MylistList;
-        mMylistListFull = new ArrayList<>(MylistList);
-        mProfileStorageRef = FirebaseStorage.getInstance()
-                .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
-    }
-
     //inflate the items in a MylistViewHolder
     @NonNull
     @Override
     public MylistLikedAdapter.MylistLikedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item, parent, false);
-        MylistLikedAdapter.MylistLikedViewHolder evh = new MylistLikedAdapter.MylistLikedViewHolder(mContext, v, mListener);
+        View v = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.occ_item, parent, false);
+        MylistLikedAdapter.MylistLikedViewHolder evh = new MylistLikedAdapter
+            .MylistLikedViewHolder(mContext, v, mListener);
         return evh;
     }
 
@@ -227,11 +240,11 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
         final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
 
         final MylistLikedAdapter.MylistLikedViewHolder holder1 = holder;
-        final String creatorUID = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUID);
+        final String creatorUid = currentItem.getCreatorID();
+        holder1.setCreatorUid(creatorUid);
         holder1.setOccID(occID);
         holder1.setIsJio(currentItem.isJio());
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
+        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUid);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -258,7 +271,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
                         holder1.mTextView6.setText(name);
                         holder1.setCreatorName(name);
@@ -339,15 +352,9 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                     MainActivity.mJioIDs.remove(occID);
                 }
 
-                if(MainActivity.mEventIDs.contains(occID)) {
+                if (MainActivity.mEventIDs.contains(occID)) {
                     MainActivity.mEventIDs.remove(occID);
                 }
-
-
-//                mMylistList.remove(position);
-//                notifyItemRemoved(position);
-//                notifyItemRangeChanged(position, mMylistList.size());
-
             }
         };
 
@@ -378,13 +385,6 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                     holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
                     handler.postDelayed(myRun, 0000);
                     Toast.makeText(buttonView.getContext(), "Item removed from your list.", Toast.LENGTH_SHORT).show();
-
-//                    String msg = "Item will be removed in 5s." + "\n" + "Press the + to add it back to your list.";
-////                    Toast toast = Toast.makeText(buttonView.getContext(), msg, Toast.LENGTH_SHORT);
-////                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-////                    v.setGravity(Gravity.CENTER);
-////                    toast.show();
-
 
                 }
             }

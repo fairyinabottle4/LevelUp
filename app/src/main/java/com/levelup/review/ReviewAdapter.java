@@ -1,14 +1,6 @@
 package com.levelup.review;
 
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,9 +11,16 @@ import com.google.firebase.storage.StorageReference;
 import com.levelup.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>{
+public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
     private ArrayList<ReviewItem> mReviewList;
     private StorageReference mProfileStorageRef;

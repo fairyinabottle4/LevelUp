@@ -1,5 +1,18 @@
 package com.levelup.ui.mylist;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.fragment.mylist.MylistFragment;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,27 +30,21 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.fragment.mylist.MylistFragment;
-
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private FirebaseAuth firebaseAuth;
+    public static Uri profileImageUri;
+
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String[] residentials = {"I don't stay on campus",
+        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+        "Select Residence"};
+
+    private FirebaseAuth firebaseAuth;
 
     private String name;
     private int residence;
@@ -53,18 +60,12 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private EditText editEmailAddress;
     private EditText editPhoneNumber;
 
-    public static Uri profileImageUri;
     private ImageView editProfileImage;
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
 
     private Spinner spinner;
-    private static final String[] residentials = {"I don't stay on campus",
-            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-            "Select Residence"};
 
     private boolean deleteProfilePicture = false;
     private boolean changes = false;
@@ -76,19 +77,19 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         super.onCreate(savedInstanceState);
 
-        name = MainActivity.display_name;
+        name = MainActivity.displayName;
         residence = MainActivity.currUser.getResidential();
-        telegram = MainActivity.display_telegram;
-        phone = MainActivity.display_phone;
+        telegram = MainActivity.displayTelegram;
+        phone = MainActivity.displayPhone;
 
 
-        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUID);
+        final String fbUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUid);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
-        TextView display_name = findViewById(R.id.editTextDisplayName);
-        display_name.setText(name);
+        TextView displayName = findViewById(R.id.editTextDisplayName);
+        displayName.setText(name);
 
         initializeSpinner();
 
@@ -105,9 +106,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         //For updating Contact Information
         editTelegramHandle = findViewById(R.id.edit_telegram_handle);
-        editTelegramHandle.setText(MainActivity.display_telegram);
+        editTelegramHandle.setText(MainActivity.displayTelegram);
         editPhoneNumber = findViewById(R.id.edit_phone_number);
-        editPhoneNumber.setText(Long.toString(MainActivity.display_phone));
+        editPhoneNumber.setText(Long.toString(MainActivity.displayPhone));
 
 
 
@@ -159,8 +160,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
                 // Open Gallery
-                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                openGalleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                openGalleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "image/*");
                 startActivityForResult(openGalleryIntent, PICK_IMAGE_REQUEST);
             }
         });
@@ -200,26 +203,27 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         super.onActivityResult(requestCode, resultCode, data);
         AlertDialog.Builder builder = new AlertDialog.Builder(EditUserInfoActivity.this);
         builder.setMessage("Set profile picture?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
-                            if (resultCode == Activity.RESULT_OK) {
-                                deleteProfilePicture = false;
-                                Uri imageUri = data.getData();
-                                editProfileImage.setImageURI(imageUri);
-                                profileImageUri = imageUri;
-                                uploadImageToFireBase();
-                            }
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
+                        if (resultCode == Activity.RESULT_OK) {
+                            deleteProfilePicture = false;
+                            Uri imageUri = data.getData();
+                            editProfileImage.setImageURI(imageUri);
+                            profileImageUri = imageUri;
+                            uploadImageToFireBase();
                         }
                     }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+                }
+                })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -230,12 +234,14 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(EditUserInfoActivity.this, "Profile Picture Changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditUserInfoActivity.this, "Profile Picture Changed",
+                    Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(EditUserInfoActivity.this, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditUserInfoActivity.this, "Oops! Something went wrong",
+                    Toast.LENGTH_SHORT).show();
             }
         });
         MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
@@ -245,11 +251,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             .child(MainActivity.currUser.getId())
             .child("profilePictureUri")
             .setValue(newUri);
-
-//        UserItem updatedUser = MainActivity.currUser;
-//        FirebaseDatabase.getInstance().getReference("Users")
-//                .child(MainActivity.currUser.getId())
-//                .setValue(updatedUser);
 
     }
 
@@ -266,55 +267,57 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
-            case 0:
-                finalResidence = 0;
-                break;
-            case 1:
-                // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
-                finalResidence = 1;
-                break;
-            case 2:
-                // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
-                finalResidence = 2;
-                break;
-            case 3:
-                // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
-                finalResidence = 3;
-                break;
-            case 4:
-                // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
-                finalResidence = 4;
-                break;
-            case 5:
-                finalResidence = 5;
-                break;
-            case 6:
-                finalResidence = 6;
-                break;
-            case 7:
-                finalResidence = 7;
-                break;
-            case 8:
-                finalResidence = 8;
-                break;
-            case 9:
-                finalResidence = 9;
-                break;
-            case 10:
-                finalResidence = 10;
-                break;
-            case 11:
-                finalResidence = 11;
-                break;
-            case 12:
-                finalResidence = 12;
-                break;
-            case 13:
-                finalResidence = 13;
-                break;
-            case 14:
-                finalResidence = 14;
-                break;
+        case 0:
+            finalResidence = 0;
+            break;
+        case 1:
+            // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
+            finalResidence = 1;
+            break;
+        case 2:
+            // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
+            finalResidence = 2;
+            break;
+        case 3:
+            // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
+            finalResidence = 3;
+            break;
+        case 4:
+            // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
+            finalResidence = 4;
+            break;
+        case 5:
+            finalResidence = 5;
+            break;
+        case 6:
+            finalResidence = 6;
+            break;
+        case 7:
+            finalResidence = 7;
+            break;
+        case 8:
+            finalResidence = 8;
+            break;
+        case 9:
+            finalResidence = 9;
+            break;
+        case 10:
+            finalResidence = 10;
+            break;
+        case 11:
+            finalResidence = 11;
+            break;
+        case 12:
+            finalResidence = 12;
+            break;
+        case 13:
+            finalResidence = 13;
+            break;
+        case 14:
+            finalResidence = 14;
+            break;
+        default:
+            break;
         }
 
     }
@@ -331,7 +334,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             // update the DB
             String updatedName = inputName;
             name = inputName;
-            MainActivity.display_name = updatedName;
+            MainActivity.displayName = updatedName;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("name")
@@ -344,7 +347,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateTelegramHandle() {
         String inputHandle = editTelegramHandle.getText().toString().trim();
         if (!inputHandle.equals(telegram)) {
-            MainActivity.display_telegram = inputHandle;
+            MainActivity.displayTelegram = inputHandle;
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("TelegramHandle")
@@ -353,22 +356,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
-//    private void updateEmailAddress() {
-//        String inputAddress = editEmailAddress.getText().toString().trim();
-//        if (!inputAddress.equals(email)) {
-//            MainActivity.display_email = inputAddress;
-//            mDatabaseRef
-//                    .child(MainActivity.currUser.getId())
-//                    .child("email")
-//                    .setValue(inputAddress);
-//            changes = true;
-//        }
-//    }
-
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();
         long inputNumber = Long.parseLong(inputNumberString);
-        MainActivity.display_phone = inputNumber;
+        MainActivity.displayPhone = inputNumber;
         if (inputNumber != phone) {
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
@@ -381,7 +372,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateResidence() {
         if (finalResidence != residence) { // these are ints
             // update the DB
-            MainActivity.display_residential = intToRes(finalResidence);
+            MainActivity.displayResidential = intToRes(finalResidence);
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("residential")
@@ -391,54 +382,54 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     }
 
     public String intToRes(int x) {
-        String residence_name = "";
+        String residenceName = "";
         if (x == 0) {
-            residence_name = "Off Campus";
+            residenceName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residenceName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residenceName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residenceName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residenceName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residenceName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residenceName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residenceName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residenceName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residenceName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residenceName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residenceName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residenceName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residenceName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residenceName = "UTown Residence";
         }
 
-        return residence_name;
+        return residenceName;
     }
 
     public void deleteProfilePicture() {

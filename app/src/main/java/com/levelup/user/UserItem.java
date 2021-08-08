@@ -6,37 +6,21 @@ public class UserItem {
     public String name;
     public String email;
     public int residential;
-    public String TelegramHandle;
-    public long PhoneNumber;
+    public String telegramHandle;
+    public long phoneNumber;
     private boolean isStaff;
 
-    public UserItem(String id, String profilePictureUri, String name, String email, int residential, String telegram, long phone, boolean isStaff) {
+    public UserItem(String id, String profilePictureUri, String name, String email,
+                    int residential, String telegram, long phone, boolean isStaff) {
         this.id = id;
         this.profilePictureUri = profilePictureUri;
         this.name = name;
         this.email = email;
         this.residential = residential;
-        this.TelegramHandle = telegram;
-        this.PhoneNumber = phone;
+        this.telegramHandle = telegram;
+        this.phoneNumber = phone;
         this.isStaff = isStaff;
     }
-
-
-//    public UserItem(int profilePicture, String name, String email, int residential) {
-//        this.profilePicture =  profilePicture;
-//        this.name = name;
-//        this.email = email;
-//        this.residential = residential;
-//    }
-//
-//    // Overloaded Constructor to push to Firebase
-//    public UserItem(String ID, int profilePicture, String name, String email, int residential) {
-//        this.ID = ID;
-//        this.profilePicture =  profilePicture;
-//        this.name = name;
-//        this.email = email;
-//        this.residential = residential;
-//    }
 
     public UserItem() {
 
@@ -62,9 +46,13 @@ public class UserItem {
         return profilePictureUri;
     }
 
-    public String getTelegram() { return TelegramHandle; }
+    public String getTelegram() {
+        return telegramHandle;
+    }
 
-    public long getPhone() { return PhoneNumber;}
+    public long getPhone() {
+        return phoneNumber;
+    }
 
     public void setProfilePictureUri(String profilePictureUri) {
         this.profilePictureUri = profilePictureUri;

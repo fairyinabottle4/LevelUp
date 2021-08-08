@@ -1,16 +1,8 @@
 package com.levelup.ui.mylist;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,9 +16,16 @@ import com.levelup.occasion.ActivityOccasionItem;
 import com.levelup.occasion.Occasion;
 import com.levelup.ui.events.EventsItem;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryEventsFragment extends Fragment {
     private View rootView;
@@ -39,11 +38,12 @@ public class HistoryEventsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // pulling activityevent with my userID
         DatabaseReference mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
@@ -53,7 +53,7 @@ public class HistoryEventsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
+                    if (selectedUserID.equals(fbUidFinal)) {
                         // it is my event so I add EventID into arraylist
                         mEventIDs.add(selected.getOccasionID());
 
@@ -80,7 +80,7 @@ public class HistoryEventsFragment extends Fragment {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();

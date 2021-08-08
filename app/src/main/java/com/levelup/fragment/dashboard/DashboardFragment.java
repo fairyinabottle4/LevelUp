@@ -10,6 +10,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.Occasion;
+import com.levelup.ui.dashboard.DashboardAdapter;
+import com.levelup.ui.dashboard.DashboardSettingsActivity;
+import com.levelup.ui.events.EventsItem;
+import com.levelup.ui.jios.JiosItem;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,29 +36,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.levelup.R;
-import com.levelup.activity.MainActivity;
-import com.levelup.occasion.Occasion;
-import com.levelup.ui.dashboard.DashboardAdapter;
-import com.levelup.ui.dashboard.DashboardSettingsActivity;
-import com.levelup.ui.events.EventsItem;
-import com.levelup.ui.jios.JiosItem;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-
 public class DashboardFragment extends Fragment {
-    private View rootView;
 
     public static boolean refresh;
+
+    private View rootView;
 
     private RecyclerView recyclerViewTrending;
     private LinearLayoutManager layoutManagerTrending;
@@ -151,13 +139,9 @@ public class DashboardFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch(item.getItemId()) {
-        case R.id.action_dashboard_settings:
+        if (item.getItemId() == R.id.action_dashboard_settings) {
             Intent intent = new Intent(getActivity(), DashboardSettingsActivity.class);
             startActivity(intent);
-
-            break;
         }
         return super.onOptionsItemSelected(item);
     }

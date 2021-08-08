@@ -1,17 +1,9 @@
 package com.levelup.user;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,17 +15,24 @@ import com.levelup.activity.MainActivity;
 import com.levelup.review.ReviewAdapter;
 import com.levelup.review.ReviewItem;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class UserReviews extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-    private ArrayList<ReviewItem> ReviewItemList;
+    private ArrayList<ReviewItem> reviewItemList;
     private ValueEventListener mValueEventListener;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Button submitButton;
@@ -65,7 +64,7 @@ public class UserReviews extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ReviewItemList.clear();
+                reviewItemList.clear();
                 loadDataReviews();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -86,14 +85,14 @@ public class UserReviews extends AppCompatActivity {
     }
 
     public void createReviewList() {
-        ReviewItemList = new ArrayList<>();
+        reviewItemList = new ArrayList<>();
     }
 
     public void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.recyclerviewReviews);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ReviewAdapter(ReviewItemList);
+        mAdapter = new ReviewAdapter(reviewItemList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -102,12 +101,12 @@ public class UserReviews extends AppCompatActivity {
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ReviewItemList.clear();
+                reviewItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ReviewItem selected = snapshot.getValue(ReviewItem.class);
-                    ReviewItemList.add(selected);
+                    reviewItemList.add(selected);
                 }
-                ReviewAdapter reviewAdapter = new ReviewAdapter(ReviewItemList);
+                ReviewAdapter reviewAdapter = new ReviewAdapter(reviewItemList);
                 mRecyclerView.setAdapter(reviewAdapter);
                 mAdapter = reviewAdapter;
             }

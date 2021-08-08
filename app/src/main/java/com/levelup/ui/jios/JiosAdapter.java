@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.levelup.R;
-import com.levelup.occasion.ActivityOccasionItem;
-import com.levelup.occasion.LikeOccasionItem;
-import com.levelup.activity.MainActivity;
-import com.levelup.user.UserItem;
-import com.levelup.user.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +14,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.levelup.R;
+import com.levelup.activity.MainActivity;
+import com.levelup.occasion.ActivityOccasionItem;
+import com.levelup.occasion.LikeOccasionItem;
+import com.levelup.user.UserItem;
+import com.levelup.user.UserProfile;
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
@@ -48,6 +48,38 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
     private Context jiosContext;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+
+    private Filter jiosFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<JiosItem> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(jiosListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (JiosItem item : jiosListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            jiosList.clear();
+            jiosList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+
+        }
+    };
 
     //the ViewHolder holds the content of the card
     public static class JiosViewHolder extends RecyclerView.ViewHolder {
@@ -190,10 +222,10 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
     //Constructor for JiosAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
-    public JiosAdapter(Context context, ArrayList<JiosItem> JiosList) {
+    public JiosAdapter(Context context, ArrayList<JiosItem> jiosList) {
         jiosContext = context;
-        jiosList = JiosList;
-        jiosListFull = new ArrayList<>(JiosList); // copy of JiosList for SearchView
+        this.jiosList = jiosList;
+        jiosListFull = new ArrayList<>(jiosList); // copy of jiosList for SearchView
         profileStorageRef = FirebaseStorage.getInstance()
             .getReference("profile picture uploads");
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -429,38 +461,6 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
     public Filter getFilter() { // for the 'implements Filterable'
         return jiosFilter;
     }
-
-    private Filter jiosFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<JiosItem> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(jiosListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (JiosItem item : jiosListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            jiosList.clear();
-            jiosList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-
-        }
-    };
 
     public void resetAdapter() {
         this.jiosList = jiosListFull;

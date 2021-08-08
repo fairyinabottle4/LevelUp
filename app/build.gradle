@@ -34,6 +34,7 @@ task checkstyle(type: Checkstyle) {
     classpath = files()
 }
 
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.cardview:cardview:1.0.0"

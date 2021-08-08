@@ -1,8 +1,8 @@
 package com.levelup.ui.events;
 
-import com.levelup.occasion.Occasion;
-
 import java.util.Date;
+
+import com.levelup.occasion.Occasion;
 
 public class EventsItem implements Occasion {
     private String timeInfo;
