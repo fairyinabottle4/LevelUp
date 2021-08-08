@@ -7,6 +7,14 @@ public class ReviewItem {
     private String date;
     private String review;
 
+    /**
+     * Constructor for the ReviewItem class
+     *
+     * @param userID ID of the user being reviewed
+     * @param reviewerdisplayName Name of the user giving the review
+     * @param date Date of the review
+     * @param review Content of the review
+     */
     public ReviewItem(String userID, String reviewerdisplayName, String date, String review) {
         this.userID = userID;
         this.reviewerdisplayName = reviewerdisplayName;

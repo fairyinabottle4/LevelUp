@@ -29,11 +29,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class UserReviews extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter viewAdapter;
     private ArrayList<ReviewItem> reviewItemList;
-    private ValueEventListener mValueEventListener;
+    private ValueEventListener valueEventListener;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Button submitButton;
     private EditText writeReview;
@@ -42,8 +42,8 @@ public class UserReviews extends AppCompatActivity {
     private String name;
     private String creatorID;
 
-    FirebaseDatabase mDatabase;
-    DatabaseReference mDatabaseReference;
+    FirebaseDatabase database;
+    DatabaseReference databaseRef;
 
     DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     Date currentDate = new Date();
@@ -53,8 +53,8 @@ public class UserReviews extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         name = MainActivity.getCurrentUser().name;
         creatorID = getIntent().getStringExtra("creatorid");
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mDatabase.getReference().child("Users").child(creatorID);
+        database = FirebaseDatabase.getInstance();
+        databaseRef = database.getReference().child("Users").child(creatorID);
         setContentView(R.layout.user_reviews);
         createReviewList();
         buildRecyclerView();
@@ -77,7 +77,7 @@ public class UserReviews extends AppCompatActivity {
             public void onClick(View v) {
                 String toSubmit = writeReview.getText().toString().trim();
                 ReviewItem reviewItem = new ReviewItem(userID, name, df.format(currentDate), toSubmit);
-                mDatabaseReference.child("Reviews").child(userID).setValue(reviewItem);
+                databaseRef.child("Reviews").child(userID).setValue(reviewItem);
                 Toast.makeText(getApplicationContext(), "Thank you for your review!", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -88,17 +88,23 @@ public class UserReviews extends AppCompatActivity {
         reviewItemList = new ArrayList<>();
     }
 
+    /**
+     * Build the recycler view that will display the list of items
+     */
     public void buildRecyclerView() {
-        mRecyclerView = findViewById(R.id.recyclerviewReviews);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ReviewAdapter(reviewItemList);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView = findViewById(R.id.recyclerviewReviews);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        viewAdapter = new ReviewAdapter(reviewItemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(viewAdapter);
     }
 
+    /**
+     * Load the review information from the storage
+     */
     public void loadDataReviews() {
-        mValueEventListener = new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 reviewItemList.clear();
@@ -107,8 +113,8 @@ public class UserReviews extends AppCompatActivity {
                     reviewItemList.add(selected);
                 }
                 ReviewAdapter reviewAdapter = new ReviewAdapter(reviewItemList);
-                mRecyclerView.setAdapter(reviewAdapter);
-                mAdapter = reviewAdapter;
+                recyclerView.setAdapter(reviewAdapter);
+                viewAdapter = reviewAdapter;
             }
 
             @Override
@@ -116,7 +122,7 @@ public class UserReviews extends AppCompatActivity {
 
             }
         };
-        mDatabaseReference.child("Reviews").addListenerForSingleValueEvent(mValueEventListener);
-        mAdapter.notifyDataSetChanged();
+        databaseRef.child("Reviews").addListenerForSingleValueEvent(valueEventListener);
+        viewAdapter.notifyDataSetChanged();
     }
 }
