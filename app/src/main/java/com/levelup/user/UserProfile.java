@@ -53,9 +53,9 @@ public class UserProfile extends AppCompatActivity {
     private String currUserId = MainActivity.getCurrentUser().getId();
     private String creatorId;
 
-    float sumOfRatings = 0;
-    float numOfRatings = 0;
-    float averageRatingGlobal;
+    private float sumOfRatings = 0;
+    private float numOfRatings = 0;
+    private float averageRatingGlobal;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

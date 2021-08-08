@@ -41,30 +41,37 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
 
     //the ViewHolder holds the content of the card
     public static class MktplaceCreatedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public String creatorUid;
-        public String creatorName;
-        public String mktPlaceID;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
+        private String creatorUid;
+        private String creatorName;
+        private String mktPlaceID;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
 
 
-        public ImageView mImageView;
-        public TextView mTitle;
-        public TextView mCreatorName;
-        public Button mEditButton;
-        public Button mPeopleLikedButton;
-        private MktplaceCreatedAdapter.OnItemClickListener mListener;
+        private ImageView imageView;
+        private TextView titleView;
+        private TextView creatorView;
+        private Button editButton;
+        private Button peopleLikedButton;
+        private MktplaceCreatedAdapter.OnItemClickListener itemListener;
 
+        /**
+         * Constructor for the ViewHolder that is used in MktplaceCreatedAdapter
+         *
+         * @param context Context of the fragment it is placed in
+         * @param itemView The view that will contain the item
+         * @param listener Listener that acts upon user input
+         */
         public MktplaceCreatedViewHolder(final Context context, View itemView,
                                          final MktplaceCreatedAdapter.OnItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mTitle = itemView.findViewById(R.id.textView);
-            mCreatorName = itemView.findViewById(R.id.creatorTextView);
-            mCreatorName.setOnClickListener(new View.OnClickListener() {
+            imageView = itemView.findViewById(R.id.imageView);
+            titleView = itemView.findViewById(R.id.textView);
+            creatorView = itemView.findViewById(R.id.creatorTextView);
+            creatorView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -78,15 +85,15 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
                     context.startActivity(intent);
                 }
             });
-            mEditButton = itemView.findViewById(R.id.mktplace_edit_btn);
-            mPeopleLikedButton = itemView.findViewById(R.id.image_people_liked);
-            mListener = listener;
+            editButton = itemView.findViewById(R.id.mktplace_edit_btn);
+            peopleLikedButton = itemView.findViewById(R.id.image_people_liked);
+            itemListener = listener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onItemClick(getAdapterPosition());
+            itemListener.onItemClick(getAdapterPosition());
         }
 
         public void setCreatorUid(String newUid) {
@@ -119,8 +126,14 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
 
     }
 
-    //Constructor for MktplaceAdapter class. This ArrayList contains the
-    //complete list of items that we want to add to the View.
+    /**
+     * Constructor for MktplaceCreatedAdapter
+     *
+     * @param context Context of the fragment it is placed in.
+     * @param mktplaceList List of items to be displayed, namely the list of Marketplace listings
+     *                     made by the user.
+     * @param listener Listener that acts upon user selecting an item
+     */
     public MktplaceCreatedAdapter(Context context, ArrayList<MktplaceItem> mktplaceList,
                                   MktplaceCreatedAdapter.OnItemClickListener listener) {
         this.mContext = context;
@@ -150,19 +163,19 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         final String mktplaceID = uploadCurrent.getMktPlaceID();
         final String creatorUid = uploadCurrent.getCreatorID();
         holder.setCreatorUid(creatorUid);
-        final String title = uploadCurrent.getName();
+        final String titleView = uploadCurrent.getName();
         final String location = uploadCurrent.getLocation();
         final String description = uploadCurrent.getDescription();
 
-        holder.mTitle.setText(uploadCurrent.getName());
+        holder.titleView.setText(uploadCurrent.getName());
 
-        holder.mEditButton.setOnClickListener(new View.OnClickListener() {
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, EditMarketPlaceActivity.class);
                 intent.putExtra("imageurl", imageUrl);
                 intent.putExtra("mktplaceID", mktplaceID);
-                intent.putExtra("title", title);
+                intent.putExtra("titleView", titleView);
                 intent.putExtra("location", location);
                 intent.putExtra("description", description);
                 intent.putExtra("creatorUid", creatorUid);
@@ -170,7 +183,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
             }
         });
 
-        holder.mPeopleLikedButton.setOnClickListener(new View.OnClickListener() {
+        holder.peopleLikedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, CreatorViewLikeNamesMktplace.class);
@@ -189,7 +202,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
 
                     if (creatorUid.equals(id)) {
                         String name = selected.getName();
-                        holder.mCreatorName.setText(name);
+                        holder.creatorView.setText(name);
                         holder.setCreatorName(name);
                         int res = selected.getResidential();
                         String telegram = selected.getTelegram();
@@ -212,7 +225,7 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
             }
         });
 
-        Glide.with(holder.mImageView.getContext()).load(imageUrl).into(holder.mImageView);
+        Glide.with(holder.imageView.getContext()).load(imageUrl).into(holder.imageView);
     }
 
 

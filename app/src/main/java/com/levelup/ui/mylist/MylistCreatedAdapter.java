@@ -34,27 +34,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdapter.MylistCreatedViewHolder> {
-    private ArrayList<Occasion> mMylistList;
+    private ArrayList<Occasion> mylistList;
     private MylistCreatedAdapter.OnItemClickListener mListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private DateFormat df2 = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
-    private Context mContext;
+    private Context fragContext;
 
-    private StorageReference mProfileStorageRef;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUserRef;
+    private StorageReference profileStorageRef;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference userRef;
 
     private Occasion item;
 
-    //Constructor
+    /**
+     * Constructor for the MylistCreatedAdapter class
+     *
+     * @param context Context of the fragment it is in
+     * @param mylistList List of all the items to be displayed
+     */
     public MylistCreatedAdapter(Context context, ArrayList<Occasion> mylistList) {
-        mContext = context;
-        mMylistList = mylistList;
-        mProfileStorageRef = FirebaseStorage.getInstance()
+        fragContext = context;
+        mylistList = mylistList;
+        profileStorageRef = FirebaseStorage.getInstance()
             .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("Users");
     }
 
     public interface OnItemClickListener {
@@ -66,37 +71,44 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     }
 
     public static class MylistCreatedViewHolder extends RecyclerView.ViewHolder {
-        public String creatorName;
-        public String creatorUid;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
-        public int category;
+        private String creatorName;
+        private String creatorUid;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
+        private int category;
 
-        public String occID;
-        public boolean isJio;
-        public Date date;
-        public int numLikes;
+        private String occID;
+        private boolean isJio;
+        private Date date;
+        private int numLikes;
 
-        public Button mEditButton;
-        public Button mPeopleButton;
-        public Button mPeopleLikedButton;
-        public TextView mNumLikes;
-        public ImageView mImageView;
-        public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextView3;
-        public TextView mTextView4;
-        public TextView mTextView5;
-        public TextView mTextView6;
+        private Button editButton;
+        private Button peopleButton;
+        private Button peopleLikedButton;
+        private TextView numLikesView;
+        private ImageView imageView;
+        private TextView titleView;
+        private TextView descView;
+        private TextView timeView;
+        private TextView locationView;
+        private TextView dateView;
+        private TextView creatorView;
 
+        /**
+         * Constructor for the MylistCreatedViewHolder class
+         *
+         * @param context Context of the fragment it is in
+         * @param itemView View of the item to be displayed
+         * @param listener Listener which activates upon being clicked
+         */
         public MylistCreatedViewHolder(final Context context, View itemView,
                                        final MylistCreatedAdapter.OnItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mImageView.setOnClickListener(new View.OnClickListener() {
+            imageView = itemView.findViewById(R.id.imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UserProfile.class);
@@ -110,16 +122,16 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                     context.startActivity(intent);
                 }
             });
-            mEditButton = itemView.findViewById(R.id.image_edit);
-            mPeopleButton = itemView.findViewById(R.id.image_people);
-            mPeopleLikedButton = itemView.findViewById(R.id.image_people_liked);
-            mNumLikes = itemView.findViewById(R.id.numlikes_textview);
-            mTextView1 = itemView.findViewById(R.id.title);
-            mTextView2 = itemView.findViewById(R.id.event_description);
-            mTextView3 = itemView.findViewById(R.id.time);
-            mTextView4 = itemView.findViewById(R.id.location);
-            mTextView5 = itemView.findViewById(R.id.date);
-            mTextView6 = itemView.findViewById(R.id.eventCreator);
+            editButton = itemView.findViewById(R.id.image_edit);
+            peopleButton = itemView.findViewById(R.id.image_people);
+            peopleLikedButton = itemView.findViewById(R.id.image_people_liked);
+            numLikesView = itemView.findViewById(R.id.numlikes_textview);
+            titleView = itemView.findViewById(R.id.title);
+            descView = itemView.findViewById(R.id.event_description);
+            timeView = itemView.findViewById(R.id.time);
+            locationView = itemView.findViewById(R.id.location);
+            dateView = itemView.findViewById(R.id.date);
+            creatorView = itemView.findViewById(R.id.eventCreator);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,13 +142,13 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
                     intent.putExtra("uid", creatorUid);
                     intent.putExtra("creatorName", creatorName);
-                    intent.putExtra("title", mTextView1.getText().toString());
-                    intent.putExtra("description", mTextView2.getText().toString());
-                    intent.putExtra("date", mTextView5.getText().toString());
+                    intent.putExtra("title", titleView.getText().toString());
+                    intent.putExtra("description", descView.getText().toString());
+                    intent.putExtra("date", dateView.getText().toString());
                     intent.putExtra("dateToShow", DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK)
                         .format(date));
-                    intent.putExtra("location", mTextView4.getText().toString());
-                    intent.putExtra("time", mTextView3.getText().toString());
+                    intent.putExtra("location", locationView.getText().toString());
+                    intent.putExtra("time", timeView.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("numLikes", numLikes);
                     intent.putExtra("occID", occID);
@@ -206,52 +218,52 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         View v = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.occ_item_editmode, parent, false);
         MylistCreatedAdapter.MylistCreatedViewHolder evh = new MylistCreatedAdapter
-            .MylistCreatedViewHolder(mContext, v, mListener);
+            .MylistCreatedViewHolder(fragContext, v, mListener);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull MylistCreatedAdapter.MylistCreatedViewHolder holder, final int position) {
-        final Occasion currentItem = mMylistList.get(position);
+        final Occasion currentItem = mylistList.get(position);
         UserItem user = MainActivity.currUser;
         final String userID = user.getId();
         final String occID = currentItem.getOccasionID();
-        final DatabaseReference mActivityJioRef = mFirebaseDatabase.getReference("ActivityJio");
-        final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
+        final DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");
+        final DatabaseReference activityEventRef = firebaseDatabase.getReference("ActivityEvent");
 
-        final MylistCreatedAdapter.MylistCreatedViewHolder holder1 = holder;
+        final MylistCreatedAdapter.MylistCreatedViewHolder viewHolder = holder;
         final String creatorUid = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUid);
-        holder1.setOccID(occID);
-        holder1.setIsJio(currentItem.isJio());
-        holder1.setDate(currentItem.getDateInfo());
+        viewHolder.setCreatorUid(creatorUid);
+        viewHolder.setOccID(occID);
+        viewHolder.setIsJio(currentItem.isJio());
+        viewHolder.setDate(currentItem.getDateInfo());
 
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUid);
-        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        StorageReference profileStorageRefIndiv = profileStorageRef.child(creatorUid);
+        profileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(holder1.mImageView);
+                Picasso.get().load(uri).into(viewHolder.imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
+                viewHolder.imageView.setImageResource(R.drawable.fake_user_dp);
             }
         });
 
-        holder1.mTextView1.setText(currentItem.getTitle());
-        holder1.mTextView2.setText(currentItem.getDescription());
-        holder1.mTextView3.setText(currentItem.getTimeInfo());
-        holder1.mTextView4.setText(currentItem.getLocationInfo());
-        holder1.mTextView5.setText(df.format(currentItem.getDateInfo()));
+        viewHolder.titleView.setText(currentItem.getTitle());
+        viewHolder.descView.setText(currentItem.getDescription());
+        viewHolder.timeView.setText(currentItem.getTimeInfo());
+        viewHolder.locationView.setText(currentItem.getLocationInfo());
+        viewHolder.dateView.setText(df.format(currentItem.getDateInfo()));
 
         int numLikes = currentItem.getNumLikes();
-        holder1.mNumLikes.setText(Integer.toString(numLikes));
-        holder1.setNumLikes(numLikes);
+        viewHolder.numLikesView.setText(Integer.toString(numLikes));
+        viewHolder.setNumLikes(numLikes);
 
-        holder1.setCategory(currentItem.getCategory());
+        viewHolder.setCategory(currentItem.getCategory());
 
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -260,19 +272,19 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
                     if (creatorUid.equals(id)) {
                         String name = selected.getName();
-                        holder1.mTextView6.setText(name);
-                        holder1.setCreatorName(name);
+                        viewHolder.creatorView.setText(name);
+                        viewHolder.setCreatorName(name);
                         int res = selected.getResidential();
                         String telegram = selected.getTelegram();
                         String email = selected.getEmail();
                         String dpUri = selected.getProfilePictureUri();
                         long phone = selected.getPhone();
-                        holder1.setCreatorName(name);
-                        holder1.setCreatorResidence(res);
-                        holder1.setTelegram(telegram);
-                        holder1.setEmail(email);
-                        holder1.setProfilePictureUri(dpUri);
-                        holder1.setPhone(phone);
+                        viewHolder.setCreatorName(name);
+                        viewHolder.setCreatorResidence(res);
+                        viewHolder.setTelegram(telegram);
+                        viewHolder.setEmail(email);
+                        viewHolder.setProfilePictureUri(dpUri);
+                        viewHolder.setPhone(phone);
                     }
                 }
             }
@@ -285,35 +297,35 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
 
 
-        holder1.mPeopleButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.peopleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // new Activity
-                Intent intent = new Intent(mContext, CreatorViewNames.class);
+                Intent intent = new Intent(fragContext, CreatorViewNames.class);
                 String occID = currentItem.getOccasionID();
                 boolean isJio = currentItem.isJio();
                 intent.putExtra("occID", occID);
                 intent.putExtra("isJio", isJio);
-                mContext.startActivity(intent);
+                fragContext.startActivity(intent);
 
             }
         });
 
-        holder1.mPeopleLikedButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.peopleLikedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // new Activity
-                Intent intent = new Intent(mContext, CreatorViewLikeNames.class);
+                Intent intent = new Intent(fragContext, CreatorViewLikeNames.class);
                 String occID = currentItem.getOccasionID();
                 boolean isJio = currentItem.isJio();
                 intent.putExtra("occID", occID);
                 intent.putExtra("isJio", isJio);
-                mContext.startActivity(intent);
+                fragContext.startActivity(intent);
 
             }
         });
 
-        holder1.mEditButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // open Activity to Edit Info
@@ -321,7 +333,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 // pass item ID as well
                 // reuse the create events page UI
 
-                Intent intent = new Intent(mContext, EditOccasionInfoActivity.class);
+                Intent intent = new Intent(fragContext, EditOccasionInfoActivity.class);
                 String title = currentItem.getTitle();
                 String location = currentItem.getLocationInfo();
                 String description = currentItem.getDescription();
@@ -340,7 +352,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
                 intent.putExtra("creatorID", creatorID);
                 intent.putExtra("category", category);
 
-                mContext.startActivity(intent);
+                fragContext.startActivity(intent);
 
             }
         });
@@ -348,6 +360,6 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
 
     @Override
     public int getItemCount() {
-        return mMylistList.size();
+        return mylistList.size();
     }
 }
