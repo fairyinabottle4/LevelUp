@@ -5,6 +5,7 @@
 * It is targeted at students who are **interested in connecting with the wider population
   of students living on campus and are **proficient with mobile phone applications**.
 
+A promotional video for the applciation can be found [here](https://youtu.be/3wKsuOvmBZ0)
 
 ### Example usages:
 
