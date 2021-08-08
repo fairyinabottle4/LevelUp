@@ -143,6 +143,11 @@ public class CreatorViewNames extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Sets the residence name based on the pre-coded number
+     *
+     * @param x The number representing each residence
+     */
     public String intToRes(int x) {
         String residenceName = "";
         if (x == 0) {

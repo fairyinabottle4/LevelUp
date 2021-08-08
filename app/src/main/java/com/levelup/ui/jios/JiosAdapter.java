@@ -107,6 +107,12 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
         private TextView eventView;
         private TextView numLikesView;
 
+        /**
+         * Constructor for the JiosViewHolder class
+         *
+         * @param context Context of the fragment
+         * @param itemView View of the item to be displayed
+         */
         public JiosViewHolder(final Context context, View itemView) {
             super(itemView);
             final Context context1 = context;
@@ -222,6 +228,13 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
     //Constructor for JiosAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
+
+    /**
+     * Constructor for the JiosAdapter class
+     *
+     * @param context Context of the fragment
+     * @param jiosList List of items to be added to the View
+     */
     public JiosAdapter(Context context, ArrayList<JiosItem> jiosList) {
         jiosContext = context;
         this.jiosList = jiosList;

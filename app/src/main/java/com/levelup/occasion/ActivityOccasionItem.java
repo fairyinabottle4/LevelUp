@@ -4,6 +4,12 @@ public class ActivityOccasionItem {
     private String occasionID;
     private String userID;
 
+    /**
+     * Constructor of the ActivityOccasionItem class
+     *
+     * @param occasionID ID of the OccasionItem
+     * @param userID ID of the user
+     */
     public ActivityOccasionItem(String occasionID, String userID) {
         this.occasionID = occasionID;
         this.userID = userID;

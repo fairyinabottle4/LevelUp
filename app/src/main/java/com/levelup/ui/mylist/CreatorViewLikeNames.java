@@ -21,25 +21,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class CreatorViewLikeNames extends AppCompatActivity {
-    public ArrayList<String> userIDs = new ArrayList<>();
-    public ArrayList<String> names = new ArrayList<>();
-    public String occID;
-    public boolean isJio;
+    private ArrayList<String> userIDs = new ArrayList<>();
+    private ArrayList<String> names = new ArrayList<>();
+    private String occID;
+    private boolean isJio;
 
-    public FirebaseDatabase mFirebaseDatabase;
-    public DatabaseReference mDatabaseRefLikeEvents;
-    public DatabaseReference mDatabaseRefLikeJios;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseRefLikeEvents;
+    private DatabaseReference databaseRefLikeJios;
 
-    public Toolbar tb;
+    private Toolbar tb;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.creator_names_view);
         final ListView list = findViewById(R.id.names_list);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRefLikeEvents = mFirebaseDatabase.getReference("LikeEvent");
-        mDatabaseRefLikeJios = mFirebaseDatabase.getReference("LikeJio");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseRefLikeEvents = firebaseDatabase.getReference("LikeEvent");
+        databaseRefLikeJios = firebaseDatabase.getReference("LikeJio");
 
         tb = findViewById(R.id.creator_names_toolbar);
         setSupportActionBar(tb);
@@ -52,7 +52,7 @@ public class CreatorViewLikeNames extends AppCompatActivity {
 
         if (isJio) {
             // search AJ
-            mDatabaseRefLikeJios.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseRefLikeJios.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -60,7 +60,7 @@ public class CreatorViewLikeNames extends AppCompatActivity {
                         if (occID.equals(selected.getOccasionID())) {
                             // userIDs.add(selected.getUserID());
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users")
+                            firebaseDatabase.getReference("Users")
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -95,14 +95,14 @@ public class CreatorViewLikeNames extends AppCompatActivity {
             });
         } else {
             // search AE
-            mDatabaseRefLikeEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseRefLikeEvents.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         if (occID.equals(selected.getOccasionID())) {
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users")
+                            firebaseDatabase.getReference("Users")
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,6 +142,11 @@ public class CreatorViewLikeNames extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Sets the residence name based on the pre-coded number
+     *
+     * @param x The number representing each residence
+     */
     public String intToRes(int x) {
         String residenceName = "";
         if (x == 0) {

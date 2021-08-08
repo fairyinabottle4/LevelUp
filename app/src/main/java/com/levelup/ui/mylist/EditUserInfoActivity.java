@@ -381,6 +381,11 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         }
     }
 
+    /**
+     * Sets the residence name based on the pre-coded number
+     *
+     * @param x The number representing each residence
+     */
     public String intToRes(int x) {
         String residenceName = "";
         if (x == 0) {
@@ -432,6 +437,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         return residenceName;
     }
 
+    /**
+     * Deletes the user's profile picture
+     */
     public void deleteProfilePicture() {
         mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
