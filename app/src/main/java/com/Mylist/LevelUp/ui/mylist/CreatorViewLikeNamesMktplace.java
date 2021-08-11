@@ -22,21 +22,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
-    public ArrayList<String> names = new ArrayList<>();
-    public String occID;
+    private ArrayList<String> names = new ArrayList<>();
+    private String occID;
 
-    public FirebaseDatabase mFirebaseDatabase;
-    public DatabaseReference mDatabaseRefLikeMktplace;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseRefLikeMktplace;
 
-    public Toolbar tb;
+    private Toolbar tb;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.creator_names_view);
         final ListView list = findViewById(R.id.names_list);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRefLikeMktplace = mFirebaseDatabase.getReference("LikeMktplace");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseRefLikeMktplace = firebaseDatabase.getReference("LikeMktplace");
 
         tb = findViewById(R.id.creator_names_toolbar);
         setSupportActionBar(tb);
@@ -45,7 +45,7 @@ public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
         Intent intent = getIntent();
         occID = intent.getStringExtra("occID");
 
-        mDatabaseRefLikeMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRefLikeMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -53,26 +53,31 @@ public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
                     if (occID.equals(selected.getOccasionID())) {
                         // userIDs.add(selected.getUserID());
                         final String userID = selected.getUserID();
-                        mFirebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    UserItem selectedUser = snapshot.getValue(UserItem.class);
-                                    if (userID.equals(selectedUser.getId())) {
-                                        names.add("(" + intToRes(selectedUser.getResidential()) + ") " + selectedUser.getName());
+                        firebaseDatabase.getReference("Users")
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        UserItem selectedUser = snapshot.getValue(UserItem.class);
+                                        if (userID.equals(selectedUser.getId())) {
+                                            names.add("(" + intToRes(selectedUser.getResidential())
+                                                + ") " + selectedUser.getName());
+                                        }
                                     }
+
+                                    ArrayAdapter adapter = new ArrayAdapter(
+                                        CreatorViewLikeNamesMktplace.this,
+                                        android.R.layout.simple_list_item_1, names);
+                                    list.setAdapter(adapter);
+                                    getSupportActionBar().setTitle(names.size()
+                                        + (names.size() == 1 ? " Person " : " People ") + "Liked");
                                 }
 
-                                ArrayAdapter adapter = new ArrayAdapter(CreatorViewLikeNamesMktplace.this, android.R.layout.simple_list_item_1, names);
-                                list.setAdapter(adapter);
-                                getSupportActionBar().setTitle(names.size() + (names.size() == 1 ? " Person " : " People ") + "Liked");
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
+                                }
+                            });
                     }
                 }
             }
@@ -86,53 +91,58 @@ public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Sets the residence name based on the pre-coded number
+     *
+     * @param x The number representing each residence
+     */
     public String intToRes(int x) {
-        String residence_name = "";
+        String residenceName = "";
         if (x == 0) {
-            residence_name = "Off Campus";
+            residenceName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residenceName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residenceName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residenceName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residenceName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residenceName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residenceName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residenceName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residenceName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residenceName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residenceName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residenceName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residenceName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residenceName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residenceName = "UTown Residence";
         }
-        return residence_name;
+        return residenceName;
     }
 }
