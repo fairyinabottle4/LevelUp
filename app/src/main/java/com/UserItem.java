@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserItem {
     private String id;
     private String profilePictureUri;
-    public String name;
+    private String name;
     private String email;
     private int residential;
     private String telegramHandle;
