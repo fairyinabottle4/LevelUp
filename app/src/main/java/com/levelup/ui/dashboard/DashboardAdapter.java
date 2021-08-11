@@ -31,44 +31,46 @@ import androidx.recyclerview.widget.RecyclerView;
 public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.DashboardViewHolder> {
 
     private ArrayList<Occasion> occasionList;
-    private StorageReference mProfileStorageRef;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUserRef;
+    private StorageReference profileStorageRef;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference userRef;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-    private FragmentActivity mContext;
+    private FragmentActivity dashContext;
 
     public static class DashboardViewHolder extends RecyclerView.ViewHolder {
-        public String creatorUid;
-        public String creatorName;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
-        public String description;
+        private String creatorUid;
+        private String creatorName;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
+        private String description;
 
-        public String eventID;
-        public boolean isChecked;
-        public boolean isLiked;
-        public int numLikes;
+        private String eventID;
+        private boolean isChecked;
+        private boolean isLiked;
+        private int numLikes;
 
-        public ImageView mImageView;
-        public TextView mTextView1;
-        public TextView mTextView3;
-        public TextView mTextView4;
-        public TextView mTextView5;
+        private ImageView imageView;
+        private TextView titleView;
+        private TextView dateView;
+        private TextView locationView;
+        private TextView timeView;
 
+        /**
+         * Constructor for the DashboardViewHolder class
+         *
+         * @param context Context of the fragment that the dashboard is placed in
+         * @param itemView View of the item that will be displayed
+         */
         public DashboardViewHolder (final Context context, View itemView) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.category_imageView);
-            // mAddButton = itemView.findViewById(R.id.image_add);
-            // mLikeButton = itemView.findViewById(R.id.image_like);
-            mTextView1 = itemView.findViewById(R.id.title);
-            mTextView3 = itemView.findViewById(R.id.date);
-            mTextView4 = itemView.findViewById(R.id.location);
-            mTextView5 = itemView.findViewById(R.id.time);
-            // mTextView6 = itemView.findViewById(R.id.eventCreator);
-            // mNumLikes = itemView.findViewById(R.id.numlikes_textview);
+            imageView = itemView.findViewById(R.id.category_imageView);
+            titleView = itemView.findViewById(R.id.title);
+            dateView = itemView.findViewById(R.id.date);
+            locationView = itemView.findViewById(R.id.location);
+            timeView = itemView.findViewById(R.id.time);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,11 +78,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                     Intent intent = new Intent(context, EventPage.class);
                     intent.putExtra("uid", creatorUid);
                     intent.putExtra("creatorName", creatorName);
-                    intent.putExtra("title", mTextView1.getText().toString());
+                    intent.putExtra("title", titleView.getText().toString());
                     intent.putExtra("description", description);
-                    intent.putExtra("date", mTextView3.getText().toString());
-                    intent.putExtra("location", mTextView4.getText().toString());
-                    intent.putExtra("time", mTextView5.getText().toString());
+                    intent.putExtra("date", dateView.getText().toString());
+                    intent.putExtra("location", locationView.getText().toString());
+                    intent.putExtra("time", timeView.getText().toString());
                     intent.putExtra("position", getAdapterPosition());
                     intent.putExtra("stateChecked", isChecked);
                     intent.putExtra("stateLiked", isLiked);
@@ -140,16 +142,21 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         public void setNumLikes(int numLikes) {
             this.numLikes = numLikes;
         }
-
     }
 
+    /**
+     * Constructor for the DashboardAdapter class
+     *
+     * @param context Context of the fragment the DashboardAdapter is placed in
+     * @param occasionList List of items to be displayed in the adapter
+     */
     public DashboardAdapter(FragmentActivity context, ArrayList<Occasion> occasionList) {
         this.occasionList = occasionList;
-        mProfileStorageRef = FirebaseStorage.getInstance()
+        profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
-        this.mContext = context;
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("Users");
+        this.dashContext = context;
     }
 
 
@@ -157,63 +164,49 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     @Override
     public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.occ_item_dashboard, parent, false);
-        DashboardAdapter.DashboardViewHolder dvh = new DashboardAdapter.DashboardViewHolder(mContext, v);
+        DashboardAdapter.DashboardViewHolder dvh = new DashboardAdapter.DashboardViewHolder(dashContext, v);
         return dvh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull DashboardViewHolder holder, final int position) {
         final Occasion currentItem = occasionList.get(position);
-        final DashboardAdapter.DashboardViewHolder holder1 = holder;
+        final DashboardAdapter.DashboardViewHolder dashHolder = holder;
         final String creatorUid = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUid);
+        dashHolder.setCreatorUid(creatorUid);
 
         int category = currentItem.getCategory();
 
         if (category == 0) { // arts
-            holder1.mImageView.setImageResource(R.drawable.arts);
+            dashHolder.imageView.setImageResource(R.drawable.arts);
         }
         if (category == 1) { // sports
-            holder1.mImageView.setImageResource(R.drawable.sports);
+            dashHolder.imageView.setImageResource(R.drawable.sports);
         }
         if (category == 2) { // talks
-            holder1.mImageView.setImageResource(R.drawable.talks);
+            dashHolder.imageView.setImageResource(R.drawable.talks);
         }
         if (category == 3) { // volunteering
-            holder1.mImageView.setImageResource(R.drawable.volunteering);
+            dashHolder.imageView.setImageResource(R.drawable.volunteering);
         }
         if (category == 4) { // food
-            holder1.mImageView.setImageResource(R.drawable.food);
+            dashHolder.imageView.setImageResource(R.drawable.food);
         }
         if (category == 5) { // food
-            holder1.mImageView.setImageResource(R.drawable.others);
+            dashHolder.imageView.setImageResource(R.drawable.others);
         }
 
-
-        //        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUid);
-        //        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-        //            @Override
-        //            public void onSuccess(Uri uri) {
-        //                Picasso.get().load(uri).into(holder1.mImageView);
-        //            }
-        //        }).addOnFailureListener(new OnFailureListener() {
-        //            @Override
-        //            public void onFailure(@NonNull Exception e) {
-        //                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
-        //            }
-        //        });
-
-        holder1.mTextView1.setText(currentItem.getTitle());
-        holder1.description = currentItem.getDescription();
-        holder1.mTextView4.setText(currentItem.getLocationInfo());
+        dashHolder.titleView.setText(currentItem.getTitle());
+        dashHolder.description = currentItem.getDescription();
+        dashHolder.locationView.setText(currentItem.getLocationInfo());
 
         String date = df.format(currentItem.getDateInfo());
-        holder1.mTextView3.setText(date);
+        dashHolder.dateView.setText(date);
 
         String time = currentItem.getTimeInfo();
-        holder1.mTextView5.setText(time);
+        dashHolder.timeView.setText(time);
 
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -227,12 +220,12 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                         String email = selected.getEmail();
                         String dpUri = selected.getProfilePictureUri();
                         long phone = selected.getPhone();
-                        holder1.setCreatorName(name);
-                        holder1.setCreatorResidence(res);
-                        holder1.setTelegram(telegram);
-                        holder1.setEmail(email);
-                        holder1.setProfilePictureUri(dpUri);
-                        holder1.setPhone(phone);
+                        dashHolder.setCreatorName(name);
+                        dashHolder.setCreatorResidence(res);
+                        dashHolder.setTelegram(telegram);
+                        dashHolder.setEmail(email);
+                        dashHolder.setProfilePictureUri(dpUri);
+                        dashHolder.setPhone(phone);
                     }
                 }
             }
@@ -244,26 +237,26 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         });
 
         final String eventID = currentItem.getOccasionID();
-        holder1.setEventID(eventID);
+        dashHolder.setEventID(eventID);
 
         // set stateChecked and stateLiked to pass into the intent
         if (currentItem.isJio()) {
             if (MainActivity.mJioIDs.contains(currentItem.getOccasionID())) {
-                holder1.setChecked(true);
+                dashHolder.setChecked(true);
             }
             if (MainActivity.mLikeJioIDs.contains(currentItem.getOccasionID())) {
-                holder1.setLiked(true);
+                dashHolder.setLiked(true);
             }
         } else {
             if (MainActivity.mEventIDs.contains(currentItem.getOccasionID())) {
-                holder1.setChecked(true);
+                dashHolder.setChecked(true);
             }
             if (MainActivity.mLikeEventIDs.contains(currentItem.getOccasionID())) {
-                holder1.setLiked(true);
+                dashHolder.setLiked(true);
             }
         }
 
-        holder1.setNumLikes(currentItem.getNumLikes());
+        dashHolder.setNumLikes(currentItem.getNumLikes());
 
     }
 
