@@ -74,7 +74,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
      */
     public MylistLikedAdapter(Context context, ArrayList<Occasion> mylistList) {
         fragmentContext = context;
-        myListList = mylistList;
+        this.myListList = mylistList;
         myListListFull = new ArrayList<>(mylistList);
         profileStorageRef = FirebaseStorage.getInstance()
             .getReference("profile picture uploads");

@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/created_occasion_page.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/creator_names_view.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/fragment_mktplace.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/marketplace_adder.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/marketplace_edit.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/marketplace_page.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/mktplace_plain.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/mktplace_plain_withtb.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/mylist_createdpage.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/layout/occ_mylist_fragment.xml" value="2.754934210526316" />
+        <entry key="app/src/main/res/menu/mylist_top_menu.xml" value="3.8642857142857143" />
+        <entry key="app/src/main/res/menu/occasions_top_menu.xml" value="3.8642857142857143" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
