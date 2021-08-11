@@ -3,7 +3,7 @@ package com.levelup.user;
 public class UserItem {
     private String id;
     private String profilePictureUri;
-    public String name;
+    private String name;
     private String email;
     private int residential;
     private String telegramHandle;

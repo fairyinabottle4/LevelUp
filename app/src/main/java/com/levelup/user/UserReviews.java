@@ -51,7 +51,7 @@ public class UserReviews extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = MainActivity.getCurrentUser().name;
+        name = MainActivity.getCurrentUser().getName();
         creatorID = getIntent().getStringExtra("creatorid");
         database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference().child("Users").child(creatorID);
