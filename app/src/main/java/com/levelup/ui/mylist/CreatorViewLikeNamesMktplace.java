@@ -21,21 +21,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
-    public ArrayList<String> names = new ArrayList<>();
-    public String occID;
+    private ArrayList<String> names = new ArrayList<>();
+    private String occID;
 
-    public FirebaseDatabase mFirebaseDatabase;
-    public DatabaseReference mDatabaseRefLikeMktplace;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseRefLikeMktplace;
 
-    public Toolbar tb;
+    private Toolbar tb;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.creator_names_view);
         final ListView list = findViewById(R.id.names_list);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRefLikeMktplace = mFirebaseDatabase.getReference("LikeMktplace");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseRefLikeMktplace = firebaseDatabase.getReference("LikeMktplace");
 
         tb = findViewById(R.id.creator_names_toolbar);
         setSupportActionBar(tb);
@@ -44,7 +44,7 @@ public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
         Intent intent = getIntent();
         occID = intent.getStringExtra("occID");
 
-        mDatabaseRefLikeMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRefLikeMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -52,7 +52,7 @@ public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
                     if (occID.equals(selected.getOccasionID())) {
                         // userIDs.add(selected.getUserID());
                         final String userID = selected.getUserID();
-                        mFirebaseDatabase.getReference("Users")
+                        firebaseDatabase.getReference("Users")
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -90,6 +90,11 @@ public class CreatorViewLikeNamesMktplace extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Sets the residence name based on the pre-coded number
+     *
+     * @param x The number representing each residence
+     */
     public String intToRes(int x) {
         String residenceName = "";
         if (x == 0) {
