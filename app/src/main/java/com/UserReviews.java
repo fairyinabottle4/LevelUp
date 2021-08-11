@@ -42,11 +42,11 @@ public class UserReviews extends AppCompatActivity {
     private String name;
     private String creatorID;
 
-    FirebaseDatabase database;
-    DatabaseReference databaseRef;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseRef;
 
-    DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-    Date currentDate = new Date();
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+    private Date currentDate = new Date();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
