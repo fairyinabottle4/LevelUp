@@ -21,45 +21,43 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class CreatorViewNames extends AppCompatActivity {
-    public ArrayList<String> userIDs = new ArrayList<>();
-    public ArrayList<String> names = new ArrayList<>();
-    public String occID;
-    public boolean isJio;
+    private ArrayList<String> userIDs = new ArrayList<>();
+    private ArrayList<String> names = new ArrayList<>();
+    private String occID;
+    private boolean isJio;
 
-    public FirebaseDatabase mFirebaseDatabase;
-    public DatabaseReference mDatabaseRefActivityEvents;
-    public DatabaseReference mDatabaseRefActivityJios;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseRefActivityEvents;
+    private DatabaseReference databaseRefActivityJios;
 
-    public Toolbar tb;
+    private Toolbar tb;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.creator_names_view);
         final ListView list = findViewById(R.id.names_list);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRefActivityEvents = mFirebaseDatabase.getReference("ActivityEvent");
-        mDatabaseRefActivityJios = mFirebaseDatabase.getReference("ActivityJio");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseRefActivityEvents = firebaseDatabase.getReference("ActivityEvent");
+        databaseRefActivityJios = firebaseDatabase.getReference("ActivityJio");
 
         tb = findViewById(R.id.creator_names_toolbar);
         setSupportActionBar(tb);
 
         Intent intent = getIntent();
         occID = intent.getStringExtra("occID");
-        // Toast.makeText(this, occID, Toast.LENGTH_SHORT).show();
         isJio = intent.getBooleanExtra("isJio", true);
 
         if (isJio) {
             // search AJ
-            mDatabaseRefActivityJios.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseRefActivityJios.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         if (occID.equals(selected.getOccasionID())) {
-                            // userIDs.add(selected.getUserID());
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users")
+                            firebaseDatabase.getReference("Users")
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -96,14 +94,14 @@ public class CreatorViewNames extends AppCompatActivity {
             });
         } else {
             // search AE
-            mDatabaseRefActivityEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseRefActivityEvents.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         if (occID.equals(selected.getOccasionID())) {
                             final String userID = selected.getUserID();
-                            mFirebaseDatabase.getReference("Users")
+                            firebaseDatabase.getReference("Users")
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
