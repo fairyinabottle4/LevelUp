@@ -42,16 +42,16 @@ public class UserReviews extends AppCompatActivity {
     private String name;
     private String creatorID;
 
-    FirebaseDatabase database;
-    DatabaseReference databaseRef;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseRef;
 
-    DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-    Date currentDate = new Date();
+    private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+    private Date currentDate = new Date();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = MainActivity.getCurrentUser().name;
+        name = MainActivity.getCurrentUser().getName();
         creatorID = getIntent().getStringExtra("creatorid");
         database = FirebaseDatabase.getInstance();
         databaseRef = database.getReference().child("Users").child(creatorID);
