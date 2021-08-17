@@ -314,7 +314,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
             }
         });
 
-        if (MainActivity.mJioIDs.contains(occID) || MainActivity.getEventIDs().contains(occID)) {
+        if (MainActivity.getJioIds().contains(occID) || MainActivity.getEventIDs().contains(occID)) {
             likedHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
             likedHolder.setChecked(true);
             likedHolder.addButton.setChecked(true);
@@ -365,8 +365,8 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                     }
                 });
 
-                if (MainActivity.mJioIDs.contains(occID)) {
-                    MainActivity.mJioIDs.remove(occID);
+                if (MainActivity.getJioIds().contains(occID)) {
+                    MainActivity.getJioIds().remove(occID);
                 }
 
                 if (MainActivity.getEventIDs().contains(occID)) {
@@ -388,7 +388,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                         ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(occID, userID);
                         mActivityJioRef.push().setValue(activityOccasionItem);
 
-                        MainActivity.mJioIDs.add(currentItem.getOccasionID());
+                        MainActivity.getJioIds().add(currentItem.getOccasionID());
                     } else {
                         // add to eventActivityDB
                         DatabaseReference mActivityJioRef = firebaseDatabase.getReference("ActivityEvent");
@@ -407,7 +407,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
             }
         });
 
-        if (MainActivity.mLikeEventIDs.contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
+        if (MainActivity.getLikeEventIDs().contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
             likedHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             likedHolder.setLiked(true);
             likedHolder.likeButton.setChecked(true);
@@ -516,7 +516,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                         eventRef.child(occID).child("numLikes").setValue(currLikes - 1);
                         likedHolder.setNumLikes(currLikes - 1);
 
-                        MainActivity.mLikeEventIDs.remove(occID);
+                        MainActivity.getLikeEventIDs().remove(occID);
 
                     }
 

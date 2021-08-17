@@ -315,7 +315,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
         final String jioID = currentItem.getJioID();
         jiosViewHolder.setJioID(jioID);
-        if (MainActivity.mJioIDs.contains(jioID)) {
+        if (MainActivity.getJioIds().contains(jioID)) {
             jiosViewHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
             jiosViewHolder.setChecked(true);
             jiosViewHolder.addButton.setChecked(true);
@@ -377,7 +377,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                         }
                     });
-                    MainActivity.mJioIDs.remove(jioID);
+                    MainActivity.getJioIds().remove(jioID);
                 }
             }
         });

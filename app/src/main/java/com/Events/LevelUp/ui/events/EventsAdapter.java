@@ -361,7 +361,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             }
         });
 
-        if (MainActivity.mLikeEventIDs.contains(eventID)) {
+        if (MainActivity.getLikeEventIDs().contains(eventID)) {
             eventsHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             eventsHolder.setLiked(true);
             eventsHolder.likeButton.setChecked(true);
@@ -438,7 +438,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     // for display only
                     eventsHolder.numLikesView.setText(Integer.toString(currLikes - 1));
 
-                    MainActivity.mLikeEventIDs.remove(eventID);
+                    MainActivity.getLikeEventIDs().remove(eventID);
                 }
 
             }

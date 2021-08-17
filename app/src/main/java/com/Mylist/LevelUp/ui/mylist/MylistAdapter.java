@@ -377,8 +377,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     }
                 });
 
-                if (MainActivity.mJioIDs.contains(occID)) {
-                    MainActivity.mJioIDs.remove(occID);
+                if (MainActivity.getJioIds().contains(occID)) {
+                    MainActivity.getJioIds().remove(occID);
                 }
 
                 if (MainActivity.getEventIDs().contains(occID)) {
@@ -411,7 +411,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
-        if (MainActivity.mLikeEventIDs.contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
+        if (MainActivity.getLikeEventIDs().contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
             viewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             viewHolder.setLiked(true);
             viewHolder.likeButton.setChecked(true);
@@ -515,7 +515,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         eventRef.child(occID).child("numLikes").setValue(currLikes - 1);
                         viewHolder.setNumLikes(currLikes - 1);
 
-                        MainActivity.mLikeEventIDs.remove(occID);
+                        MainActivity.getLikeEventIDs().remove(occID);
                     }
                 }
             }

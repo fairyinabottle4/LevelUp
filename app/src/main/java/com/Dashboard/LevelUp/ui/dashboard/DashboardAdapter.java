@@ -241,7 +241,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
         // set stateChecked and stateLiked to pass into the intent
         if (currentItem.isJio()) {
-            if (MainActivity.mJioIDs.contains(currentItem.getOccasionID())) {
+            if (MainActivity.getJioIds().contains(currentItem.getOccasionID())) {
                 holder1.setChecked(true);
             }
             if (MainActivity.mLikeJioIDs.contains(currentItem.getOccasionID())) {
@@ -251,7 +251,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             if (MainActivity.getEventIDs().contains(currentItem.getOccasionID())) {
                 holder1.setChecked(true);
             }
-            if (MainActivity.mLikeEventIDs.contains(currentItem.getOccasionID())) {
+            if (MainActivity.getLikeEventIDs().contains(currentItem.getOccasionID())) {
                 holder1.setLiked(true);
             }
         }

@@ -203,7 +203,7 @@ public class JiosPage extends AppCompatActivity {
 
                         }
                     });
-                    MainActivity.mJioIDs.remove(jioID);
+                    MainActivity.getJioIds().remove(jioID);
                 }
             }
         });

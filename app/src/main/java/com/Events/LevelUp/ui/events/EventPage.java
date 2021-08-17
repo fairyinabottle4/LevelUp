@@ -270,7 +270,7 @@ public class EventPage extends AppCompatActivity {
                     numLikesArrLi.set(0, currLikes - 1);
                     numLikesView.setText(Integer.toString(currLikes - 1)); // for display only
 
-                    MainActivity.mLikeEventIDs.remove(eventID);
+                    MainActivity.getLikeEventIDs().remove(eventID);
                 }
             }
         });

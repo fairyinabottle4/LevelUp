@@ -60,10 +60,11 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReferenceLikeJio;
     private DatabaseReference mDatabaseReferenceLikeMktplace;
 
-    public static final ArrayList<String> mEventIDs = new ArrayList<>();
-    public static final ArrayList<String> mJioIDs = new ArrayList<>();
+    private static final ArrayList<String> mEventIDs = new ArrayList<>();
+    private static final ArrayList<String> mJioIDs = new ArrayList<>();
 
-    public static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
+    private static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
+
     public static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
     public static final ArrayList<String > mLikeMktplaceIDs = new ArrayList<>();
 
@@ -435,6 +436,12 @@ public class MainActivity extends AppCompatActivity {
     }
     public static ArrayList<String> getEventIDs() {
         return mEventIDs;
+    }
+    public static ArrayList<String> getJioIds() {
+        return mJioIDs;
+    }
+    public static ArrayList<String> getLikeEventIDs() {
+        return mLikeEventIDs;
     }
 
 }
