@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
- import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,13 +51,18 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         private boolean isChecked;
         private boolean isLiked;
         private int numLikes;
-        
         private ImageView mImageView;
         private TextView mTextView1;
         private TextView mTextView3;
         private TextView mTextView4;
         private TextView mTextView5;
 
+        /**
+         * Constructor for the DashboardViewHolder class
+         *
+         * @param context Context of the Fragemnt
+         * @param itemView View of the item that will be displayed
+         */
         public DashboardViewHolder (final Context context, View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.category_imageView);
@@ -93,8 +98,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
         }
 
-        public void setCreatorUid(String newUID) {
-            this.creatorUid = newUID;
+        public void setCreatorUid(String newUid) {
+            this.creatorUid = newUid;
         }
 
         public void setCreatorName(String creatorName) {
@@ -167,8 +172,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     public void onBindViewHolder(@NonNull DashboardViewHolder holder, final int position) {
         final Occasion currentItem = occasionList.get(position);
         final DashboardAdapter.DashboardViewHolder holder1 = holder;
-        final String creatorUID = currentItem.getCreatorID();
-        holder1.setCreatorUid(creatorUID);
+        final String creatorUid = currentItem.getCreatorID();
+        holder1.setCreatorUid(creatorUid);
 
         int category = currentItem.getCategory();
 
@@ -208,14 +213,13 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                     UserItem selected = snapshot.getValue(UserItem.class);
                     String id = selected.getId();
 
-                    if (creatorUID.equals(id)) {
+                    if (creatorUid.equals(id)) {
                         String name = selected.getName();
                         int res = selected.getResidential();
                         String telegram = selected.getTelegram();
                         String email = selected.getEmail();
                         String dpUri = selected.getProfilePictureUri();
                         long phone = selected.getPhone();
-//                        holder1.mTextView6.setText(name);
                         holder1.setCreatorName(name);
                         holder1.setCreatorResidence(res);
                         holder1.setTelegram(telegram);
@@ -251,10 +255,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                 holder1.setLiked(true);
             }
         }
-
         holder1.setNumLikes(currentItem.getNumLikes());
-
-
 
     }    
 

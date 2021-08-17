@@ -95,11 +95,11 @@ public class MylistFragment extends Fragment {
 
         firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if (MainActivity.display_name != null) {
-            name.setText(MainActivity.display_name);
+        if (MainActivity.getDisplayName() != null) {
+            name.setText(MainActivity.getDisplayName());
         }
-        if (MainActivity.display_residential != null) {
-            residence.setText(MainActivity.display_residential);
+        if (MainActivity.getDisplayResidential() != null) {
+            residence.setText(MainActivity.getDisplayResidential());
         }
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -321,15 +321,15 @@ public class MylistFragment extends Fragment {
                         if (firebaseUserIdFinal.equals(id)) {
                             user = selected;
                             String displayName = user.getName();
-                            MainActivity.display_name = displayName;
+                            MainActivity.setDisplayName(displayName);
                             nameFinal.setText(displayName);
 
                             intToRes(user.getResidential());
                             resiFinal.setText(residenceName);
-                            MainActivity.display_residential = residenceName;
+                            MainActivity.setDisplayResidential(residenceName);
 
-                            MainActivity.display_phone = user.getPhone();
-                            MainActivity.display_telegram = user.getTelegram();
+                            MainActivity.setDisplayPhone(user.getPhone());
+                            MainActivity.setDisplayTelegram(user.getTelegram());
                         }
                     } catch (Exception e) {
                         System.out.print(e);

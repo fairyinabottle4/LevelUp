@@ -8,10 +8,10 @@ import java.util.Comparator;
 import com.example.LevelUp.ui.Occasion;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
-import com.example.LevelUp.ui.mylist.MylistFragment;
-import com.example.tryone.R;
 import com.example.LevelUp.ui.dashboard.DashboardFragment;
 import com.example.LevelUp.ui.mktplace.MktplaceFragment;
+import com.example.LevelUp.ui.mylist.MylistFragment;
+import com.example.tryone.R;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,19 +33,23 @@ import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity {
     // For Login
+    public static UserItem currUser;
     public static FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    // For User Information on MyList Fragment
+    private static String displayName;
+
+    private static String displayResidential;
+
+    private static String displayTelegram = "default";
+
+    private static long displayPhone = 0;
+
     private static final String TAG = "MainActivity";
 
-    public static UserItem currUser;
     private static String currUserProfilePicture;
     private DatabaseReference mDatabaseReferenceUser;
 
-    // For User Information on MyList Fragment
-    public static String display_name;
-    public static String display_residential;
-    public static String display_telegram = "default";
-    public static long display_phone = 0;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     // For things in MyList
     private FirebaseDatabase mFirebaseDatabase;
@@ -84,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(navListener);
 
         initializeLogin();
-
-        // initializeMyList();
-
-        // Toast.makeText(MainActivity.this, mJioIDs.toString(), Toast.LENGTH_SHORT).show();
-
     }
 
     private void initializeMyList() {
@@ -225,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeUser() {
-        final String fbUIDfinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabaseReferenceUser = mFirebaseDatabase.getReference().child("Users");
         mDatabaseReferenceUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -234,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         UserItem selected = snapshot.getValue(UserItem.class);
                         String id = selected.getId();
-                        if (fbUIDfinal.equals(id)) {
+                        if (fbUidFinal.equals(id)) {
                             currUser = selected;
                             currUser.setProfilePictureUri(currUserProfilePicture);
                             initializeMyList();
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(e);
                     }
                 }
-                if (!existInFirebase()){
+                if (!existInFirebase()) {
                     // start registration of details
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
@@ -273,11 +272,8 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    //onSignedInInitialize(user.getDisplayName());
-                    // mReferenceUsers.setValue(user);
                     initializeUser();
                 } else { // first time sign in
-                    //onSignedOutCleanup();
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
@@ -287,9 +283,6 @@ public class MainActivity extends AppCompatActivity {
                                             new AuthUI.IdpConfig.EmailBuilder().build()))
                                     .build(),
                             RC_SIGN_IN);
-//                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                        startActivity(intent);
-
                 }
             }
         };
@@ -363,6 +356,11 @@ public class MainActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    /**
+     * Sorts a given list of Occasion items by date and time
+     *
+     * @param list List of Occasion items to be sorted
+     */
     public static void sort(ArrayList<? extends Occasion> list) {
         Collections.sort(list, new Comparator<Occasion>() {
             @Override
@@ -399,4 +397,33 @@ public class MainActivity extends AppCompatActivity {
     public static UserItem getCurrentUser() {
         return currUser;
     }
+
+    public static String getDisplayName() {
+        return displayName;
+    }
+    public static void setDisplayName(String name) {
+        displayName = name;
+    }
+    public static String getDisplayResidential() {
+        return displayResidential;
+    }
+    public static void setDisplayResidential(String display) {
+        displayResidential = display;
+    }
+
+    public static String getDisplayTelegram() {
+        return displayTelegram;
+    }
+    public static void setDisplayTelegram(String display) {
+        displayTelegram = display;
+    }
+    public static long getDisplayPhone() {
+        return displayPhone;
+    }
+
+    public static void setDisplayPhone(long display) {
+        displayPhone = display;
+    }
+
+
 }

@@ -31,6 +31,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     // For Login
+    private static final String[] residentials = {"I don't stay on campus",
+        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+        "Select Residence"};
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText editTextName;
     private EditText telegramBox;
@@ -47,13 +53,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     private Uri profileImageUri;
     private boolean allowed;
 
-    // eventually add halls
     private Spinner spinner;
-    private static final String[] residentials = {"I don't stay on campus",
-        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-        "Select Residence"};
     private final int listsize = residentials.length - 1;
 
     @Override
@@ -124,7 +124,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
 
     private void uploadImageToFireBase() {
         String currUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        StorageReference fileReference = FirebaseStorage.getInstance().getReference("profile picture uploads").child(currUserId);
+        StorageReference fileReference = FirebaseStorage.getInstance().getReference("profile picture uploads")
+            .child(currUserId);
         fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -214,6 +215,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         case 14:
             residence = 14; // UTown Residence
             break;
+        default:
 
         }
 
@@ -225,12 +227,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void initializeFirebase() {
-//        mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mReferenceUsers = mFirebaseDatabase.getReference("Users");
-//        mReferenceJios = mFirebaseDatabase.getReference().child("Jios");
-//        mReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-//        mReferenceMktplace = mFirebaseDatabase.getReference().child("mktplace uploads");
     }
 
     private void registerName() {
@@ -268,13 +266,13 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         // new user(id, email, name) (eventually rc and profile pic)
         String userID = fbUser.getUid();
         String email = fbUser.getEmail();
-        String imageURI = "";
+        String imageUri = "";
 
         // must add the set dp
         if (profileImageUri != null) {
-            imageURI = profileImageUri.toString();
+            imageUri = profileImageUri.toString();
         }
-        UserItem userItem = new UserItem(userID, imageURI, name, email, residence, telegramHandle, phoneNumber, false);
+        UserItem userItem = new UserItem(userID, imageUri, name, email, residence, telegramHandle, phoneNumber, false);
         mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);
     }

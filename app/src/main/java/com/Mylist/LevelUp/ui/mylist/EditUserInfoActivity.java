@@ -35,6 +35,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public static Uri profileImageUri;
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String[] residentials = {"I don't stay on campus",
         "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
@@ -58,7 +60,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private EditText editEmailAddress;
     private EditText editPhoneNumber;
 
-    public static Uri profileImageUri;
     private ImageView editProfileImage;
 
     private StorageReference mStorageRef;
@@ -76,10 +77,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         super.onCreate(savedInstanceState);
 
-        name = MainActivity.display_name;
+        name = MainActivity.getDisplayName();
         residence = MainActivity.currUser.getResidential();
-        telegram = MainActivity.display_telegram;
-        phone = MainActivity.display_phone;
+        telegram = MainActivity.getDisplayTelegram();
+        phone = MainActivity.getDisplayPhone();
 
 
         final String fbUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -105,9 +106,9 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         //For updating Contact Information
         editTelegramHandle = findViewById(R.id.edit_telegram_handle);
-        editTelegramHandle.setText(MainActivity.display_telegram);
+        editTelegramHandle.setText(MainActivity.getDisplayTelegram());
         editPhoneNumber = findViewById(R.id.edit_phone_number);
-        editPhoneNumber.setText(Long.toString(MainActivity.display_phone));
+        editPhoneNumber.setText(Long.toString(MainActivity.getDisplayPhone()));
 
 
 
@@ -201,21 +202,21 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         super.onActivityResult(requestCode, resultCode, data);
         AlertDialog.Builder builder = new AlertDialog.Builder(EditUserInfoActivity.this);
         builder.setMessage("Set profile picture?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
-                            if (resultCode == Activity.RESULT_OK) {
-                                deleteProfilePicture = false;
-                                Uri imageUri = data.getData();
-                                editProfileImage.setImageURI(imageUri);
-                                profileImageUri = imageUri;
-                                uploadImageToFireBase();
-                            }
+            .setCancelable(false)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (requestCode == PICK_IMAGE_REQUEST) { // means data is the image selected
+                        if (resultCode == Activity.RESULT_OK) {
+                            deleteProfilePicture = false;
+                            Uri imageUri = data.getData();
+                            editProfileImage.setImageURI(imageUri);
+                            profileImageUri = imageUri;
+                            uploadImageToFireBase();
                         }
                     }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }
+            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -326,7 +327,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             // update the DB
             String updatedName = inputName;
             name = inputName;
-            MainActivity.display_name = updatedName;
+            MainActivity.setDisplayName(updatedName);
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("name")
@@ -339,7 +340,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateTelegramHandle() {
         String inputHandle = editTelegramHandle.getText().toString().trim();
         if (!inputHandle.equals(telegram)) {
-            MainActivity.display_telegram = inputHandle;
+            MainActivity.setDisplayTelegram(inputHandle);
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("TelegramHandle")
@@ -351,7 +352,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();
         long inputNumber = Long.parseLong(inputNumberString);
-        MainActivity.display_phone = inputNumber;
+        MainActivity.setDisplayPhone(inputNumber);
         if (inputNumber != phone) {
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
@@ -364,7 +365,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private void updateResidence() {
         if (finalResidence != residence) { // these are ints
             // update the DB
-            MainActivity.display_residential = intToRes(finalResidence);
+            MainActivity.setDisplayResidential(intToRes(finalResidence));
             mDatabaseRef
                     .child(MainActivity.currUser.getId())
                     .child("residential")
