@@ -142,6 +142,7 @@ public class EventsFragment extends Fragment {
             break;
         case R.id.subitem1:
             loadDataEvents();
+            break;
         case R.id.subitem2:
             getSelectedCategoryData(0);
             break;

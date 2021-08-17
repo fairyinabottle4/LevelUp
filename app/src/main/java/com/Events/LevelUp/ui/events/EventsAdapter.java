@@ -199,8 +199,38 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         }
     } // static class EventsViewHolder ends here
 
-    //Constructor for EventsAdapter class. This ArrayList contains the
-    //complete list of items that we want to add to the View.
+    private Filter eventsFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<EventsItem> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(eventsListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (EventsItem item : eventsListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            eventsList.clear();
+            eventsList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+        }
+    };
+
 
     /**
      * Constructor for EventsAdapter class
@@ -457,37 +487,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         return eventsFilter;
     }
 
-    private Filter eventsFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<EventsItem> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(eventsListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (EventsItem item : eventsListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getTitle().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            eventsList.clear();
-            eventsList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-        }
-    };
 
     public void resetAdapter() {
         this.eventsList = eventsListFull;

@@ -155,6 +155,37 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
             this.numLikes = numLikes;
         }
     }
+    private Filter mktplaceFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<MktplaceItem> filteredList = new ArrayList<>(); // initially empty list
+
+            if (constraint == null || constraint.length() == 0) { // search input field empty
+                filteredList.addAll(mktplaceListFull); // to show everything
+            } else {
+                String userSearchInput = constraint.toString().toLowerCase().trim();
+
+                for (MktplaceItem item : mktplaceListFull) {
+                    // contains can be changed to StartsWith
+                    if (item.getName().toLowerCase().contains(userSearchInput)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mktplaceList.clear();
+            mktplaceList.addAll((List) results.values); // data list contains filtered items
+            notifyDataSetChanged(); // tell adapter list has changed
+        }
+    };
 
     //Constructor for MktplaceAdapter class. This ArrayList contains the
     //complete list of items that we want to add to the View.
@@ -327,37 +358,6 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         return mktplaceFilter;
     }
 
-    private Filter mktplaceFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<MktplaceItem> filteredList = new ArrayList<>(); // initially empty list
-
-            if (constraint == null || constraint.length() == 0) { // search input field empty
-                filteredList.addAll(mktplaceListFull); // to show everything
-            } else {
-                String userSearchInput = constraint.toString().toLowerCase().trim();
-
-                for (MktplaceItem item : mktplaceListFull) {
-                    // contains can be changed to StartsWith
-                    if (item.getName().toLowerCase().contains(userSearchInput)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mktplaceList.clear();
-            mktplaceList.addAll((List) results.values); // data list contains filtered items
-            notifyDataSetChanged(); // tell adapter list has changed
-        }
-    };
 
     public void resetAdapter() {
         this.mktplaceList = mktplaceListFull;
