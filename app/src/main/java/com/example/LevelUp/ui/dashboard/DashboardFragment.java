@@ -37,10 +37,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class DashboardFragment extends Fragment {
-    private View rootView;
 
     public static boolean refresh;
-
+    private View rootView;
     private RecyclerView recyclerViewTrending;
     private LinearLayoutManager layoutManagerTrending;
     private DashboardAdapter adapterTrending;

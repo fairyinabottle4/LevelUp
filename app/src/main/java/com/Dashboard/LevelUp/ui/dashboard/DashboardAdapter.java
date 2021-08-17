@@ -24,8 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-import androidx.annotation.NonNull;
+ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -140,6 +139,12 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
     }
 
+    /**
+     * Constructor for the DashboardAdapter class
+     *
+     * @param context Context in which this fragment is placed in
+     * @param occasionList List of Occasions to be displayed
+     */
     public DashboardAdapter(FragmentActivity context, ArrayList<Occasion> occasionList) {
         this.occasionList = occasionList;
         mProfileStorageRef = FirebaseStorage.getInstance()
@@ -161,7 +166,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     @Override
     public void onBindViewHolder(@NonNull DashboardViewHolder holder, final int position) {
         final Occasion currentItem = occasionList.get(position);
-//        holder.mImageView.setImageResource(currentItem.getProfilePicture());
         final DashboardAdapter.DashboardViewHolder holder1 = holder;
         final String creatorUID = currentItem.getCreatorID();
         holder1.setCreatorUid(creatorUID);

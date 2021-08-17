@@ -36,6 +36,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditMarketPlaceActivity extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
+
     private Button saveBtn;
     private Button changeImageBtn;
     private ToggleButton deleteBtn;
@@ -59,7 +61,6 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
     private StorageTask mUploadTask;
     private Uri mImageUri;
 
-    private static final int PICK_IMAGE_REQUEST = 1;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.marketplace_edit);
@@ -234,7 +235,8 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()
+                                / taskSnapshot.getTotalByteCount());
                             progressBar.setProgress((int) progress);
                         }
                     });

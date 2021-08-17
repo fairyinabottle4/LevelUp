@@ -61,7 +61,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
 
     private int category;
     private static final String[] categories = {
-            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     private boolean validDate;
 

@@ -38,7 +38,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class MktplaceFragment extends Fragment {
     public static boolean refresh;
 
-    private static ArrayList<MktplaceItem> MktplaceItemList;
+    private static ArrayList<MktplaceItem> mktPlaceItemList;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private MktplaceAdapter adapter;
@@ -77,7 +77,7 @@ public class MktplaceFragment extends Fragment {
         activity.setSupportActionBar(toolbar);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            MktplaceItemList.clear();
+            mktPlaceItemList.clear();
             loadDataMktplace();
             swipeRefreshLayout.setRefreshing(false);
         });
@@ -85,7 +85,7 @@ public class MktplaceFragment extends Fragment {
     }
 
     public void createMktplaceList() {
-        MktplaceItemList = new ArrayList<>();
+        mktPlaceItemList = new ArrayList<>();
     }
 
     /**
@@ -94,7 +94,7 @@ public class MktplaceFragment extends Fragment {
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new GridLayoutManager(getActivity(), 2);
-        adapter = new MktplaceAdapter(getActivity(), MktplaceItemList);
+        adapter = new MktplaceAdapter(getActivity(), mktPlaceItemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -132,6 +132,7 @@ public class MktplaceFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
             break;
+        default:
         }
         return super.onOptionsItemSelected(item);
     }
@@ -169,16 +170,16 @@ public class MktplaceFragment extends Fragment {
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                MktplaceItemList.clear();
+                mktPlaceItemList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     MktplaceItem upload = postSnapshot.getValue(MktplaceItem.class);
-                    MktplaceItemList.add(upload);
+                    mktPlaceItemList.add(upload);
                 }
 
-                if (MktplaceItemList.isEmpty()) {
+                if (mktPlaceItemList.isEmpty()) {
                     nothingView.setVisibility(View.VISIBLE);
                 }
-                adapter = new MktplaceAdapter(getActivity(), MktplaceItemList);
+                adapter = new MktplaceAdapter(getActivity(), mktPlaceItemList);
                 recyclerView.setAdapter(adapter);
             }
 

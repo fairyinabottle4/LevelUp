@@ -35,8 +35,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private FirebaseAuth firebaseAuth;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final String[] residentials = {"I don't stay on campus",
+        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+        "Select Residence"};
+
+    private FirebaseAuth firebaseAuth;
 
     private String name;
     private int residence;
@@ -59,11 +65,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     private DatabaseReference mDatabaseRef;
 
     private Spinner spinner;
-    private static final String[] residentials = {"I don't stay on campus",
-        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-        "Select Residence"};
 
     private boolean deleteProfilePicture = false;
     private boolean changes = false;
@@ -245,12 +246,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             .child(MainActivity.currUser.getId())
             .child("profilePictureUri")
             .setValue(newUri);
-
-//        UserItem updatedUser = MainActivity.currUser;
-//        FirebaseDatabase.getInstance().getReference("Users")
-//                .child(MainActivity.currUser.getId())
-//                .setValue(updatedUser);
-
     }
 
     private void initializeSpinner() {

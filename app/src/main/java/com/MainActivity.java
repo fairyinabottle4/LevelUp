@@ -296,43 +296,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selected = null;
-                    String fragTag = null;
+        new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selected = null;
+                String fragTag = null;
 
-                    switch (item.getItemId()) {
-                    case R.id.navigation_mktPlace:
-                        selected = new MktplaceFragment();
-                        fragTag = "MktplaceFragment";
-                        break;
-                    case R.id.navigation_jios:
-                        selected = new JiosFragment();
-                        fragTag = "JiosFragment";
-                        break;
-                    case R.id.navigation_dashboard:
-                        selected = new DashboardFragment();
-                        fragTag = "DashboardFragment";
-                        break;
-                    case R.id.navigation_events:
-                        // Toolbar eventsToolbar = (Toolbar) findViewById(R.id.events_toolbar);
-                        // setSupportActionBar(eventsToolbar);
-                        selected = new EventsFragment();
-                        fragTag = "EventsFragment";
-                        break;
-                    case R.id.navigation_myList:
-                        selected = new MylistFragment();
-                        fragTag = "MylistFragment";
-                        break;
-                    }
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.nav_host_fragment, selected, fragTag)
-                            .addToBackStack(fragTag)
-                            .commit();
-                    return true;
+                switch (item.getItemId()) {
+                case R.id.navigation_mktPlace:
+                    selected = new MktplaceFragment();
+                    fragTag = "MktplaceFragment";
+                    break;
+                case R.id.navigation_jios:
+                    selected = new JiosFragment();
+                    fragTag = "JiosFragment";
+                    break;
+                case R.id.navigation_dashboard:
+                    selected = new DashboardFragment();
+                    fragTag = "DashboardFragment";
+                    break;
+                case R.id.navigation_events:
+                    // Toolbar eventsToolbar = (Toolbar) findViewById(R.id.events_toolbar);
+                    // setSupportActionBar(eventsToolbar);
+                    selected = new EventsFragment();
+                    fragTag = "EventsFragment";
+                    break;
+                case R.id.navigation_myList:
+                    selected = new MylistFragment();
+                    fragTag = "MylistFragment";
+                    break;
                 }
-            };
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, selected, fragTag)
+                        .addToBackStack(fragTag)
+                        .commit();
+                return true;
+            }
+        };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

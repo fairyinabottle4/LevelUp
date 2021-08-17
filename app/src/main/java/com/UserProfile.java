@@ -115,31 +115,31 @@ public class UserProfile extends AppCompatActivity {
         //pulling the rating from the database
         db.getReference().child("Users").child(creatorId).child("Ratings")
             .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot child :dataSnapshot.getChildren()) {
-                        sumOfRatings += Float.parseFloat(child.getValue().toString());
-                        numOfRatings++;
-                        if (child.getKey().equals(currUserId)) {
-                            ratingBar.setRating(Float.parseFloat(child.getValue().toString()));
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot child :dataSnapshot.getChildren()) {
+                            sumOfRatings += Float.parseFloat(child.getValue().toString());
+                            numOfRatings++;
+                            if (child.getKey().equals(currUserId)) {
+                                ratingBar.setRating(Float.parseFloat(child.getValue().toString()));
+                            }
                         }
                     }
+                    float averageRating = sumOfRatings / numOfRatings;
+                    averageRatingGlobal = averageRating;
+                    if (numOfRatings == 0) {
+                        actualRating.setText("No ratings yet!");
+                    } else {
+                        actualRating.setText(String.format("%.1f", averageRating));
+                    }
                 }
-                float averageRating = sumOfRatings / numOfRatings;
-                averageRatingGlobal = averageRating;
-                if (numOfRatings == 0) {
-                    actualRating.setText("No ratings yet!");
-                } else {
-                    actualRating.setText(String.format("%.1f", averageRating));
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            });
 
         //when the rating is changed.
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

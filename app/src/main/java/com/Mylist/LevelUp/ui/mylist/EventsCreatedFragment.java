@@ -33,11 +33,12 @@ public class EventsCreatedFragment extends Fragment {
     private ArrayList<Occasion> mOccasionEvents = new ArrayList<>();
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
         mDatabaseReferenceEvents.addValueEventListener(new ValueEventListener() {
             @Override
@@ -46,7 +47,7 @@ public class EventsCreatedFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     EventsItem selected = snapshot.getValue(EventsItem.class);
                     String creatorID = selected.getCreatorID();
-                    if (creatorID.equals(fbUIDFinal)) {
+                    if (creatorID.equals(fbUidFinal)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
