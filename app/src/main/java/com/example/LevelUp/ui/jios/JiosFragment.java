@@ -42,7 +42,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 public class JiosFragment extends Fragment {
     private static boolean refresh;
 
-    private static ArrayList<JiosItem> JiosItemList;
+    private static ArrayList<JiosItem> jiosItemList;
     private static ArrayList<JiosItem> copy;
     private static final String[] categories = {"All",
         "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
@@ -85,7 +85,7 @@ public class JiosFragment extends Fragment {
         swipeRefreshLayout = rootView.findViewById(R.id.swiperefreshlayoutjios);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            JiosItemList.clear();
+            jiosItemList.clear();
             loadDataJios();
             adapter.notifyDataSetChanged();
             swipeRefreshLayout.setRefreshing(false);
@@ -95,7 +95,7 @@ public class JiosFragment extends Fragment {
     }
 
     public void createJiosList() {
-        JiosItemList = new ArrayList<>();
+        jiosItemList = new ArrayList<>();
     }
 
     /**
@@ -104,7 +104,7 @@ public class JiosFragment extends Fragment {
     public void buildRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recyclerview);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new JiosAdapter(getActivity(), JiosItemList);
+        adapter = new JiosAdapter(getActivity(), jiosItemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -216,7 +216,7 @@ public class JiosFragment extends Fragment {
     }
 
     public static ArrayList<JiosItem> getJiosItemList() {
-        return JiosItemList;
+        return jiosItemList;
     }
 
     private void getSelectedCategoryData(int categoryID) {
@@ -224,7 +224,7 @@ public class JiosFragment extends Fragment {
         ArrayList<JiosItem> list = new ArrayList<>();
         JiosAdapter jiosAdapter;
         //filter by id
-        for (JiosItem jiosItem : JiosItemList) {
+        for (JiosItem jiosItem : jiosItemList) {
             if (jiosItem.getCategory() == categoryID) {
                 list.add(jiosItem);
             }
@@ -243,7 +243,7 @@ public class JiosFragment extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                JiosItemList.clear();
+                jiosItemList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
                         JiosItem selected = snapshot.getValue(JiosItem.class);
@@ -265,17 +265,17 @@ public class JiosFragment extends Fragment {
                         Date currentDate = new Date();
 
                         if (eventDate.compareTo(currentDate) >= 0) {
-                            JiosItemList.add(selected);
+                            jiosItemList.add(selected);
                         }
                     } catch (Exception e) {
                         System.out.println(e);
                     }
                 }
-                copy = new ArrayList<>(JiosItemList);
-                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), JiosItemList);
+                copy = new ArrayList<>(jiosItemList);
+                JiosAdapter jiosAdapter = new JiosAdapter(getActivity(), jiosItemList);
                 recyclerView.setAdapter(jiosAdapter);
                 adapter = jiosAdapter;
-                MainActivity.sort(JiosItemList);
+                MainActivity.sort(jiosItemList);
             }
 
             @Override

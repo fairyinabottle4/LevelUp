@@ -194,12 +194,12 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
      * Constructor for the MktplaceAdapter class.
      *
      * @param context Context that belongs to the Fragment
-     * @param MktplaceList List of items that are added to the View
+     * @param mktplaceList List of items that are added to the View
      */
-    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> MktplaceList) {
+    public MktplaceAdapter(FragmentActivity context, ArrayList<MktplaceItem> mktplaceList) {
         this.mktplaceContext = context;
-        mktplaceList = MktplaceList;
-        mktplaceListFull = new ArrayList<>(MktplaceList);
+        this.mktplaceList = mktplaceList;
+        mktplaceListFull = new ArrayList<>(mktplaceList);
         firebaseDatabase = FirebaseDatabase.getInstance();
         userRef = firebaseDatabase.getReference("Users");
     }
