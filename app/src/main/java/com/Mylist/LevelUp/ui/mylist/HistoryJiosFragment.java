@@ -29,12 +29,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryJiosFragment extends Fragment {
     private View rootView;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MylistAdapter adapter;
 
-    private ArrayList<Occasion> mPastOccasions = new ArrayList<>();
-    private ArrayList<String> mJioIDs = new ArrayList<>();
+    private ArrayList<Occasion> pastOccasions = new ArrayList<>();
+    private ArrayList<String> jioIDs = new ArrayList<>();
 
     @Nullable
     @Override
@@ -47,15 +47,15 @@ public class HistoryJiosFragment extends Fragment {
 
         // pulling activityjio with my userID
 
-        DatabaseReference mDatabaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
-        mDatabaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReferenceActivityJio = mFirebaseDatabase.getReference().child("ActivityJio");
+        databaseReferenceActivityJio.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUidFinal)) {
-                        mJioIDs.add(selected.getOccasionID());
+                        jioIDs.add(selected.getOccasionID());
                     }
                 }
             }
@@ -66,15 +66,15 @@ public class HistoryJiosFragment extends Fragment {
             }
         });
 
-        DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        DatabaseReference databaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
 
-        mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(JiosItem.class);
                     String jioID = selected.getOccasionID();
-                    if (mJioIDs.contains(jioID)) {
+                    if (jioIDs.contains(jioID)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
@@ -92,14 +92,14 @@ public class HistoryJiosFragment extends Fragment {
 
                         Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) < 0) {
-                            mPastOccasions.add(selected);
+                            pastOccasions.add(selected);
                         }
                     }
                 }
-                MainActivity.sort(mPastOccasions);
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mPastOccasions);
-                mAdapter = myListAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MainActivity.sort(pastOccasions);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), pastOccasions);
+                adapter = myListAdapter;
+                recyclerView.setAdapter(adapter);
 
             }
 
@@ -117,12 +117,12 @@ public class HistoryJiosFragment extends Fragment {
      * Builds the recycler view to display the list of items
      */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mPastOccasions);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new MylistAdapter(getActivity(), pastOccasions);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 }

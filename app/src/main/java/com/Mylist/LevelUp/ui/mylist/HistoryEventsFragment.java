@@ -29,12 +29,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryEventsFragment extends Fragment {
     private View rootView;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MylistAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MylistAdapter adapter;
 
-    private ArrayList<Occasion> mPastOccasions = new ArrayList<>();
-    private ArrayList<String> mEventIDs = new ArrayList<>();
+    private ArrayList<Occasion> pastOccasions = new ArrayList<>();
+    private ArrayList<String> eventIDs = new ArrayList<>();
 
     @Nullable
     @Override
@@ -42,12 +42,12 @@ public class HistoryEventsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
-        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // pulling activityevent with my userID
-        DatabaseReference mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
-        mDatabaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReferenceActivityEvent = firebaseDatabase.getReference().child("ActivityEvent");
+        databaseReferenceActivityEvent.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -55,7 +55,7 @@ public class HistoryEventsFragment extends Fragment {
                     String selectedUserID = selected.getUserID();
                     if (selectedUserID.equals(fbUidFinal)) {
                         // it is my event so I add EventID into arraylist
-                        mEventIDs.add(selected.getOccasionID());
+                        eventIDs.add(selected.getOccasionID());
 
                     }
                 }
@@ -67,15 +67,15 @@ public class HistoryEventsFragment extends Fragment {
             }
         });
 
-        DatabaseReference mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
+        DatabaseReference databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
 
-        mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Occasion selected = snapshot.getValue(EventsItem.class);
                     String eventID = selected.getOccasionID();
-                    if (mEventIDs.contains(eventID)) {
+                    if (eventIDs.contains(eventID)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
@@ -93,14 +93,14 @@ public class HistoryEventsFragment extends Fragment {
 
                         Date currentDate = new Date();
                         if (eventDate.compareTo(currentDate) < 0) {
-                            mPastOccasions.add(selected);
+                            pastOccasions.add(selected);
                         }
                     }
                 }
-                MainActivity.sort(mPastOccasions);
-                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), mPastOccasions);
-                mAdapter = myListAdapter;
-                mRecyclerView.setAdapter(mAdapter);
+                MainActivity.sort(pastOccasions);
+                MylistAdapter myListAdapter = new MylistAdapter(getActivity(), pastOccasions);
+                adapter = myListAdapter;
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -117,12 +117,12 @@ public class HistoryEventsFragment extends Fragment {
      * Builds the recycler view to display the list of items
      */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new MylistAdapter(getActivity(), mPastOccasions);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.occMylistFragmentRecyclerView);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new MylistAdapter(getActivity(), pastOccasions);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 }

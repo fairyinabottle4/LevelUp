@@ -62,8 +62,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     private ImageView editProfileImage;
 
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
+    private StorageReference storageRef;
+    private DatabaseReference databaseRef;
 
     private Spinner spinner;
 
@@ -84,8 +84,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
 
         final String fbUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUid);
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
+        storageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUid);
+        databaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
         TextView displayName = findViewById(R.id.editTextDisplayName);
@@ -169,7 +169,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
         // For displaying profile picture
 
-        mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Glide.with(getApplicationContext()).load(uri).into(editProfileImage);
@@ -228,7 +228,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     private void uploadImageToFireBase() {
         // String profilePicNameInStorage = MainActivity.currUser.getId();
-        StorageReference fileReference = mStorageRef;
+        StorageReference fileReference = storageRef;
         fileReference.putFile(profileImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -243,7 +243,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         MainActivity.getCurrUser().setProfilePictureUri(profileImageUri.toString());
         // send update to database
         String newUri = profileImageUri.toString();
-        mDatabaseRef
+        databaseRef
             .child(MainActivity.getCurrUser().getId())
             .child("profilePictureUri")
             .setValue(newUri);
@@ -329,7 +329,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             String updatedName = inputName;
             name = inputName;
             MainActivity.setDisplayName(updatedName);
-            mDatabaseRef
+            databaseRef
                     .child(MainActivity.getCurrUser().getId())
                     .child("name")
                     .setValue(updatedName);
@@ -342,7 +342,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         String inputHandle = editTelegramHandle.getText().toString().trim();
         if (!inputHandle.equals(telegram)) {
             MainActivity.setDisplayTelegram(inputHandle);
-            mDatabaseRef
+            databaseRef
                     .child(MainActivity.getCurrUser().getId())
                     .child("TelegramHandle")
                     .setValue(inputHandle);
@@ -355,7 +355,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         long inputNumber = Long.parseLong(inputNumberString);
         MainActivity.setDisplayPhone(inputNumber);
         if (inputNumber != phone) {
-            mDatabaseRef
+            databaseRef
                     .child(MainActivity.getCurrUser().getId())
                     .child("PhoneNumber")
                     .setValue(inputNumber);
@@ -367,7 +367,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         if (finalResidence != residence) { // these are ints
             // update the DB
             MainActivity.setDisplayResidential(intToRes(finalResidence));
-            mDatabaseRef
+            databaseRef
                     .child(MainActivity.getCurrUser().getId())
                     .child("residential")
                     .setValue(finalResidence);
@@ -435,7 +435,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
      * Deletes the user's profile picture
      */
     public void deleteProfilePicture() {
-        mStorageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 
@@ -447,7 +447,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             }
         });
 
-        mDatabaseRef
+        databaseRef
                 .child(MainActivity.getCurrUser().getId())
                 .child("profilePictureUri")
                 .setValue("");

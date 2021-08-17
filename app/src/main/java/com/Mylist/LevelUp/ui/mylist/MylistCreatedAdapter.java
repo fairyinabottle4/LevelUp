@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdapter.MylistCreatedViewHolder> {
     private ArrayList<Occasion> mylistList;
-    private MylistCreatedAdapter.OnItemClickListener mListener;
+    private MylistCreatedAdapter.OnItemClickListener mylistListener;
     private DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
     private DateFormat df2 = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
 
@@ -67,7 +67,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     }
 
     public void setOnItemClickListener(MylistCreatedAdapter.OnItemClickListener listener) {
-        mListener = listener;
+        mylistListener = listener;
     }
 
     public static class MylistCreatedViewHolder extends RecyclerView.ViewHolder {
@@ -218,7 +218,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
         View v = LayoutInflater.from(parent.getContext())
             .inflate(R.layout.occ_item_editmode, parent, false);
         MylistCreatedAdapter.MylistCreatedViewHolder evh = new MylistCreatedAdapter
-            .MylistCreatedViewHolder(fragContext, v, mListener);
+            .MylistCreatedViewHolder(fragContext, v, mylistListener);
         return evh;
     }
 

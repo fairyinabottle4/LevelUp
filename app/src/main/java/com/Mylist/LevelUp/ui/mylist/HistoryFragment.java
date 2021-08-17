@@ -46,8 +46,8 @@ public class HistoryFragment extends Fragment {
     }
 
     static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+        private final List<Fragment> fragmentList = new ArrayList<>();
+        private final List<String> fragmentTitleList = new ArrayList<>();
 
         public Adapter(FragmentManager manager) {
             super(manager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -55,22 +55,22 @@ public class HistoryFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+            return fragmentList.get(position);
         }
 
         @Override
         public int getCount() {
-            return mFragmentList.size();
+            return fragmentList.size();
         }
 
         public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
+            fragmentList.add(fragment);
+            fragmentTitleList.add(title);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            return fragmentTitleList.get(position);
         }
     }
 }

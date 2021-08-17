@@ -26,14 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreatedAdapter.MktplaceCreatedViewHolder> {
     //ArrayList is passed in from MktplaceItem.java
-    private Context mContext;
+    private Context mktplaceContext;
 
-    private ArrayList<MktplaceItem> mMktplaceList;
-    private ArrayList<MktplaceItem> mMktplaceListFull;
-    private MktplaceCreatedAdapter.OnItemClickListener mAdapterListener;
+    private ArrayList<MktplaceItem> mktplaceList;
+    private ArrayList<MktplaceItem> mktplaceListFull;
+    private MktplaceCreatedAdapter.OnItemClickListener adapterListener;
 
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUserRef;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference userRef;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -136,12 +136,12 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
      */
     public MktplaceCreatedAdapter(Context context, ArrayList<MktplaceItem> mktplaceList,
                                   MktplaceCreatedAdapter.OnItemClickListener listener) {
-        this.mContext = context;
-        mMktplaceList = mktplaceList;
-        mMktplaceListFull = new ArrayList<>(mktplaceList);
-        mAdapterListener = listener;
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserRef = mFirebaseDatabase.getReference("Users");
+        this.mktplaceContext = context;
+        this.mktplaceList = mktplaceList;
+        mktplaceListFull = new ArrayList<>(mktplaceList);
+        adapterListener = listener;
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = firebaseDatabase.getReference("Users");
     }
 
     //inflate the items in a MktplaceViewHolder
@@ -152,13 +152,13 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.marketplace_item_edit,
             parent, false);
         MktplaceCreatedAdapter.MktplaceCreatedViewHolder evh = new MktplaceCreatedAdapter
-            .MktplaceCreatedViewHolder(mContext, v, mAdapterListener);
+            .MktplaceCreatedViewHolder(mktplaceContext, v, adapterListener);
         return evh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MktplaceCreatedAdapter.MktplaceCreatedViewHolder holder, int position) {
-        final MktplaceItem uploadCurrent = mMktplaceList.get(position);
+        final MktplaceItem uploadCurrent = mktplaceList.get(position);
         final String imageUrl = uploadCurrent.getImageUrl();
         final String mktplaceID = uploadCurrent.getMktPlaceID();
         final String creatorUid = uploadCurrent.getCreatorID();
@@ -172,28 +172,28 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, EditMarketPlaceActivity.class);
+                Intent intent = new Intent(mktplaceContext, EditMarketPlaceActivity.class);
                 intent.putExtra("imageurl", imageUrl);
                 intent.putExtra("mktplaceID", mktplaceID);
                 intent.putExtra("titleView", titleView);
                 intent.putExtra("location", location);
                 intent.putExtra("description", description);
                 intent.putExtra("creatorUid", creatorUid);
-                mContext.startActivity(intent);
+                mktplaceContext.startActivity(intent);
             }
         });
 
         holder.peopleLikedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, CreatorViewLikeNamesMktplace.class);
+                Intent intent = new Intent(mktplaceContext, CreatorViewLikeNamesMktplace.class);
                 String occID = uploadCurrent.getMktPlaceID();
                 intent.putExtra("occID", occID);
-                mContext.startActivity(intent);
+                mktplaceContext.startActivity(intent);
             }
         });
 
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -231,10 +231,10 @@ public class MktplaceCreatedAdapter extends RecyclerView.Adapter<MktplaceCreated
 
     @Override
     public int getItemCount() {
-        return mMktplaceList.size();
+        return mktplaceList.size();
     }
 
     public void resetAdapter() {
-        this.mMktplaceList = mMktplaceListFull;
+        this.mktplaceList = mktplaceListFull;
     }
 }

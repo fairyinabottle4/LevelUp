@@ -152,8 +152,6 @@ public class CreatedOccasionPage extends AppCompatActivity {
                 imageView.setImageResource(R.drawable.fake_user_dp);
             }
         });
-        // imageView.setImageResource(R.mipmap.ic_launcher_round);
-        // mAddButton.setImageResource(R.drawable.ic_add_black_24dp);
         titleView.setText(title);
         dateView.setText(date);
         timeView.setText(time);

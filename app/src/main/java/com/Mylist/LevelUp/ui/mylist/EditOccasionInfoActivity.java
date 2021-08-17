@@ -51,7 +51,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
     private String occID;
     private String creatorID;
     private Spinner categorySpinner;
-    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseDatabase firebaseDatabase;
 
     private String updatedTimeInfo;
     private int updatedHourOfDay;
@@ -82,7 +82,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         occID = intent.getStringExtra("occID");
         creatorID = intent.getStringExtra("creatorID");
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
 
         final TextView titleTextView = findViewById(R.id.occ_editTitle);
         final TextView locationTextView = findViewById(R.id.occ_editLocation);
@@ -119,8 +119,8 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
             }
         });
 
-        final DatabaseReference mDatabaseReferenceEvents = mFirebaseDatabase.getReference().child("Events");
-        final DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
+        final DatabaseReference databaseReferenceEvents = firebaseDatabase.getReference().child("Events");
+        final DatabaseReference databaseReferenceJios = firebaseDatabase.getReference().child("Jios");
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +129,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                 // find the thing in event, if cannot, find in jio
                 // search thru, if by the end selected = null, do nth
 
-                mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -175,7 +175,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     Toast.makeText(EditOccasionInfoActivity.this,
                                         "Please check all fields and try again", Toast.LENGTH_LONG).show();
                                 } else if (factors && updatedEventsItem != null) {
-                                    mDatabaseReferenceEvents.child(occID).setValue(updatedEventsItem);
+                                    databaseReferenceEvents.child(occID).setValue(updatedEventsItem);
                                     Toast.makeText(EditOccasionInfoActivity.this, "Successfully Changed",
                                         Toast.LENGTH_LONG).show();
                                     finish();
@@ -190,7 +190,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                     }
                 });
 
-                mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -236,7 +236,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     Toast.makeText(EditOccasionInfoActivity.this,
                                         "Please check all fields and try again", Toast.LENGTH_LONG).show();
                                 } else if (factors && updatedJiosItem != null) {
-                                    mDatabaseReferenceJios.child(occID).setValue(updatedJiosItem);
+                                    databaseReferenceJios.child(occID).setValue(updatedJiosItem);
                                     Toast.makeText(EditOccasionInfoActivity.this,
                                         "Successfully Changed", Toast.LENGTH_LONG).show();
                                     finish();
@@ -257,7 +257,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
         final Runnable myRun = new Runnable() {
             @Override
             public void run() {
-                mDatabaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceEvents.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -265,7 +265,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                             String selectedOccID = selected.getEventID();
                             if (selectedOccID.equals(occID)) {
                                 String key = snapshot.getKey();
-                                mDatabaseReferenceEvents.child(key).removeValue();
+                                databaseReferenceEvents.child(key).removeValue();
                                 finish();
                             }
                         }
@@ -277,7 +277,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                     }
                 });
 
-                mDatabaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReferenceJios.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -285,7 +285,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                             String selectedOccID = selected.getJioID();
                             if (selectedOccID.equals(occID)) {
                                 String key = snapshot.getKey();
-                                mDatabaseReferenceJios.child(key).removeValue();
+                                databaseReferenceJios.child(key).removeValue();
                                 finish();
                             }
                         }

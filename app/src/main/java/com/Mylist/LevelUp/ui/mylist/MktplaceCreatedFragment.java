@@ -32,14 +32,14 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
     private static boolean refresh;
 
     private static ArrayList<MktplaceItem> mktplaceItemList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private MktplaceCreatedAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private MktplaceCreatedAdapter adapter;
     private View rootView;
     private FloatingActionButton floatingActionButton;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private DatabaseReference mDatabaseRef;
-    private MktplaceCreatedAdapter.OnItemClickListener mListener = this;
+    private DatabaseReference databaseRef;
+    private MktplaceCreatedAdapter.OnItemClickListener mktplaceListener = this;
     private TextView nothingView;
 
     @Nullable
@@ -53,7 +53,7 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
 
         buildRecyclerView();
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
+        databaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
 
         loadDataMktplace();
 
@@ -68,12 +68,12 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
      * Builds the recycler view which contains the list of MktplaceItems
      */
     public void buildRecyclerView() {
-        mRecyclerView = rootView.findViewById(R.id.recyclerview);
-        mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new MktplaceCreatedAdapter(getContext(), mktplaceItemList, this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        adapter = new MktplaceCreatedAdapter(getContext(), mktplaceItemList, this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 
@@ -99,7 +99,7 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
      */
     public void loadDataMktplace() {
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mktplaceItemList.clear();
@@ -112,8 +112,8 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
                 if (mktplaceItemList.isEmpty()) {
                     nothingView.setVisibility(View.VISIBLE);
                 }
-                mAdapter = new MktplaceCreatedAdapter(getActivity(), mktplaceItemList, mListener);
-                mRecyclerView.setAdapter(mAdapter);
+                adapter = new MktplaceCreatedAdapter(getActivity(), mktplaceItemList, mktplaceListener);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -121,7 +121,7 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        mAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public static void setRefresh(boolean toSet) {

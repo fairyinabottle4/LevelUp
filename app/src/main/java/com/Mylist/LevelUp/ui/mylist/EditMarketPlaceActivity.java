@@ -49,14 +49,14 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
     private String creatorUid;
     private String imageurl;
 
-    private ImageView mImageView;
+    private ImageView imageView;
     private TextView titleTv;
     private TextView locationTv;
     private TextView descTv;
     private ProgressBar progressBar;
 
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
+    private StorageReference storageRef;
+    private DatabaseReference databaseRef;
 
     private StorageTask mUploadTask;
     private Uri mImageUri;
@@ -79,21 +79,21 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
         locationTv = locationTextView;
         final TextView descriptionTextView = findViewById(R.id.listing_description);
         descTv = descriptionTextView;
-        mImageView = findViewById(R.id.selected_image);
+        imageView = findViewById(R.id.selected_image);
         progressBar = findViewById(R.id.progress_bar);
 
         // Setting existing values
         titleTextView.setText(title);
         locationTextView.setText(location);
         descriptionTextView.setText(description);
-        Glide.with(mImageView.getContext()).load(imageurl).into(mImageView);
+        Glide.with(imageView.getContext()).load(imageurl).into(imageView);
 
         saveBtn = findViewById(R.id.save_changes_btn);
         changeImageBtn = findViewById(R.id.photo_selector);
         deleteBtn = findViewById(R.id.delete_btn);
-        mStorageRef = FirebaseStorage.getInstance().getReference("mktplace uploads");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
-        // final DatabaseReference mDatabaseReferenceMktplace = mDatabaseRef;
+        storageRef = FirebaseStorage.getInstance().getReference("mktplace uploads");
+        databaseRef = FirebaseDatabase.getInstance().getReference("mktplace uploads");
+        // final DatabaseReference mDatabaseReferenceMktplace = databaseRef;
 
         changeImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +113,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
         final Runnable myRun = new Runnable() {
             @Override
             public void run() {
-                mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -121,7 +121,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                             String selectedMktPlaceID = selected.getMktPlaceID();
                             if (selectedMktPlaceID.equals(mktplaceID)) {
                                 String key = snapshot.getKey();
-                                mDatabaseRef.child(key).removeValue();
+                                databaseRef.child(key).removeValue();
                                 MktplaceCreatedFragment.setRefresh(true);
                                 finish();
                             }
@@ -170,7 +170,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
-            Glide.with(mImageView.getContext()).load(mImageUri).into(mImageView);
+            Glide.with(imageView.getContext()).load(mImageUri).into(imageView);
         }
     }
 
@@ -190,13 +190,13 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                     imageurl,
                     locationTv.getText().toString().trim(),
                     descTv.getText().toString().trim());
-            mDatabaseRef.child(mktplaceID).setValue(title);
+            databaseRef.child(mktplaceID).setValue(title);
             Toast.makeText(EditMarketPlaceActivity.this, "Successfully Changed", Toast.LENGTH_SHORT).show();
             MktplaceCreatedFragment.setRefresh(true);
             finish();
 
         } else if (factors) {
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+            StorageReference fileReference = storageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
             mUploadTask = fileReference.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -217,7 +217,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                                     downloadUrl.toString(),
                                     locationTv.getText().toString().trim(),
                                     descTv.getText().toString().trim());
-                            mDatabaseRef.child(mktplaceID).setValue(title);
+                            databaseRef.child(mktplaceID).setValue(title);
                             Toast.makeText(EditMarketPlaceActivity.this, "Successfully Changed",
                                 Toast.LENGTH_SHORT).show();
 
