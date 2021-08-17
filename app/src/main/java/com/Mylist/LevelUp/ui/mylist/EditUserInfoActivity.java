@@ -217,11 +217,11 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                     }
                 }
             }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
         AlertDialog alert = builder.create();
         alert.show();
     }

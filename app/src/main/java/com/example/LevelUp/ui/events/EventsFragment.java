@@ -174,6 +174,7 @@ public class EventsFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
             break;
+        default:
         }
         return super.onOptionsItemSelected(item);
     }

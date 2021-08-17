@@ -256,13 +256,10 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             }
         }
         holder1.setNumLikes(currentItem.getNumLikes());
-
-    }    
+    }
 
     @Override
     public int getItemCount() {
         return occasionList.size();
     }
-
-
 }

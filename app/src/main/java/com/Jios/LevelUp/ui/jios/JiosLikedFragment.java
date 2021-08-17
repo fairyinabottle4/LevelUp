@@ -31,8 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class JiosLikedFragment extends Fragment {
 
-    public static ArrayList<String> jioIds = new ArrayList<>();
-    public static ArrayList<Occasion> occasionJios = new ArrayList<>();
+    private static ArrayList<String> jioIds = new ArrayList<>();
+    private static ArrayList<Occasion> occasionJios = new ArrayList<>();
 
     private static boolean refreshList;
 

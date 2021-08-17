@@ -26,8 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MktplaceLikedFragment extends Fragment {
 
-    public static ArrayList<String> mktplaceIDs = new ArrayList<>();
-    public static ArrayList<MktplaceItem> mktplaceItems = new ArrayList<>();
+    private static ArrayList<String> mktplaceIDs = new ArrayList<>();
+    private static ArrayList<MktplaceItem> mktplaceItems = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;

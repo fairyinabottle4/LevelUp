@@ -124,8 +124,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
         public void setCreatorResidence(int creatorResidence) {
             this.creatorResidence = creatorResidence;
         }
-
-        public void setProfilePictureUri(String profilePictureUri) { 
+        public void setProfilePictureUri(String profilePictureUri) {
             this.profilePictureUri = profilePictureUri;
         }
 

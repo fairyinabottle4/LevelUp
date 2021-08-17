@@ -31,8 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class EventsLikedFragment extends Fragment {
 
-    public static ArrayList<String> eventIDs = new ArrayList<>();
-    public static ArrayList<Occasion> occasionEvents = new ArrayList<>();
+    private static ArrayList<String> eventIDs = new ArrayList<>();
+    private static ArrayList<Occasion> occasionEvents = new ArrayList<>();
 
     private static boolean refreshList;
     private RecyclerView recyclerView;

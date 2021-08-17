@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void registerName() {
-         name = editTextName.getText().toString().trim();
+        name = editTextName.getText().toString().trim();
 
         if (name.isEmpty()) {
             editTextName.setError("Please enter your name");

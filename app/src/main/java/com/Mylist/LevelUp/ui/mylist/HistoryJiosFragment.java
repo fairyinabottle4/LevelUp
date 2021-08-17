@@ -43,7 +43,7 @@ public class HistoryJiosFragment extends Fragment {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // pulling activityjio with my userID
 
@@ -54,7 +54,7 @@ public class HistoryJiosFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
+                    if (selectedUserID.equals(fbUidFinal)) {
                         mJioIDs.add(selected.getOccasionID());
                     }
                 }

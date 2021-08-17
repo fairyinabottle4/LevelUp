@@ -34,7 +34,7 @@ public class HistoryEventsFragment extends Fragment {
     private MylistAdapter mAdapter;
 
     private ArrayList<Occasion> mPastOccasions = new ArrayList<>();
-    ArrayList<String> mEventIDs = new ArrayList<>();
+    private ArrayList<String> mEventIDs = new ArrayList<>();
 
     @Nullable
     @Override
