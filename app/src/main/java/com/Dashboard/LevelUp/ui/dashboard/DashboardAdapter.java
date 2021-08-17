@@ -39,29 +39,25 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     private FragmentActivity mContext;
 
     public static class DashboardViewHolder extends RecyclerView.ViewHolder {
-        public String creatorUid;
-        public String creatorName;
-        public int creatorResidence;
-        public String profilePictureUri;
-        public String email;
-        public long phone;
-        public String telegram;
-        public String description;
+        private String creatorUid;
+        private String creatorName;
+        private int creatorResidence;
+        private String profilePictureUri;
+        private String email;
+        private long phone;
+        private String telegram;
+        private String description;
 
-        public String eventID;
-        public boolean isChecked;
-        public boolean isLiked;
-        public int numLikes;
+        private String eventID;
+        private boolean isChecked;
+        private boolean isLiked;
+        private int numLikes;
         
-        public ImageView mImageView;
-         public ToggleButton mAddButton;
-         public ToggleButton mLikeButton;
-        public TextView mTextView1;
-         public TextView mTextView2;
-        public TextView mTextView3;
-        public TextView mTextView4;
-        public TextView mTextView5;
-         public TextView mNumLikes;
+        private ImageView mImageView;
+        private TextView mTextView1;
+        private TextView mTextView3;
+        private TextView mTextView4;
+        private TextView mTextView5;
 
         public DashboardViewHolder (final Context context, View itemView) {
             super(itemView);
@@ -106,17 +102,29 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             this.creatorName = creatorName;
         }
 
-        public void setCreatorResidence(int creatorResidence) {this.creatorResidence = creatorResidence;}
+        public void setCreatorResidence(int creatorResidence) {
+            this.creatorResidence = creatorResidence;
+        }
 
-        public void setProfilePictureUri(String profilePictureUri) { this.profilePictureUri = profilePictureUri;}
+        public void setProfilePictureUri(String profilePictureUri) {
+            this.profilePictureUri = profilePictureUri;
+        }
 
-        public void setEmail(String email) {this.email = email;}
+        public void setEmail(String email) {
+            this.email = email;
+        }
 
-        public void setTelegram(String telegram) { this.telegram = telegram;}
+        public void setTelegram(String telegram) {
+            this.telegram = telegram;
+        }
 
-        public void setPhone(long phone) {this.phone = phone;}
+        public void setPhone(long phone) {
+            this.phone = phone;
+        }
 
-        public void setChecked(boolean toSet) {this.isChecked = toSet; }
+        public void setChecked(boolean toSet) {
+            this.isChecked = toSet;
+        }
 
         public void setEventID(String eventID) {
             this.eventID = eventID;

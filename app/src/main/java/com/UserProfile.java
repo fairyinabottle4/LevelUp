@@ -24,6 +24,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class UserProfile extends AppCompatActivity {
+
+    private static final String[] residentials = {"I don't stay on campus",
+        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+        "Select Residence"};
+
     private TextView displayName;
     private TextView residence;
     private ImageView displayPicture;
@@ -50,11 +57,6 @@ public class UserProfile extends AppCompatActivity {
     private float numOfRatings = 0;
     private float averageRatingGlobal;
 
-    private static final String[] residentials = {"I don't stay on campus",
-        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-        "Select Residence"};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +113,8 @@ public class UserProfile extends AppCompatActivity {
 
 
         //pulling the rating from the database
-        db.getReference().child("Users").child(creatorId).child("Ratings").addListenerForSingleValueEvent(new ValueEventListener() {
+        db.getReference().child("Users").child(creatorId).child("Ratings")
+            .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

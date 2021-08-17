@@ -40,9 +40,6 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     private String telegramHandle;
     private long phoneNumber;
     private int residence;
-    // private static FirebaseAuth mAuth;
-    // private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mReferenceUsers;
 
@@ -148,12 +145,6 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                 .child(currUserId)
                 .child("profilePictureUri")
                 .setValue(newUri);
-
-//        UserItem updatedUser = MainActivity.currUser;
-//        FirebaseDatabase.getInstance().getReference("Users")
-//                .child(MainActivity.currUser.getId())
-//                .setValue(updatedUser);
-
     }
 
     private void initializeSpinner() {
@@ -174,55 +165,55 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
-            case 0:
-                residence = 0; // I dont stay on campus
-                break;
-            case 1:
-                // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
-                residence = 1;
-                break;
-            case 2:
-                // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
-                residence = 2;
-                break;
-            case 3:
-                // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
-                residence = 3;
-                break;
-            case 4:
-                // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
-                residence = 4;
-                break;
-            case 5:
-                residence = 5; // RVRC
-                break;
-            case 6:
-                residence = 6; // Eusoff
-                break;
-            case 7:
-                residence = 7; // Kent Ridge
-                break;
-            case 8:
-                residence = 8; // KE7
-                break;
-            case 9:
-                residence = 9; // Raffles
-                break;
-            case 10:
-                residence = 10; // Sheares
-                break;
-            case 11:
-                residence = 11; // Temasek
-                break;
-            case 12:
-                residence = 12; // PGP House
-                break;
-            case 13:
-                residence = 13; // PGP Residences
-                break;
-            case 14:
-                residence = 14; // UTown Residence
-                break;
+        case 0:
+            residence = 0; // I dont stay on campus
+            break;
+        case 1:
+            // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
+            residence = 1;
+            break;
+        case 2:
+            // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
+            residence = 2;
+            break;
+        case 3:
+            // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
+            residence = 3;
+            break;
+        case 4:
+            // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
+            residence = 4;
+            break;
+        case 5:
+            residence = 5; // RVRC
+            break;
+        case 6:
+            residence = 6; // Eusoff
+            break;
+        case 7:
+            residence = 7; // Kent Ridge
+            break;
+        case 8:
+            residence = 8; // KE7
+            break;
+        case 9:
+            residence = 9; // Raffles
+            break;
+        case 10:
+            residence = 10; // Sheares
+            break;
+        case 11:
+            residence = 11; // Temasek
+            break;
+        case 12:
+            residence = 12; // PGP House
+            break;
+        case 13:
+            residence = 13; // PGP Residences
+            break;
+        case 14:
+            residence = 14; // UTown Residence
+            break;
 
         }
 
@@ -292,7 +283,4 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     public void onBackPressed() {
         Toast.makeText(this, "Please enter your details", Toast.LENGTH_SHORT).show();
     }
-
-
-
 }

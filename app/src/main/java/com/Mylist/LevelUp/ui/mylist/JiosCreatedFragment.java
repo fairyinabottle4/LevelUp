@@ -33,11 +33,12 @@ public class JiosCreatedFragment extends Fragment {
     private ArrayList<Occasion> mOccasionJios = new ArrayList<>();
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference mDatabaseReferenceJios = mFirebaseDatabase.getReference().child("Jios");
         mDatabaseReferenceJios.addValueEventListener(new ValueEventListener() {
             @Override
@@ -46,12 +47,12 @@ public class JiosCreatedFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     JiosItem selected = snapshot.getValue(JiosItem.class);
                     String creatorID = selected.getCreatorID();
-                    if (creatorID.equals(fbUIDFinal)) {
+                    if (creatorID.equals(fbUidFinal)) {
                         if (selected.getTimeInfo().length() > 4) {
                             continue;
                         }
 
-                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0,2));
+                        int hour = Integer.parseInt(selected.getTimeInfo().substring(0, 2));
                         int min = Integer.parseInt(selected.getTimeInfo().substring(2));
 
                         Date eventDateZero = selected.getDateInfo();

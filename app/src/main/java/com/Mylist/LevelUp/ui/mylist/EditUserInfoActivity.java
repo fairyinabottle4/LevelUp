@@ -60,10 +60,10 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
 
     private Spinner spinner;
     private static final String[] residentials = {"I don't stay on campus",
-            "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
-            "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
-            "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
-            "Select Residence"};
+        "Cinnamon", "Tembusu", "CAPT", "RC4", "RVRC",
+        "Eusoff", "Kent Ridge", "King Edward VII", "Raffles",
+        "Sheares", "Temasek", "PGP House", "PGP Residences", "UTown Residence",
+        "Select Residence"};
 
     private boolean deleteProfilePicture = false;
     private boolean changes = false;
@@ -81,8 +81,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         phone = MainActivity.display_phone;
 
 
-        final String fbUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUID);
+        final String fbUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference("profile picture uploads").child(fbUid);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
@@ -266,55 +266,55 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
-            case 0:
-                finalResidence = 0;
-                break;
-            case 1:
-                // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
-                finalResidence = 1;
-                break;
-            case 2:
-                // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
-                finalResidence = 2;
-                break;
-            case 3:
-                // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
-                finalResidence = 3;
-                break;
-            case 4:
-                // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
-                finalResidence = 4;
-                break;
-            case 5:
-                finalResidence = 5;
-                break;
-            case 6:
-                finalResidence = 6;
-                break;
-            case 7:
-                finalResidence = 7;
-                break;
-            case 8:
-                finalResidence = 8;
-                break;
-            case 9:
-                finalResidence = 9;
-                break;
-            case 10:
-                finalResidence = 10;
-                break;
-            case 11:
-                finalResidence = 11;
-                break;
-            case 12:
-                finalResidence = 12;
-                break;
-            case 13:
-                finalResidence = 13;
-                break;
-            case 14:
-                finalResidence = 14;
-                break;
+        case 0:
+            finalResidence = 0;
+            break;
+        case 1:
+            // Toast.makeText(this, "Cinnamon", Toast.LENGTH_SHORT).show();
+            finalResidence = 1;
+            break;
+        case 2:
+            // Toast.makeText(this, "Tembusu", Toast.LENGTH_SHORT).show();
+            finalResidence = 2;
+            break;
+        case 3:
+            // Toast.makeText(this, "CAPT", Toast.LENGTH_SHORT).show();
+            finalResidence = 3;
+            break;
+        case 4:
+            // Toast.makeText(this, "RC4", Toast.LENGTH_SHORT).show();
+            finalResidence = 4;
+            break;
+        case 5:
+            finalResidence = 5;
+            break;
+        case 6:
+            finalResidence = 6;
+            break;
+        case 7:
+            finalResidence = 7;
+            break;
+        case 8:
+            finalResidence = 8;
+            break;
+        case 9:
+            finalResidence = 9;
+            break;
+        case 10:
+            finalResidence = 10;
+            break;
+        case 11:
+            finalResidence = 11;
+            break;
+        case 12:
+            finalResidence = 12;
+            break;
+        case 13:
+            finalResidence = 13;
+            break;
+        case 14:
+            finalResidence = 14;
+            break;
         }
 
     }

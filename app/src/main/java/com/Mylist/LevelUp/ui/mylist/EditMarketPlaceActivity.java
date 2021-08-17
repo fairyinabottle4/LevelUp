@@ -105,33 +105,6 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadFile();
-//                mDatabaseReferenceMktplace.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            MktplaceItem selected = snapshot.getValue(MktplaceItem.class);
-//                            String selectedMktPlaceID = selected.getMktPlaceID();
-//                            if (selectedMktPlaceID.equals(mktplaceID)) {
-//                                updatedLocationInfo = locationTextView.getText().toString().trim();
-//                                updatedTitle = titleTextView.getText().toString().trim();
-//                                updatedDescription = descriptionTextView.getText().toString().trim();
-//                                // image set ltr
-//                                MktplaceItem updatedItem = new MktplaceItem(mktplaceID, creatorUID,
-//                                        updatedTitle, imageurl, updatedLocationInfo, updatedDescription);
-//                                mDatabaseReferenceMktplace.child(mktplaceID).setValue(updatedItem);
-//                                Toast.makeText(EditMarketPlaceActivity.this, "Successfully Changed", Toast.LENGTH_SHORT).show();
-//                                MktplaceCreatedFragment.setRefresh(true);
-//                                finish();
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-
             }
         });
 
@@ -238,15 +211,14 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
-                            MktplaceItem title = new MktplaceItem(0, mktplaceID, creatorUID, titleTv.getText().toString().trim(),
+                            MktplaceItem title = new MktplaceItem(0, mktplaceID, creatorUID,
+                                titleTv.getText().toString().trim(),
                                     downloadUrl.toString(),
                                     locationTv.getText().toString().trim(),
                                     descTv.getText().toString().trim());
-                            // String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(mktplaceID).setValue(title);
-                            Toast.makeText(EditMarketPlaceActivity.this, "Successfully Changed", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(MktplaceAdder.this, MainActivity.class);
-//                            startActivity(intent);
+                            Toast.makeText(EditMarketPlaceActivity.this, "Successfully Changed",
+                                Toast.LENGTH_SHORT).show();
 
                             MktplaceCreatedFragment.setRefresh(true);
                             finish();

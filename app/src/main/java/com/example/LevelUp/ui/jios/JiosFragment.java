@@ -44,9 +44,10 @@ public class JiosFragment extends Fragment {
 
     private static ArrayList<JiosItem> JiosItemList;
     private static ArrayList<JiosItem> copy;
+    private static final String[] categories = {"All",
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     private FloatingActionButton floatingActionButton;
-
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
@@ -56,8 +57,6 @@ public class JiosFragment extends Fragment {
     private View rootView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private static final String[] categories = {"All",
-            "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     @Nullable
     @Override
@@ -173,6 +172,7 @@ public class JiosFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
             break;
+        default:
         }
         return super.onOptionsItemSelected(item);
     }

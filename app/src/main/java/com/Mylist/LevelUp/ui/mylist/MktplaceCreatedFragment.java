@@ -29,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MktplaceCreatedFragment extends Fragment implements MktplaceCreatedAdapter.OnItemClickListener {
+    public static boolean refresh;
+
     private static ArrayList<MktplaceItem> mktplaceItemList;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -38,14 +40,14 @@ public class MktplaceCreatedFragment extends Fragment implements MktplaceCreated
     private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseReference mDatabaseRef;
     private MktplaceCreatedAdapter.OnItemClickListener mListener = this;
-    TextView nothingView;
+    private TextView nothingView;
 
-    public static boolean refresh;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.mktplace_plain, container, false);
-         nothingView = rootView.findViewById(R.id.nothing);
+        nothingView = rootView.findViewById(R.id.nothing);
 
         createMktplaceList();
 

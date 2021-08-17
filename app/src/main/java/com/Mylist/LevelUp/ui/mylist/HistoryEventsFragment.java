@@ -43,7 +43,7 @@ public class HistoryEventsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.occ_mylist_fragment_plain, container, false);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // pulling activityevent with my userID
         DatabaseReference mDatabaseReferenceActivityEvent = mFirebaseDatabase.getReference().child("ActivityEvent");
@@ -53,7 +53,7 @@ public class HistoryEventsFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                     String selectedUserID = selected.getUserID();
-                    if (selectedUserID.equals(fbUIDFinal)) {
+                    if (selectedUserID.equals(fbUidFinal)) {
                         // it is my event so I add EventID into arraylist
                         mEventIDs.add(selected.getOccasionID());
 
