@@ -40,7 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class JiosFragment extends Fragment {
-    public static boolean refresh;
+    private static boolean refresh;
 
     private static ArrayList<JiosItem> JiosItemList;
     private static ArrayList<JiosItem> copy;

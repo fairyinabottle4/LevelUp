@@ -30,8 +30,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class JiosMyListFragment extends Fragment {
-    public static ArrayList<String> jioIdList = new ArrayList<>();
-    public static ArrayList<Occasion> occasionJioList = new ArrayList<>();
+    private static ArrayList<String> jioIdList = new ArrayList<>();
+    private static ArrayList<Occasion> occasionJioList = new ArrayList<>();
 
     private static boolean refreshList;
 

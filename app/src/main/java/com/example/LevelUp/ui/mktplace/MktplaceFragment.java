@@ -36,7 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MktplaceFragment extends Fragment {
-    public static boolean refresh;
+    private static boolean refresh;
 
     private static ArrayList<MktplaceItem> mktPlaceItemList;
     private RecyclerView recyclerView;

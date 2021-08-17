@@ -35,7 +35,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditUserInfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    public static Uri profileImageUri;
+    private static Uri profileImageUri;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String[] residentials = {"I don't stay on campus",
@@ -88,8 +88,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Users");
 
         // For Displaying Name and Residence
-        TextView display_name = findViewById(R.id.editTextDisplayName);
-        display_name.setText(name);
+        TextView displayName = findViewById(R.id.editTextDisplayName);
+        displayName.setText(name);
 
         initializeSpinner();
 
@@ -311,6 +311,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         case 14:
             finalResidence = 14;
             break;
+        default:
         }
 
     }
@@ -380,54 +381,54 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
      * @param x The number representing each residence
      */
     public String intToRes(int x) {
-        String residence_name = "";
+        String residentName = "";
         if (x == 0) {
-            residence_name = "Off Campus";
+            residentName = "Off Campus";
         }
         if (x == 1) {
-            residence_name = "Cinnamon";
+            residentName = "Cinnamon";
         }
         if (x == 2) {
-            residence_name = "Tembusu";
+            residentName = "Tembusu";
         }
         if (x == 3) {
-            residence_name = "CAPT";
+            residentName = "CAPT";
         }
         if (x == 4) {
-            residence_name = "RC4";
+            residentName = "RC4";
         }
         if (x == 5) {
-            residence_name = "RVRC";
+            residentName = "RVRC";
         }
         if (x == 6) {
-            residence_name = "Eusoff";
+            residentName = "Eusoff";
         }
         if (x == 7) {
-            residence_name = "Kent Ridge";
+            residentName = "Kent Ridge";
         }
         if (x == 8) {
-            residence_name = "King Edward VII";
+            residentName = "King Edward VII";
         }
         if (x == 9) {
-            residence_name = "Raffles";
+            residentName = "Raffles";
         }
         if (x == 10) {
-            residence_name = "Sheares";
+            residentName = "Sheares";
         }
         if (x == 11) {
-            residence_name = "Temasek";
+            residentName = "Temasek";
         }
         if (x == 12) {
-            residence_name = "PGP House";
+            residentName = "PGP House";
         }
         if (x == 13) {
-            residence_name = "PGP Residences";
+            residentName = "PGP Residences";
         }
         if (x == 14) {
-            residence_name = "UTown Residence";
+            residentName = "UTown Residence";
         }
 
-        return residence_name;
+        return residentName;
     }
 
     /**

@@ -40,7 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class EventsFragment extends Fragment {
-    public static boolean refresh;
+    private static boolean refresh;
     private static final String[] categories = {"All",
         "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private static ArrayList<EventsItem> EventsItemList;

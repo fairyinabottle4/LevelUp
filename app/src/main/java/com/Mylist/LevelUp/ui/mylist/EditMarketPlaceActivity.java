@@ -46,7 +46,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
     private String updatedDescription;
 
     private String mktplaceID;
-    private String creatorUID;
+    private String creatorUid;
     private String imageurl;
 
     private ImageView mImageView;
@@ -71,7 +71,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
         final String title = intent.getStringExtra("title");
         final String location = intent.getStringExtra("location");
         final String description = intent.getStringExtra("description");
-        creatorUID = intent.getStringExtra("creatorUID");
+        creatorUid = intent.getStringExtra("creatorUID");
 
         final TextView titleTextView = findViewById(R.id.listing_title);
         titleTv = titleTextView;
@@ -186,7 +186,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                 && !titleTv.getText().toString().equals(""); // && !listingDescription.getText().toString().equals("");
 
         if (mImageUri == null && factors) {
-            MktplaceItem title = new MktplaceItem(0, mktplaceID, creatorUID, titleTv.getText().toString().trim(),
+            MktplaceItem title = new MktplaceItem(0, mktplaceID, creatorUid, titleTv.getText().toString().trim(),
                     imageurl,
                     locationTv.getText().toString().trim(),
                     descTv.getText().toString().trim());
@@ -212,7 +212,7 @@ public class EditMarketPlaceActivity extends AppCompatActivity {
                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
-                            MktplaceItem title = new MktplaceItem(0, mktplaceID, creatorUID,
+                            MktplaceItem title = new MktplaceItem(0, mktplaceID, creatorUid,
                                 titleTv.getText().toString().trim(),
                                     downloadUrl.toString(),
                                     locationTv.getText().toString().trim(),

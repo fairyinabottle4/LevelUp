@@ -34,7 +34,7 @@ public class HistoryJiosFragment extends Fragment {
     private MylistAdapter mAdapter;
 
     private ArrayList<Occasion> mPastOccasions = new ArrayList<>();
-    ArrayList<String> mJioIDs = new ArrayList<>();
+    private ArrayList<String> mJioIDs = new ArrayList<>();
 
     @Nullable
     @Override

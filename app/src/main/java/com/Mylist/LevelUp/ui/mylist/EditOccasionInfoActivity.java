@@ -40,6 +40,8 @@ import androidx.fragment.app.DialogFragment;
 
 public class EditOccasionInfoActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener,
         DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
+    private static final String[] categories = {
+        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
     private ImageButton editDateBtn;
     private ImageButton editTimeBtn;
     private Button saveBtn;
@@ -60,8 +62,6 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
     private int updatedCategory;
 
     private int category;
-    private static final String[] categories = {
-        "Arts", "Sports", "Talks", "Volunteering", "Food", "Others"};
 
     private boolean validDate;
 
@@ -224,7 +224,7 @@ public class EditOccasionInfoActivity extends AppCompatActivity implements TimeP
                                     updatedJiosItem = new JiosItem(selected.getNumLikes(), occID, creatorID,
                                             df.parse(dateTextView.getText().toString().trim()),
                                             updatedTimeInfo, updatedHourOfDay, updatedMinute,
-                                            updatedLocationInfo, updatedTitle, updatedDescription,updatedCategory);
+                                            updatedLocationInfo, updatedTitle, updatedDescription, updatedCategory);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();

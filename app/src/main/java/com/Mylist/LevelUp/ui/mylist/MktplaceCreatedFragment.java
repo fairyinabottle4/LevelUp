@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MktplaceCreatedFragment extends Fragment implements MktplaceCreatedAdapter.OnItemClickListener {
-    public static boolean refresh;
+    private static boolean refresh;
 
     private static ArrayList<MktplaceItem> mktplaceItemList;
     private RecyclerView mRecyclerView;
