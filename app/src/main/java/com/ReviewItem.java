@@ -27,7 +27,7 @@ public class ReviewItem {
     }
 
     public String getUserID() {
-        return  userID;
+        return userID;
     }
     public String getReviewerdisplayName() {
         return reviewerdisplayName;

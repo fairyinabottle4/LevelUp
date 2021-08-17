@@ -284,7 +284,8 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-                                if (mktplaceID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
+                                if (mktplaceID.equals(selected.getOccasionID())
+                                    && userID.equals(selected.getUserID())) {
                                     String key = snapshot.getKey();
                                     likeMktplaceRef.child(key).removeValue();
                                     Toast.makeText(mktplaceContext, "Unliked", Toast.LENGTH_SHORT).show();

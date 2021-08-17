@@ -61,21 +61,15 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
         public TextView mTextView3;
         public TextView mTextView4;
         public TextView mTextView5;
-        // public TextView mTextView6;
          public TextView mNumLikes;
 
         public DashboardViewHolder (final Context context, View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.category_imageView);
-            // mAddButton = itemView.findViewById(R.id.image_add);
-            // mLikeButton = itemView.findViewById(R.id.image_like);
             mTextView1 = itemView.findViewById(R.id.title);
-//            mTextView2 = itemView.findViewById(R.id.event_description);
             mTextView3 = itemView.findViewById(R.id.date);
             mTextView4 = itemView.findViewById(R.id.location);
             mTextView5 = itemView.findViewById(R.id.time);
-            // mTextView6 = itemView.findViewById(R.id.eventCreator);
-            // mNumLikes = itemView.findViewById(R.id.numlikes_textview);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,20 +179,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             holder1.mImageView.setImageResource(R.drawable.others);
         }
 
-
-//        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorUID);
-//        mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                Picasso.get().load(uri).into(holder1.mImageView);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                holder1.mImageView.setImageResource(R.drawable.fake_user_dp);
-//            }
-//        });
-
         holder1.mTextView1.setText(currentItem.getTitle());
         holder1.description = currentItem.getDescription();
         holder1.mTextView4.setText(currentItem.getLocationInfo());
@@ -208,8 +188,6 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
 
         String time = currentItem.getTimeInfo();
         holder1.mTextView5.setText(time);
-
-//        holder1.mNumLikes.setText(Integer.toString(currentItem.getNumLikes()));
 
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -262,157 +240,8 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             }
         }
 
-//        holder1.setEventID(eventID);
-//        if (MainActivity.mEventIDs.contains(eventID)) {
-//            holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-//            holder1.setChecked(true);
-//            holder1.mAddButton.setChecked(true);
-//        } else {
-//            holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-//            holder1.setChecked(false);
-//            holder1.mAddButton.setChecked(false);
-//        }
-
-//        holder1.mAddButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    // change to tick
-////                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
-//                    holder1.setChecked(true);
-//
-//                    Occasion ei = occasionList.get(position);
-//
-////                int index = DashboardFragment.getDashboardItemListCopy().indexOf(ei);
-////                MylistFragment.setNumberDashboard(index);
-//
-//                    // add to ActivityEvent firebase
-//                    UserItem user = MainActivity.currUser;
-//                    String eventID = ei.getOccasionID();
-//                    String userID = user.getId();
-//                    DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
-//                    ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(eventID, userID);
-//                    mActivityEventRef.push().setValue(activityOccasionItem);
-//
-//
-//                    Toast.makeText(mContext, "Event added to your list!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    // change back to plus
-////                    holder1.mAddButton.setBackgroundResource(R.drawable.ic_add_black_24dp);
-//                    holder1.setChecked(false);
-//
-//                    // delete the entry from activity DB
-//                    Occasion ei = occasionList.get(position);
-//                    UserItem user = MainActivity.currUser;
-//                    final String eventID = ei.getOccasionID();
-//                    final String userID = user.getId();
-//                    final DatabaseReference mActivityEventRef = mFirebaseDatabase.getReference("ActivityEvent");
-//                    mActivityEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
-//                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
-//                                    String key = snapshot.getKey();
-//                                    mActivityEventRef.child(key).removeValue();
-//                                    Toast.makeText(mContext, "Event removed from your list", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//
-//                    MainActivity.mEventIDs.remove(eventID);
-//                }
-//            }
-//        });
-//
-//        if (MainActivity.mLikeEventIDs.contains(eventID)) {
-//            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-//            holder1.setLiked(true);
-//            holder1.mLikeButton.setChecked(true);
-//        } else {
-//            holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-//            holder1.setLiked(false);
-//            holder1.mLikeButton.setChecked(false);
-//        }
-
         holder1.setNumLikes(currentItem.getNumLikes());
 
-//        holder1.mLikeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
-//                    holder1.setLiked(true);
-//
-//                    // send to LikeDatabase
-//                    Occasion ei = occasionList.get(position);
-//                    UserItem user = MainActivity.currUser;
-//                    final String eventID = ei.getOccasionID();
-//                    final String userID = user.getId();
-//                    DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
-//                    LikeOccasionItem likeOccasionItem = new LikeOccasionItem(eventID, userID);
-//                    mLikeEventRef.push().setValue(likeOccasionItem);
-//
-//                    // +1 to the Likes on the eventItem
-//                    int currLikes = ei.getNumLikes();
-//                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Dashboard");
-//                    mEventRef.child(eventID).child("numLikes").setValue(currLikes + 1);
-//                    ei.setNumLikes(currLikes + 1);
-//                    holder1.setNumLikes(currLikes + 1);
-//
-//                    // for display only
-//                    holder1.mNumLikes.setText(Integer.toString(currLikes + 1));
-//
-//                } else {
-//                    holder1.mLikeButton.setBackgroundResource(R.drawable.ic_favorite_black_24dp);
-//                    holder1.setLiked(false);
-//
-//                    // Delete the entry from LikeDatabse
-//                    Occasion ei = occasionList.get(position);
-//                    UserItem user = MainActivity.currUser;
-//                    final String eventID = ei.getOccasionID();
-//                    final String userID = user.getId();
-//                    final DatabaseReference mLikeEventRef = mFirebaseDatabase.getReference("LikeEvent");
-//                    mLikeEventRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
-//                                if (eventID.equals(selected.getOccasionID()) && userID.equals(selected.getUserID())) {
-//                                    String key = snapshot.getKey();
-//                                    mLikeEventRef.child(key).removeValue();
-//                                    Toast.makeText(mContext, "Unliked", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//
-//                    // -1 to the Likes on the eventItem
-//                    int currLikes = ei.getNumLikes();
-//                    DatabaseReference mEventRef = mFirebaseDatabase.getReference("Dashboard");
-//                    mEventRef.child(eventID).child("numLikes").setValue(currLikes - 1);
-//                    ei.setNumLikes(currLikes - 1);
-//                    holder1.setNumLikes(currLikes -1);
-//
-//                    // for display only
-//                    holder1.mNumLikes.setText(Integer.toString(currLikes - 1));
-//
-//                    MainActivity.mLikeEventIDs.remove(eventID);
-//                }
-//
-//            }
-//        });
 
 
     }    

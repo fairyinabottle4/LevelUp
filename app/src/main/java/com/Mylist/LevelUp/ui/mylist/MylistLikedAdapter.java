@@ -2,7 +2,6 @@ package com.Mylist.LevelUp.ui.mylist;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import com.ActivityOccasionItem;

@@ -1,7 +1,5 @@
 package com;
 
-import com.google.firebase.auth.FirebaseUser;
-
 public class UserItem {
     private String id;
     private String profilePictureUri;

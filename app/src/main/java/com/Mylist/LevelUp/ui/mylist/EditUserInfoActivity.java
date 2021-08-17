@@ -158,7 +158,8 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
                 // Open Gallery
-                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent openGalleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 openGalleryIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(openGalleryIntent, PICK_IMAGE_REQUEST);
             }
@@ -351,18 +352,6 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             changes = true;
         }
     }
-
-//    private void updateEmailAddress() {
-//        String inputAddress = editEmailAddress.getText().toString().trim();
-//        if (!inputAddress.equals(email)) {
-//            MainActivity.display_email = inputAddress;
-//            mDatabaseRef
-//                    .child(MainActivity.currUser.getId())
-//                    .child("email")
-//                    .setValue(inputAddress);
-//            changes = true;
-//        }
-//    }
 
     private void updatePhoneNumber() {
         String inputNumberString = editPhoneNumber.getText().toString().trim();
