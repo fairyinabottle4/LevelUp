@@ -407,7 +407,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
             }
         });
 
-        if (MainActivity.getLikeEventIDs().contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
+        if (MainActivity.getLikeEventIDs().contains(occID) || MainActivity.getLikeJioIDs().contains(occID)) {
             likedHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             likedHolder.setLiked(true);
             likedHolder.likeButton.setChecked(true);
@@ -487,7 +487,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                         jioRef.child(occID).child("numLikes").setValue(currLikes - 1);
                         likedHolder.setNumLikes(currLikes - 1);
 
-                        MainActivity.mLikeJioIDs.remove(occID);
+                        MainActivity.getLikeJioIDs().remove(occID);
 
                     } else {
                         // delete item from LikeEvent

@@ -265,7 +265,7 @@ public class JiosPage extends AppCompatActivity {
                     numLikesArrLi.set(0, currLikes - 1);
                     numLikesView.setText(Integer.toString(currLikes - 1)); // for display only
 
-                    MainActivity.mLikeJioIDs.remove(jioID);
+                    MainActivity.getLikeJioIDs().remove(jioID);
                 }
             }
         });

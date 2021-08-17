@@ -411,7 +411,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
             }
         });
 
-        if (MainActivity.getLikeEventIDs().contains(occID) || MainActivity.mLikeJioIDs.contains(occID)) {
+        if (MainActivity.getLikeEventIDs().contains(occID) || MainActivity.getLikeJioIDs().contains(occID)) {
             viewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             viewHolder.setLiked(true);
             viewHolder.likeButton.setChecked(true);
@@ -487,7 +487,7 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                         jioRef.child(occID).child("numLikes").setValue(currLikes - 1);
                         viewHolder.setNumLikes(currLikes - 1);
 
-                        MainActivity.mLikeJioIDs.remove(occID);
+                        MainActivity.getLikeJioIDs().remove(occID);
                     } else {
                         // delete item from LikeEvent
                         final DatabaseReference mLikeEventRef = firebaseDatabase.getReference("LikeEvent");

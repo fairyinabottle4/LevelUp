@@ -227,7 +227,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
         holder.setNumLikes(uploadCurrent.getNumLikes());
         String mktplaceID = uploadCurrent.getMktPlaceID();
 
-        if (MainActivity.mLikeMktplaceIDs.contains(mktplaceID)) {
+        if (MainActivity.getLikeMktplaceIDs().contains(mktplaceID)) {
             holder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             holder.setLiked(true);
             holder.likeButton.setChecked(true);
@@ -303,7 +303,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
                     // for display only
                     holder.numLikesView.setText(Integer.toString(currLikes - 1));
 
-                    MainActivity.mLikeMktplaceIDs.remove(mktplaceID);
+                    MainActivity.getLikeMktplaceIDs().remove(mktplaceID);
 
                     mktplaceLikedList.remove(position);
                     notifyItemRemoved(position);

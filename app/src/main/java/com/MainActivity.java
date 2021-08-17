@@ -65,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
 
-    public static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
-    public static final ArrayList<String > mLikeMktplaceIDs = new ArrayList<>();
+    private static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
+
+    public static final ArrayList<String> mLikeMktplaceIDs = new ArrayList<>();
 
 
     private static final int RC_SIGN_IN = 1;
@@ -442,6 +443,12 @@ public class MainActivity extends AppCompatActivity {
     }
     public static ArrayList<String> getLikeEventIDs() {
         return mLikeEventIDs;
+    }
+    public static ArrayList<String> getLikeJioIDs() {
+        return mLikeJioIDs;
+    }
+    public static ArrayList<String> getLikeMktplaceIDs() {
+        return mLikeMktplaceIDs;
     }
 
 }

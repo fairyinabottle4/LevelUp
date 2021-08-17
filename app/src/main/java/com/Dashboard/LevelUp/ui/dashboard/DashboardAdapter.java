@@ -244,7 +244,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             if (MainActivity.getJioIds().contains(currentItem.getOccasionID())) {
                 holder1.setChecked(true);
             }
-            if (MainActivity.mLikeJioIDs.contains(currentItem.getOccasionID())) {
+            if (MainActivity.getLikeJioIDs().contains(currentItem.getOccasionID())) {
                 holder1.setLiked(true);
             }
         } else {

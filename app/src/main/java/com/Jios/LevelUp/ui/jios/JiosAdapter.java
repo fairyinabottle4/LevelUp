@@ -382,7 +382,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
             }
         });
 
-        if (MainActivity.mLikeJioIDs.contains(jioID)) {
+        if (MainActivity.getLikeJioIDs().contains(jioID)) {
             jiosViewHolder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             jiosViewHolder.setLiked(true);
             jiosViewHolder.likeButton.setChecked(true);
@@ -458,7 +458,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     // for display only
                     jiosViewHolder.numLikesView.setText(Integer.toString(currLikes - 1));
 
-                    MainActivity.mLikeJioIDs.remove(jioID);
+                    MainActivity.getLikeJioIDs().remove(jioID);
                 }
             }
         });

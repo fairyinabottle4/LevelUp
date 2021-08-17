@@ -178,7 +178,7 @@ public class MktplacePage extends AppCompatActivity {
                     numLikesArrLi.set(0, currLikes - 1);
                     numLikesView.setText(Integer.toString(currLikes - 1)); // for display only
 
-                    MainActivity.mLikeMktplaceIDs.remove(mktplaceID);
+                    MainActivity.getLikeMktplaceIDs().remove(mktplaceID);
                 }
             }
         });

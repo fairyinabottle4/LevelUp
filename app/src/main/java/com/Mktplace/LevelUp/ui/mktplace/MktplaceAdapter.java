@@ -187,7 +187,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         MktplaceItem uploadCurrent = mktplaceList.get(position);
         String imageUrl = uploadCurrent.getImageUrl();
         holder.titleView.setText(uploadCurrent.getName());
-        holder.setLiked(MainActivity.mLikeMktplaceIDs.contains(uploadCurrent.getMktPlaceID()));
+        holder.setLiked(MainActivity.getLikeMktplaceIDs().contains(uploadCurrent.getMktPlaceID()));
         holder.description = uploadCurrent.getDescription();
         holder.location = uploadCurrent.getLocation();
         holder.imageUrl = uploadCurrent.getImageUrl();
@@ -233,7 +233,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
         holder.numLikesView.setText(Integer.toString(uploadCurrent.getNumLikes()));
         holder.setNumLikes(uploadCurrent.getNumLikes());
         String mktplaceID = uploadCurrent.getMktPlaceID();
-        if (MainActivity.mLikeMktplaceIDs.contains(mktplaceID)) {
+        if (MainActivity.getLikeMktplaceIDs().contains(mktplaceID)) {
             holder.likeButton.setBackgroundResource(R.drawable.ic_favorite_red_24dp);
             holder.setLiked(true);
             holder.likeButton.setChecked(true);
@@ -309,7 +309,7 @@ public class MktplaceAdapter extends RecyclerView.Adapter<MktplaceAdapter.Mktpla
                     // for display only
                     holder.numLikesView.setText(Integer.toString(currLikes - 1));
 
-                    MainActivity.mLikeMktplaceIDs.remove(mktplaceID);
+                    MainActivity.getLikeMktplaceIDs().remove(mktplaceID);
 
                 }
             }
