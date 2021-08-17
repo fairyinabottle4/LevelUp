@@ -46,8 +46,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     private String telegramHandle;
     private long phoneNumber;
     private int residence;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mReferenceUsers;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference referenceUsers;
 
     private ImageButton setDP;
     private Uri profileImageUri;
@@ -138,7 +138,6 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        // MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
         MainActivity.setCurrUserProfilePicture(profileImageUri.toString());
         // send update to database
         String newUri = profileImageUri.toString();
@@ -227,8 +226,8 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void initializeFirebase() {
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mReferenceUsers = mFirebaseDatabase.getReference("Users");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        referenceUsers = firebaseDatabase.getReference("Users");
     }
 
     private void registerName() {
@@ -273,7 +272,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             imageUri = profileImageUri.toString();
         }
         UserItem userItem = new UserItem(userID, imageUri, name, email, residence, telegramHandle, phoneNumber, false);
-        mReferenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+        referenceUsers.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .setValue(userItem);
     }
 

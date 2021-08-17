@@ -47,7 +47,7 @@ public class UserProfile extends AppCompatActivity {
     private RatingBar ratingBar;
     private Button reviewButton;
 
-    private StorageReference mProfileStorageRef;
+    private StorageReference profileStorageRef;
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private String currUserId = MainActivity.getCurrentUser().getId();
@@ -62,7 +62,7 @@ public class UserProfile extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
-        mProfileStorageRef = FirebaseStorage.getInstance()
+        profileStorageRef = FirebaseStorage.getInstance()
                 .getReference("profile picture uploads");
         displayName = findViewById(R.id.TextViewDisplayName);
         residence = findViewById(R.id.TextViewResidenceName);
@@ -98,7 +98,7 @@ public class UserProfile extends AppCompatActivity {
         telegramHandle.setText(telegram);
         emailAddress.setText(email);
         phoneNumber.setText(phone.toString());
-        StorageReference mProfileStorageRefIndiv = mProfileStorageRef.child(creatorId);
+        StorageReference mProfileStorageRefIndiv = profileStorageRef.child(creatorId);
         mProfileStorageRefIndiv.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
