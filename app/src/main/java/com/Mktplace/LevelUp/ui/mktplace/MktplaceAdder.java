@@ -130,7 +130,7 @@ public class MktplaceAdder extends AppCompatActivity {
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
                             String key = databaseRef.push().getKey();
-                            String creatorUid = MainActivity.currUser.getId();
+                            String creatorUid = MainActivity.getCurrUser().getId();
                             MktplaceItem title = new MktplaceItem(0, key, creatorUid,
                                 listingTitle.getText().toString().trim(),
                                     downloadUrl.toString(),

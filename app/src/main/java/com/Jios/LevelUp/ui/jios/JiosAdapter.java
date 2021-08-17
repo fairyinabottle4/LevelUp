@@ -339,7 +339,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
                     //MylistFragment.setNumberEvents(index);
 
                     // add to ActivityEvent firebase
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     String eventID = jiosItem.getJioID();
                     String userID = user.getId();
                     DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");
@@ -354,7 +354,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                     // delete the entry from activity DB
                     JiosItem jiosItem = jiosList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String jioID = jiosItem.getJioID();
                     final String userID = user.getId();
                     final DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");
@@ -403,7 +403,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                     // send to LikeDatabase
                     JiosItem jiosItem = jiosList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String eventID = jiosItem.getJioID();
                     final String userID = user.getId();
                     DatabaseReference likeJioRef = firebaseDatabase.getReference("LikeJio");
@@ -425,7 +425,7 @@ public class JiosAdapter extends RecyclerView.Adapter<JiosAdapter.JiosViewHolder
 
                     // Delete the entry from LikeDatabse
                     JiosItem jiosItem = jiosList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String eventID = jiosItem.getJioID();
                     final String userID = user.getId();
                     final DatabaseReference likeJioRef = firebaseDatabase.getReference("LikeJio");

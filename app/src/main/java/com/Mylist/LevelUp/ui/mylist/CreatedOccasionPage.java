@@ -137,7 +137,7 @@ public class CreatedOccasionPage extends AppCompatActivity {
         // Toast.makeText(this, occID, Toast.LENGTH_SHORT).show();
         final String creatorID = intent.getStringExtra("uid");
         position = intent.getIntExtra("position", 0);
-        final String userID = MainActivity.currUser.getId();
+        final String userID = MainActivity.getCurrUser().getId();
         final boolean isJio = intent.getBooleanExtra("isJio", true);
 
         StorageReference profileStorageRefIndiv = profileStorageRef.child(uid);

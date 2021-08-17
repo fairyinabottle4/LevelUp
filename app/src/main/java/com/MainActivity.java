@@ -13,6 +13,7 @@ import com.example.LevelUp.ui.mktplace.MktplaceFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +34,7 @@ import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity {
     // For Login
-    public static UserItem currUser;
+    private static UserItem currUser;
     public static FirebaseAuth mAuth;
     // For User Information on MyList Fragment
     private static String displayName;
@@ -425,5 +426,12 @@ public class MainActivity extends AppCompatActivity {
         displayPhone = display;
     }
 
+    public static UserItem getCurrUser() {
+        return currUser;
+    }
+
+    public static void setCurrUser(UserItem user) {
+        currUser = user;
+    }
 
 }

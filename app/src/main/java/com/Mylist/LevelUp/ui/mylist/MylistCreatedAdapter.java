@@ -225,7 +225,7 @@ public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdap
     @Override
     public void onBindViewHolder(@NonNull MylistCreatedAdapter.MylistCreatedViewHolder holder, final int position) {
         final Occasion currentItem = mylistList.get(position);
-        UserItem user = MainActivity.currUser;
+        UserItem user = MainActivity.getCurrUser();
         final String userID = user.getId();
         final String occID = currentItem.getOccasionID();
         final DatabaseReference activityJioRef = firebaseDatabase.getReference("ActivityJio");

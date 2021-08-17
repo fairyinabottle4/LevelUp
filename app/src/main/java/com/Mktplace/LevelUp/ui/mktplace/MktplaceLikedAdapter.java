@@ -246,7 +246,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
 
                     // send to LikeDatabase
                     MktplaceItem item = mktplaceLikedList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String mktplaceID = item.getMktPlaceID();
                     final String userID = user.getId();
                     DatabaseReference likeMktplaceRef = firebaseDatabase.getReference("LikeMktplace");
@@ -269,7 +269,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
 
                     // Delete the entry from LikeDatabase
                     MktplaceItem item = mktplaceLikedList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String mktplaceID = item.getMktPlaceID();
                     final String userID = user.getId();
                     final DatabaseReference likeMktplaceRef = firebaseDatabase.getReference("LikeMktplace");

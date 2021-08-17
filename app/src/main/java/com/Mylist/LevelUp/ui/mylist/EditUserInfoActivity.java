@@ -78,7 +78,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         super.onCreate(savedInstanceState);
 
         name = MainActivity.getDisplayName();
-        residence = MainActivity.currUser.getResidential();
+        residence = MainActivity.getCurrUser().getResidential();
         telegram = MainActivity.getDisplayTelegram();
         phone = MainActivity.getDisplayPhone();
 
@@ -188,7 +188,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
-                MainActivity.currUser = null;
+                MainActivity.setCurrUser(null);
                 Intent intent = new Intent(EditUserInfoActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -240,11 +240,11 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
                 Toast.makeText(EditUserInfoActivity.this, "Oops! Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
-        MainActivity.currUser.setProfilePictureUri(profileImageUri.toString());
+        MainActivity.getCurrUser().setProfilePictureUri(profileImageUri.toString());
         // send update to database
         String newUri = profileImageUri.toString();
         mDatabaseRef
-            .child(MainActivity.currUser.getId())
+            .child(MainActivity.getCurrUser().getId())
             .child("profilePictureUri")
             .setValue(newUri);
     }
@@ -329,7 +329,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             name = inputName;
             MainActivity.setDisplayName(updatedName);
             mDatabaseRef
-                    .child(MainActivity.currUser.getId())
+                    .child(MainActivity.getCurrUser().getId())
                     .child("name")
                     .setValue(updatedName);
             changes = true;
@@ -342,7 +342,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         if (!inputHandle.equals(telegram)) {
             MainActivity.setDisplayTelegram(inputHandle);
             mDatabaseRef
-                    .child(MainActivity.currUser.getId())
+                    .child(MainActivity.getCurrUser().getId())
                     .child("TelegramHandle")
                     .setValue(inputHandle);
             changes = true;
@@ -355,7 +355,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         MainActivity.setDisplayPhone(inputNumber);
         if (inputNumber != phone) {
             mDatabaseRef
-                    .child(MainActivity.currUser.getId())
+                    .child(MainActivity.getCurrUser().getId())
                     .child("PhoneNumber")
                     .setValue(inputNumber);
             changes = true;
@@ -367,7 +367,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
             // update the DB
             MainActivity.setDisplayResidential(intToRes(finalResidence));
             mDatabaseRef
-                    .child(MainActivity.currUser.getId())
+                    .child(MainActivity.getCurrUser().getId())
                     .child("residential")
                     .setValue(finalResidence);
             changes = true;
@@ -447,7 +447,7 @@ public class EditUserInfoActivity extends AppCompatActivity implements AdapterVi
         });
 
         mDatabaseRef
-                .child(MainActivity.currUser.getId())
+                .child(MainActivity.getCurrUser().getId())
                 .child("profilePictureUri")
                 .setValue("");
 

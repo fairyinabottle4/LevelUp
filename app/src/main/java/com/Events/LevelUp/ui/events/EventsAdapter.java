@@ -316,7 +316,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                     //MylistFragment.setNumberEvents(index);
 
                     // add to ActivityEvent firebase
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     String eventID = ei.getEventID();
                     String userID = user.getId();
                     DatabaseReference activityEventRef = firebaseDatabase.getReference("ActivityEvent");
@@ -332,7 +332,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
                     // delete the entry from activity DB
                     EventsItem ei = eventsList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String eventID = ei.getEventID();
                     final String userID = user.getId();
                     final DatabaseReference activityEventRef = firebaseDatabase.getReference("ActivityEvent");
@@ -382,7 +382,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
                     // send to LikeDatabase
                     EventsItem ei = eventsList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String eventID = ei.getEventID();
                     final String userID = user.getId();
                     DatabaseReference likeEventRef = firebaseDatabase.getReference("LikeEvent");
@@ -405,7 +405,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
                     // Delete the entry from LikeDatabse
                     EventsItem ei = eventsList.get(position);
-                    UserItem user = MainActivity.currUser;
+                    UserItem user = MainActivity.getCurrUser();
                     final String eventID = ei.getEventID();
                     final String userID = user.getId();
                     final DatabaseReference likeEventRef = firebaseDatabase.getReference("LikeEvent");

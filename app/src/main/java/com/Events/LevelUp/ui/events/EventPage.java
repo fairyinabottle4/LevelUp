@@ -104,7 +104,7 @@ public class EventPage extends AppCompatActivity {
         final ArrayList<Integer> numLikesArrLi = new ArrayList<>(Arrays.asList(numLikes));
         final String eventID = intent.getStringExtra("eventID");
         position = intent.getIntExtra("position", 0);
-        final String userID = MainActivity.currUser.getId();
+        final String userID = MainActivity.getCurrUser().getId();
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

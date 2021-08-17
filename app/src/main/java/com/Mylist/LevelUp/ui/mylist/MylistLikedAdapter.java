@@ -250,7 +250,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
     @Override
     public void onBindViewHolder(@NonNull MylistLikedAdapter.MylistLikedViewHolder holder, final int position) {
         final Occasion currentItem = myListList.get(position);
-        UserItem user = MainActivity.currUser;
+        UserItem user = MainActivity.getCurrUser();
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String occID = currentItem.getOccasionID();
         final DatabaseReference mActivityJioRef = firebaseDatabase.getReference("ActivityJio");
