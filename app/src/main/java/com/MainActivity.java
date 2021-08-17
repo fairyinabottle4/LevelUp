@@ -6,14 +6,13 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.example.LevelUp.ui.Occasion;
+import com.example.LevelUp.ui.dashboard.DashboardFragment;
 import com.example.LevelUp.ui.events.EventsFragment;
 import com.example.LevelUp.ui.jios.JiosFragment;
-import com.example.LevelUp.ui.dashboard.DashboardFragment;
 import com.example.LevelUp.ui.mktplace.MktplaceFragment;
 import com.example.LevelUp.ui.mylist.MylistFragment;
 import com.example.tryone.R;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +47,17 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private static String currUserProfilePicture;
+    private static final ArrayList<String> mEventIDs = new ArrayList<>();
+    private static final ArrayList<String> mJioIDs = new ArrayList<>();
+
+    private static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
+
+    private static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
+
+    private static final ArrayList<String> mLikeMktplaceIDs = new ArrayList<>();
+
+
+    private static final int RC_SIGN_IN = 1;
     private DatabaseReference mDatabaseReferenceUser;
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -60,17 +70,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReferenceLikeJio;
     private DatabaseReference mDatabaseReferenceLikeMktplace;
 
-    private static final ArrayList<String> mEventIDs = new ArrayList<>();
-    private static final ArrayList<String> mJioIDs = new ArrayList<>();
-
-    private static final ArrayList<String> mLikeEventIDs = new ArrayList<>();
-
-    private static final ArrayList<String> mLikeJioIDs = new ArrayList<>();
-
-    public static final ArrayList<String> mLikeMktplaceIDs = new ArrayList<>();
-
-
-    private static final int RC_SIGN_IN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeMyList() {
-        // final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final String fbUIDFinal = currUser.getId();
+        // final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = currUser.getId();
 
         // pulling activityevent with my userID
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(fbUidFinal)) {
                             // it is my event so I add EventID into arraylist
                             mEventIDs.add(selected.getOccasionID());
                         }
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         ActivityOccasionItem selected = snapshot.getValue(ActivityOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(fbUidFinal)) {
                             mJioIDs.add(selected.getOccasionID());
                         }
                     } catch (Exception e) {
@@ -149,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeMyLikes() {
-        // final String fbUIDFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final String fbUIDFinal = currUser.getId();
+        // final String fbUidFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String fbUidFinal = currUser.getId();
 
         // pulling activityevent with my userID
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(fbUidFinal)) {
                             // it is my LikeEvent so I add EventID into arraylist
                             mLikeEventIDs.add(selected.getOccasionID());
                         }
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(fbUidFinal)) {
                             mLikeJioIDs.add(selected.getOccasionID());
                         }
                     } catch (Exception e) {
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         LikeOccasionItem selected = snapshot.getValue(LikeOccasionItem.class);
                         String selectedUserID = selected.getUserID();
-                        if (selectedUserID.equals(fbUIDFinal)) {
+                        if (selectedUserID.equals(fbUidFinal)) {
                             mLikeMktplaceIDs.add(selected.getOccasionID());
                         }
                     } catch (Exception e) {
@@ -321,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                     selected = new MylistFragment();
                     fragTag = "MylistFragment";
                     break;
+                default:
                 }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, selected, fragTag)

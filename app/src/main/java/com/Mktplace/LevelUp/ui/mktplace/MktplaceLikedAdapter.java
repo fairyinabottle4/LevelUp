@@ -180,7 +180,7 @@ public class MktplaceLikedAdapter extends RecyclerView.Adapter<MktplaceLikedAdap
         MktplaceItem uploadCurrent = mktplaceLikedList.get(position);
         String imageUrl = uploadCurrent.getImageUrl();
         holder.titleView.setText(uploadCurrent.getName());
-        holder.setLiked(MainActivity.mLikeMktplaceIDs.contains(uploadCurrent.getMktPlaceID()));
+        holder.setLiked(MainActivity.getLikeMktplaceIDs().contains(uploadCurrent.getMktPlaceID()));
         holder.description = uploadCurrent.getDescription();
         holder.location = uploadCurrent.getLocation();
         holder.imageUrl = uploadCurrent.getImageUrl();
