@@ -381,8 +381,8 @@ public class MylistAdapter extends RecyclerView.Adapter<MylistAdapter.MylistView
                     MainActivity.mJioIDs.remove(occID);
                 }
 
-                if (MainActivity.mEventIDs.contains(occID)) {
-                    MainActivity.mEventIDs.remove(occID);
+                if (MainActivity.getEventIDs().contains(occID)) {
+                    MainActivity.getEventIDs().remove(occID);
                 }
 
 

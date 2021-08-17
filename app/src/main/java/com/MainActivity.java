@@ -35,7 +35,7 @@ import androidx.fragment.app.Fragment;
 public class MainActivity extends AppCompatActivity {
     // For Login
     private static UserItem currUser;
-    public static FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     // For User Information on MyList Fragment
     private static String displayName;
 
@@ -432,6 +432,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static void setCurrUser(UserItem user) {
         currUser = user;
+    }
+    public static ArrayList<String> getEventIDs() {
+        return mEventIDs;
     }
 
 }

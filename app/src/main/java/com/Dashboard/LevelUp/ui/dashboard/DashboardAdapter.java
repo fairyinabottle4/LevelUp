@@ -248,7 +248,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                 holder1.setLiked(true);
             }
         } else {
-            if (MainActivity.mEventIDs.contains(currentItem.getOccasionID())) {
+            if (MainActivity.getEventIDs().contains(currentItem.getOccasionID())) {
                 holder1.setChecked(true);
             }
             if (MainActivity.mLikeEventIDs.contains(currentItem.getOccasionID())) {

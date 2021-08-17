@@ -314,7 +314,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
             }
         });
 
-        if (MainActivity.mJioIDs.contains(occID) || MainActivity.mEventIDs.contains(occID)) {
+        if (MainActivity.mJioIDs.contains(occID) || MainActivity.getEventIDs().contains(occID)) {
             likedHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
             likedHolder.setChecked(true);
             likedHolder.addButton.setChecked(true);
@@ -369,8 +369,8 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                     MainActivity.mJioIDs.remove(occID);
                 }
 
-                if (MainActivity.mEventIDs.contains(occID)) {
-                    MainActivity.mEventIDs.remove(occID);
+                if (MainActivity.getEventIDs().contains(occID)) {
+                    MainActivity.getEventIDs().remove(occID);
                 }
             }
         };
@@ -395,7 +395,7 @@ public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.
                         ActivityOccasionItem activityOccasionItem = new ActivityOccasionItem(occID, userID);
                         mActivityJioRef.push().setValue(activityOccasionItem);
 
-                        MainActivity.mEventIDs.add(currentItem.getOccasionID());
+                        MainActivity.getEventIDs().add(currentItem.getOccasionID());
                     }
 
                 } else {

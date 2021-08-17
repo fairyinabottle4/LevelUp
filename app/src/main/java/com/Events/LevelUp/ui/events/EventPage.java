@@ -206,7 +206,7 @@ public class EventPage extends AppCompatActivity {
                         }
                     });
 
-                    MainActivity.mEventIDs.remove(eventID);
+                    MainActivity.getEventIDs().remove(eventID);
                 }
             }
         });

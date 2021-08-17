@@ -292,7 +292,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         // if currentItem is contained in Main's Event List, then addButton set state
         final String eventID = currentItem.getEventID();
         eventsHolder.setEventID(eventID);
-        if (MainActivity.mEventIDs.contains(eventID)) {
+        if (MainActivity.getEventIDs().contains(eventID)) {
             eventsHolder.addButton.setBackgroundResource(R.drawable.ic_done_black_24dp);
             eventsHolder.setChecked(true);
             eventsHolder.addButton.setChecked(true);
@@ -356,7 +356,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                         }
                     });
 
-                    MainActivity.mEventIDs.remove(eventID);
+                    MainActivity.getEventIDs().remove(eventID);
                 }
             }
         });
