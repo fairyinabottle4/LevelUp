@@ -1,5 +1,10 @@
 package com.Mylist.LevelUp.ui.mylist;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,13 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Events.LevelUp.ui.events.EventPage;
-import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.MainActivity;
 import com.UserItem;
 import com.UserProfile;
@@ -31,11 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class MylistCreatedAdapter extends RecyclerView.Adapter<MylistCreatedAdapter.MylistCreatedViewHolder> {
     private ArrayList<Occasion> mylistList;

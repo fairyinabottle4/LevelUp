@@ -1,29 +1,27 @@
 package com.Mylist.LevelUp.ui.mylist;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.ActivityOccasionItem;
 import com.Events.LevelUp.ui.events.EventPage;
-import com.Jios.LevelUp.ui.jios.JiosItem;
-import com.Jios.LevelUp.ui.jios.JiosLikedFragment;
 import com.Jios.LevelUp.ui.jios.JiosPage;
 import com.LikeOccasionItem;
 import com.MainActivity;
@@ -31,7 +29,6 @@ import com.UserItem;
 import com.UserProfile;
 import com.example.LevelUp.ui.Occasion;
 import com.example.tryone.R;
-import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,11 +40,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class MylistLikedAdapter extends RecyclerView.Adapter<MylistLikedAdapter.MylistLikedViewHolder> {
     // ArrayList is passed in from Occasion.java
