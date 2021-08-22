@@ -19,3 +19,9 @@ jobs:
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
+
+      - name: check coding style
+        run: gradlew checkstyle
+
+      - name: run unit and instrumentation tests
+        run: gradlew test
