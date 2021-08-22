@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Keith/Downloads/LevelUp/app/src/main/res/layout/events_adder.xml" value="1.6266447368421053" />
+        <entry key="..\:/Users/Keith/Downloads/LevelUp/app/src/main/res/layout/fragment_events.xml" value="1.6266447368421053" />
+        <entry key="..\:/Users/Keith/Downloads/LevelUp/app/src/main/res/layout/occ_item_editmode.xml" value="1.6266447368421053" />
         <entry key="app/src/main/res/layout/created_occasion_page.xml" value="2.754934210526316" />
         <entry key="app/src/main/res/layout/creator_names_view.xml" value="2.754934210526316" />
         <entry key="app/src/main/res/layout/fragment_mktplace.xml" value="2.754934210526316" />
